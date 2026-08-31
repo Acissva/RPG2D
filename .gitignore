@@ -1,0 +1,50 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+# Unity and IDE generated files
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Visual Studio / Rider / local editor state
+.vs/
+.vscode/
+.idea/
+
+# OS local files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Unity crash and profiling output
+sysinfo.txt
+
+# Tuanjie Codely local cache and runtime state
+.codely-cli/
+.codely.packages/
+mem-log/
+.com-unity-codely.json
+
+# Keep project-authored Unity assets, settings, packages, and .meta files trackable.
