@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 68989982}
   m_Layer: 5
   m_HasEditorInfo: 1
-  m_Name: PanelRoot
+  m_Name: MainPanelRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -289,7 +289,7 @@ MonoBehaviour:
   warnMissingRoots: 0
   hudRoot: {fileID: 0}
   toolbarRoot: {fileID: 0}
-  panelRoot: {fileID: 0}
+  mainPanelRoot: {fileID: 0}
   dialogueRoot: {fileID: 0}
   popupRoot: {fileID: 0}
   toastRoot: {fileID: 0}
@@ -662,7 +662,7 @@ GameObject:
   - component: {fileID: 1201404760}
   m_Layer: 5
   m_HasEditorInfo: 1
-  m_Name: MenuPanel
+  m_Name: StartScenePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1365,7 +1365,7 @@ MonoBehaviour:
   warnMissingRoots: 1
   hudRoot: {fileID: 0}
   toolbarRoot: {fileID: 0}
-  panelRoot: {fileID: 68989982}
+  mainPanelRoot: {fileID: 68989982}
   dialogueRoot: {fileID: 0}
   popupRoot: {fileID: 0}
   toastRoot: {fileID: 0}
@@ -1522,7 +1522,7 @@ GameObject:
   - component: {fileID: 2078591773}
   m_Layer: 5
   m_HasEditorInfo: 1
-  m_Name: PanelCanvas
+  m_Name: MainPanelCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,10 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace RPG2D
 {
-    [CreateAssetMenu(menuName = "RPG2D/UI/Panel Config Database", fileName = "UIPanelConfigDatabase")]
+    [CreateAssetMenu(menuName = "RPG2D/Config/UI/Panel Config Database", fileName = "UIPanelConfigDatabase")]
     public class UIPanelConfigDatabase : ScriptableObject
     {
         [SerializeField] private List<UIPanelConfig> panelConfigs = new();
@@ -19,7 +18,7 @@ namespace RPG2D
 
         private void BuildCondigMapIfNeeded()
         {
-            if(configMap != null)
+            if (configMap != null)
             {
                 return;
             }
@@ -28,9 +27,9 @@ namespace RPG2D
 
             foreach (var config in panelConfigs)
             {
-                if(config == null) continue;
+                if (config == null) continue;
 
-                if(config.PanelId == UIPanelId.None)
+                if (config.PanelId == UIPanelId.None)
                 {
                     Debug.LogError($"{nameof(UIPanelConfigDatabase)} 中存在 PanelId=None 的配置", this);
                     continue;

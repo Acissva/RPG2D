@@ -8,11 +8,13 @@ namespace RPG2D
         None = 0,
         HUD = 1,
         Toolbar = 2,
-        Panel = 3,
+        MainPanel = 3,
         Dialogue = 4,
         Popup = 5,
         Toast = 6,
         Loading = 7,
     }
-
+    //注意：MainPanel 和 Panel 不是一个概念
+    //MainPanel是指一种Panel类型（主面板类型）
+    //UISystem、UIPanelConfig等中的 Panel 则为面板概念的统称
 }

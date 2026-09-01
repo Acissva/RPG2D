@@ -2,12 +2,12 @@ using UnityEngine;
 
 namespace RPG2D
 {
-    [CreateAssetMenu(menuName = "RPG2D/GameConfig/Panel Config", fileName = "UIPanelConfig")]
+    [CreateAssetMenu(menuName = "RPG2D/Config/UI/Panel Config", fileName = "UIPanelConfig")]
     public class UIPanelConfig : ScriptableObject
     {
         [SerializeField] private UIPanelId panelId;
         [SerializeField] private UIPanelGroup panelGroup = UIPanelGroup.MainPanel;
-        [SerializeField] private UILayer layer = UILayer.Panel;
+        [SerializeField] private UILayer layer = UILayer.MainPanel;
         /// <summary>
         /// 按下通用返回按钮（ESC）时是否可以返回
         /// </summary>

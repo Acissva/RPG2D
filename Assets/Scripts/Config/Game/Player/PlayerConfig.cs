@@ -4,7 +4,7 @@ namespace RPG2D
 {
     [CreateAssetMenu(
         fileName = "PlayerConfig",
-        menuName = "RPG2D/GameConfig/Player Config")]
+        menuName = "RPG2D/Config/Game/Player Config")]
     public class PlayerConfig : ScriptableObject
     {
         [SerializeField, Min(0)] private int initialHP = 5;
@@ -17,11 +17,11 @@ namespace RPG2D
 
         private void OnValidate()
         {
-            if(maxHP < 1) maxHP = 1;
-            if(initialHP < 0) initialHP = 0;
-            if(moveSpeed < 0) moveSpeed = 0;
+            if (maxHP < 1) maxHP = 1;
+            if (initialHP < 0) initialHP = 0;
+            if (moveSpeed < 0) moveSpeed = 0;
 
-            if(initialHP > maxHP)
+            if (initialHP > maxHP)
             {
                 initialHP = maxHP;
             }
