@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1405313472999984716}
   - component: {fileID: 320522738141108917}
   - component: {fileID: 6913388622159197734}
+  - component: {fileID: 598104088702339356}
   m_Layer: 0
   m_HasEditorInfo: 1
   m_Name: interactable_gt_dungeon_gate_placeholder_01
@@ -148,6 +149,21 @@ MonoBehaviour:
   preferSortingGroup: 1
   includeChildRenderers: 1
   includeInactiveChildren: 0
+--- !u!114 &598104088702339356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005993342735223406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9977e0ebeef67be45b7591759d4700a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionId: dungeon_gate_gt_001
+  promptText: "\u67E5\u770B\u5165\u53E3"
+  message: "\u5730\u7262\u5165\u53E3\u8FD8\u6CA1\u6709\u5F00\u653E"
 --- !u!1 &8616310801268640632
 GameObject:
   m_ObjectHideFlags: 0
