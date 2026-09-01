@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 7422775070715289944}
   - component: {fileID: 4949135223395895808}
   - component: {fileID: 7450106430209291014}
+  - component: {fileID: 4116532600107865125}
+  - component: {fileID: 6851572560810363609}
   m_Layer: 0
   m_HasEditorInfo: 1
   m_Name: interactable_gt_chest_closed_01
@@ -127,6 +129,47 @@ CapsuleCollider2D:
   m_Offset: {x: -0.00000009078558, y: 0.90510225}
   m_Size: {x: 4.296876, y: 1.8920771}
   m_Direction: 1
+--- !u!114 &4116532600107865125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514913698520836551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abcdb1ce249308b4d9f84265ae13e8a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sortingPoint: {fileID: 7422775070715289944}
+  orderPerUnit: 10
+  orderOffset: 0
+  updateEveryFrame: 1
+  applyInEditMode: 1
+  preferSortingGroup: 1
+  includeChildRenderers: 1
+  includeInactiveChildren: 0
+--- !u!114 &6851572560810363609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514913698520836551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f91700daa4d646648bca9fe11f584c9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionId: chest_gt_001
+  closedPromptText: "\u6253\u5F00\u5B9D\u7BB1"
+  openedPromptText: "\u67E5\u770B\u5B9D\u7BB1"
+  openedMessage: "\u5B9D\u7BB1\u5DF2\u6253\u5F00"
+  emptyMessage: "\u5B9D\u7BB1\u5DF2\u7ECF\u7A7A\u4E86"
+  startOpened: 0
+  targetRenderer: {fileID: 0}
+  openedSprite: {fileID: 0}
+  openedColor: {r: 1, g: 0.82, b: 0.35, a: 1}
 --- !u!1 &6277349135726876515
 GameObject:
   m_ObjectHideFlags: 0
