@@ -53,6 +53,11 @@ namespace RPG2D
                 inputBuffer.Press(InputActionType.Attack);
             }
 
+            if (Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.E))
+            {
+                inputBuffer.Press(InputActionType.Interact);
+            }
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 inputBuffer.Press(InputActionType.UIBack);
