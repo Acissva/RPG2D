@@ -11,4 +11,3 @@ namespace RPG2D
         void Interact(GameObject interactor);
     }
 }
-
