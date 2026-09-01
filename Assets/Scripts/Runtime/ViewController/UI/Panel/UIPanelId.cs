@@ -1,5 +1,6 @@
 namespace RPG2D
 {
+    //数字不决定显示层级
     public enum UIPanelId
     {
         None = 0,
@@ -11,6 +12,6 @@ namespace RPG2D
         ConfirmPopup = 100,
         Loading = 200,
         StartSceneMenu = 300,
+        Dialogue = 400,
     }
-
 }

@@ -47,7 +47,6 @@ namespace RPG2D
         {
             if (uiModel.InputBlocked.Value)
             {
-                inputReader.ConsumeAction(InputActionType.Interact);
                 CurrentInteractable = null;
                 return;
             }

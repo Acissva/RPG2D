@@ -23,7 +23,7 @@ namespace RPG2D
 
         [SerializeField] private Transform hudRoot;
         [SerializeField] private Transform toolbarRoot;
-        [SerializeField] private Transform panelRoot;
+        [SerializeField] private Transform mainPanelRoot;
         [SerializeField] private Transform dialogueRoot;
         [SerializeField] private Transform popupRoot;
         [SerializeField] private Transform toastRoot;
@@ -31,7 +31,7 @@ namespace RPG2D
 
         private const string HUDName = "HUD";
         private const string ToolbarName = "Toolbar";
-        private const string PanelName = "Panel";
+        private const string MainPanelName = "MainPanel";
         private const string DialogueName = "Dialogue";
         private const string PopupName = "Popup";
         private const string ToastName = "Toast";
@@ -72,7 +72,7 @@ namespace RPG2D
 
         protected virtual void OnDestroy()
         {
-            if(uiSystem == null)
+            if (uiSystem == null)
             {
                 return;
             }
@@ -90,7 +90,7 @@ namespace RPG2D
         {
             foreach (var panel in registeredPanels)
             {
-                if(panel == null)
+                if (panel == null)
                 {
                     continue;
                 }
@@ -109,8 +109,8 @@ namespace RPG2D
                 case UILayer.Toolbar:
                     return toolbarRoot;
 
-                case UILayer.Panel:
-                    return panelRoot;
+                case UILayer.MainPanel:
+                    return mainPanelRoot;
 
                 case UILayer.Dialogue:
                     return dialogueRoot;
@@ -131,13 +131,19 @@ namespace RPG2D
 
         private Transform EnsureRoot(Transform currentRoot, string name, UILayer layer)
         {
-            if(currentRoot != null) return currentRoot;
+            if (currentRoot != null)
+            {
+                SyncCanvasSorting(currentRoot, layer);
+                return currentRoot;
+            }
 
-            Transform existingRoot = transform.Find(name + "Root");
-            if (existingRoot != null) return existingRoot;
+            Transform existingRoot = FindRoot(name);
 
-            existingRoot = transform.Find(name + "Canvas/" + name + "Root");
-            if (existingRoot != null) return existingRoot;
+            if (existingRoot != null)
+            {
+                SyncCanvasSorting(existingRoot, layer);
+                return existingRoot;
+            }
 
             if (!autoCreateMissingRoots)
             {
@@ -160,6 +166,7 @@ namespace RPG2D
             }
 
             Transform rootObjTrans = CreateRoot(canvasTrans, name + "Root");
+            SyncCanvasSorting(rootObjTrans, layer);
 
             return rootObjTrans;
         }
@@ -168,7 +175,7 @@ namespace RPG2D
         {
             hudRoot = EnsureRoot(hudRoot, HUDName, UILayer.HUD);
             toolbarRoot = EnsureRoot(toolbarRoot, ToolbarName, UILayer.Toolbar);
-            panelRoot = EnsureRoot(panelRoot, PanelName, UILayer.Panel);
+            mainPanelRoot = EnsureRoot(mainPanelRoot, MainPanelName, UILayer.MainPanel);
             dialogueRoot = EnsureRoot(dialogueRoot, DialogueName, UILayer.Dialogue);
             popupRoot = EnsureRoot(popupRoot, PopupName, UILayer.Popup);
             toastRoot = EnsureRoot(toastRoot, ToastName, UILayer.Toast);
@@ -217,6 +224,32 @@ namespace RPG2D
             rectTransform.pivot = new Vector2(0.5f, 0.5f);
 
             return rootObj.transform;
+        }
+
+        private Transform FindRoot(string name)
+        {
+            Transform existingRoot = transform.Find(name + "Root");
+            if (existingRoot != null) return existingRoot;
+
+            return transform.Find(name + "Canvas/" + name + "Root");
+        }
+
+        private void SyncCanvasSorting(Transform root, UILayer layer)
+        {
+            if (root == null || layer == UILayer.None)
+            {
+                return;
+            }
+
+            Canvas canvas = root.GetComponentInParent<Canvas>();
+
+            if (canvas == null)
+            {
+                return;
+            }
+
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = (int)layer;
         }
     }
 }
