@@ -68,7 +68,7 @@ namespace RPG2D
                 return;
             }
 
-            playerInteraction = playerObj.GetComponent<PlayerInteractionController>();
+            playerInteraction = playerObj.GetComponentInChildren<PlayerInteractionController>();
         }
 
         private void SetVisible(bool visible)

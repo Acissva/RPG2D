@@ -11,13 +11,36 @@ namespace RPG2D
         private IInputReader inputReader;
         private IUIModel uiModel;
 
+        [Tooltip("Player 根节点")]
+        [SerializeField] private GameObject interactorRoot;     //交互控制器一般不挂在Player根节点，所以这里需要获取Player根节点
+
         public IInteractable CurrentInteractable { get; private set; }
         public bool HasCurrentInteractable => CurrentInteractable != null;
+
+        private GameObject InteractorGameObject => interactorRoot != null ? interactorRoot : gameObject;
+
+        private void Reset()
+        {
+            CacheInteractorRoot();
+        }
+
+        private void CacheInteractorRoot()
+        {
+            if (interactorRoot != null)
+            {
+                return;
+            }
+
+            PlayerController playerController = GetComponentInParent<PlayerController>();
+            interactorRoot = playerController != null ? playerController.gameObject : gameObject;
+        }
 
         private void Awake()
         {
             inputReader = this.GetSystem<IRPG2DInputSystem>().InputReader;
             uiModel = this.GetModel<IUIModel>();
+
+            CacheInteractorRoot();
         }
 
         private void Update()
@@ -38,7 +61,7 @@ namespace RPG2D
 
             if (inputReader.ConsumeAction(InputActionType.Interact))
             {
-                CurrentInteractable.Interact(gameObject);
+                CurrentInteractable.Interact(InteractorGameObject);
                 RefreshCurrentInteractable();
             }
         }
@@ -47,7 +70,7 @@ namespace RPG2D
         {
             IInteractable interactable = collision.GetComponentInParent<IInteractable>();
 
-            if(interactable == null || nearbyInteractables.Contains(interactable))
+            if (interactable == null || nearbyInteractables.Contains(interactable))
             {
                 return;
             }
@@ -82,7 +105,7 @@ namespace RPG2D
                     continue;
                 }
 
-                if(bestInteractable == null || GetDistanceSqr(candidate) < GetDistanceSqr(bestInteractable))
+                if (bestInteractable == null || GetDistanceSqr(candidate) < GetDistanceSqr(bestInteractable))
                 {
                     bestInteractable = candidate;
                 }
@@ -104,7 +127,7 @@ namespace RPG2D
 
         private bool IsInteractableAvailable(IInteractable interactable)
         {
-            return IsSceneObjectAlive(interactable) && interactable.CanInteract(gameObject);
+            return IsSceneObjectAlive(interactable) && interactable.CanInteract(InteractorGameObject);
         }
 
         private bool IsSceneObjectAlive(IInteractable interactable)
