@@ -1,6 +1,6 @@
 using QFramework;
-using UnityEngine;
 using RPG2D.Utility;
+using UnityEngine;
 
 namespace RPG2D
 {
@@ -14,6 +14,7 @@ namespace RPG2D
             //注册Model
             this.RegisterModel<IPlayerModel>(new PlayerModel());
             this.RegisterModel<IUIModel>(new UIModel());
+            this.RegisterModel<IDialogueModel>(new DialogueModel());
 
             //注册System
             this.RegisterSystem<IRuntimeUpdateSystem>(new RuntimeUpdateSystem());   //特殊：由于后面有几个系统会使用Update，所以放最前面
@@ -22,6 +23,7 @@ namespace RPG2D
             this.RegisterSystem<ITimeSystem>(new TimeSystem());
             this.RegisterSystem<IEnemyRegistrySystem>(new EnemyRegistrySystem());
             this.RegisterSystem<IUISystem>(new UISystem());
+            this.RegisterSystem<IDialogueSystem>(new DialogueSystem());
             this.RegisterSystem<ISceneSystem>(new SceneSystem());
 
         }
@@ -78,4 +80,3 @@ namespace RPG2D
 
     }
 }
-
