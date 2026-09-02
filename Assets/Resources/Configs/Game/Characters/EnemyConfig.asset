@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9eb89edab5df30741b32a1aeeec0c3bf, type: 3}
   m_Name: EnemyConfig
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   identity:
     enemyId: enemy_001
     displayName: Enemy

@@ -1,12 +1,18 @@
+using QFramework;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RPG2D
 {
-    public class ChestInteractable : MonoBehaviour, IInteractable
+    public class ChestInteractable : RPG2DController, IInteractable
     {
         [SerializeField] private string interactionId = "chest_gt_001";
+
         [SerializeField] private string closedPromptText = "打开宝箱";
         [SerializeField] private string openedPromptText = "查看宝箱";
+
+        [SerializeField] private string speakerName = "旁白";
+
         [SerializeField] private string openedMessage = "宝箱已打开";
         [SerializeField] private string emptyMessage = "宝箱已经空了";
 
@@ -14,6 +20,8 @@ namespace RPG2D
         [SerializeField] private SpriteRenderer targetRenderer;
         [SerializeField] private Sprite openedSprite;
         [SerializeField] private Color openedColor = new Color(1f, 0.82f, 0.35f, 1f);
+
+        private readonly List<DialogueLine> dialogueLines = new();
 
         private Sprite closedSprite;
         private Color closedColor;
@@ -51,13 +59,13 @@ namespace RPG2D
         {
             if (isOpened)
             {
-                Debug.Log($"{emptyMessage}：{InteractionId}");
+                ShowMessage(emptyMessage);
                 return;
             }
 
             isOpened = true;
             RefreshVisual();
-            Debug.Log($"{openedMessage}：{InteractionId}");
+            ShowMessage(openedMessage);
         }
 
         private void CacheRenderer()
@@ -92,6 +100,14 @@ namespace RPG2D
             }
 
             targetRenderer.color = closedColor;
+        }
+
+        private void ShowMessage(string text)
+        {
+            dialogueLines.Clear();
+            dialogueLines.Add(new DialogueLine(speakerName, text));
+
+            this.GetSystem<IDialogueSystem>().StartDialogue(dialogueLines);
         }
     }
 }

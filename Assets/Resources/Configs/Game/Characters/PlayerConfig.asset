@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4848db0da4a20f3448dd9c6ae11bbd24, type: 3}
   m_Name: PlayerConfig
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   initialHP: 5
   maxHP: 5
   moveSpeed: 5
