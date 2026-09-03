@@ -10627,7 +10627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7d250c02b1a53f4ba2fcbd3d55b6203, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  config: {fileID: 11400000, guid: 5b052f2c326df3841bc4b805cd38f4e4, type: 2}
+  panelId: 200
   loadingText: {fileID: 239446455}
   defaultText: "\u52A0\u8F7D\u4E2D..."
 --- !u!114 &666247285
@@ -11047,7 +11047,6 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   defaultOpenPanels:
-  panelConfigDatabase: {fileID: 0}
   autoCreateMissingRoots: 0
   warnMissingRoots: 0
   hudRoot: {fileID: 0}
@@ -11918,7 +11917,6 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   defaultOpenPanels:
-  panelConfigDatabase: {fileID: 11400000, guid: fafccc1cece112d49835f870d2745283, type: 2}
   autoCreateMissingRoots: 1
   warnMissingRoots: 1
   hudRoot: {fileID: 1286860788}
@@ -27767,6 +27765,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7091644306781493832, guid: de381266df4bf49409fff766c57c14a0, type: 3}
+      propertyPath: panelId
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -27894,6 +27896,10 @@ PrefabInstance:
     - target: {fileID: 1972151209588795344, guid: a71c9efa43661b547b244d95519c32a2, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2256512052366088588, guid: a71c9efa43661b547b244d95519c32a2, type: 3}
+      propertyPath: panelId
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3254421285141442524, guid: a71c9efa43661b547b244d95519c32a2, type: 3}
       propertyPath: m_Pivot.x

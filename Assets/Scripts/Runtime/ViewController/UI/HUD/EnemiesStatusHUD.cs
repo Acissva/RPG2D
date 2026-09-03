@@ -1,18 +1,18 @@
 using QFramework;
 using RPG2D.Utility;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace RPG2D
 {
     public class EnemiesStatusHUD : RPG2DController
     {
+        private IAssetSystem assetSystem;
         private IEnemyRegistrySystem enemyRegistrySystem;
         private IObjectPoolUtility poolUtility;
 
         [Header("相机")]
-        [SerializeField] private Camera renderTargetCamera; 
+        [SerializeField] private Camera renderTargetCamera;
 
         [Header("血条")]
         private Dictionary<int, HealthBarView> healthBarViews = new();
@@ -21,6 +21,7 @@ namespace RPG2D
 
         private void Awake()
         {
+            assetSystem = this.GetSystem<IAssetSystem>();
             enemyRegistrySystem = this.GetSystem<IEnemyRegistrySystem>();
             poolUtility = this.GetUtility<IObjectPoolUtility>();
 
@@ -28,7 +29,7 @@ namespace RPG2D
             {
                 renderTargetCamera = Camera.main;
 
-                if(renderTargetCamera == null)
+                if (renderTargetCamera == null)
                 {
                     enabled = false;
                     return;
@@ -37,7 +38,7 @@ namespace RPG2D
 
             if (healthBarViewPrefab == null)
             {
-                healthBarViewPrefab = Resources.Load<GameObject>("Prefabs/UI/HealthBar");
+                healthBarViewPrefab = assetSystem.Load<GameObject>("Prefabs/UI/HealthBar");
             }
             else
             {
@@ -49,7 +50,7 @@ namespace RPG2D
                 }
             }
 
-            if(healthBarViewPrefab == null)
+            if (healthBarViewPrefab == null)
             {
                 Debug.LogError("Can not find HealthBar Prefab : Prefabs/UI/HealthBar");
                 enabled = false;
@@ -98,7 +99,7 @@ namespace RPG2D
                     Vector3 tempPos = renderTargetCamera.WorldToScreenPoint(enemy.transform.position + new Vector3(healthBarViewOffset.x, healthBarViewOffset.y, 0));
                     healthBarView.transform.position = new Vector3(tempPos.x, tempPos.y, healthBarView.transform.position.z);
                 }
-                else if(!enemy.Stats.IsDead)
+                else if (!enemy.Stats.IsDead)
                 {
                     AddEnemy(enemy);
                 }
@@ -128,7 +129,7 @@ namespace RPG2D
 
         private void RemoveEnemy(int enemyInstanceId)
         {
-            if(healthBarViews.TryGetValue(enemyInstanceId, out var view))
+            if (healthBarViews.TryGetValue(enemyInstanceId, out var view))
             {
                 poolUtility.Despawn(view.gameObject);
                 healthBarViews.Remove(enemyInstanceId);

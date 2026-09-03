@@ -577,7 +577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6eb412e1cb547045805907d227868d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: aad2e1d60a6742a43a1cd6224a2cf74b, type: 2}
+  panelId: 100
   messageText: {fileID: 1848393974044035356}
   confirmButton: {fileID: 2469288813156031556}
   cancelButton: {fileID: 4052446127769193519}

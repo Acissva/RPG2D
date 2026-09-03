@@ -18,7 +18,7 @@ namespace RPG2D
         private IUISystem uiSystem;
         private IInputReader inputReader;
 
-        //UISystem.LoadPanelFromConfig() 会实例化面板后先调用一次 panel.Close()，用于初始化为关闭状态。
+        //UISystem 动态实例化面板后会先调用一次 panel.Close()，用于初始化为关闭状态。
         //DialoguePanelController.OnClose() 会把这次“初始化关闭”误认为玩家关闭对话，从而提前 EndDialogue()。
         //该字段用于解决这个问题
         private bool hasOpened;

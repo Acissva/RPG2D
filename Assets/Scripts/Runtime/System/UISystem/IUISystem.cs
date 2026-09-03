@@ -12,7 +12,7 @@ namespace RPG2D
         void UnregisterRoot(UIRootController root);
         Transform GetRoot(UILayer layer);
 
-        void RegisterPanel(UIPanelController panel);
+        bool RegisterPanel(UIPanelController panel);
         void UnregisterPanel(UIPanelController panel);
 
         void OpenPanel(UIPanelId panelId, bool closeOtherPanels = true);
@@ -26,10 +26,6 @@ namespace RPG2D
 
         bool IsPanelOpen(UIPanelId panelId);
 
-        UIPanelController LoadPanelFromConfig(UIPanelConfig config);
-
-        void SetPanelConfigDatabase(UIPanelConfigDatabase database);
-
         UIStatusSnapshot GetStatusSnapshot();
 
         void CleanupInvalidUIReferences();
@@ -42,11 +38,12 @@ namespace RPG2D
         private readonly List<UIPanelId> openedPanelStack = new();
 
         private IUIModel uiModel;
+        private IAssetSystem assetSystem;
+        private IConfigSystem configSystem;
         private IInputReader inputReader;
         private IRuntimeUpdateSystem runtimeUpdateSystem;
 
         private ConfirmPopupController confirmPopup;
-        private UIPanelConfigDatabase panelConfigDatabase;
 
         private readonly List<UIAutoRepairInfo> autoRepairInfos = new();
         private const int MaxAutoRepairInfoCount = 20;
@@ -54,6 +51,8 @@ namespace RPG2D
         protected override void OnInit()
         {
             uiModel = this.GetModel<IUIModel>();
+            assetSystem = this.GetSystem<IAssetSystem>();
+            configSystem = this.GetSystem<IConfigSystem>();
             inputReader = this.GetSystem<IRPG2DInputSystem>().InputReader;
             runtimeUpdateSystem = this.GetSystem<IRuntimeUpdateSystem>();
 
@@ -85,7 +84,7 @@ namespace RPG2D
 
         public void UnregisterRoot(UIRootController root)
         {
-            if(root == null) return;
+            if (root == null) return;
 
             roots.Remove(root);
         }
@@ -114,11 +113,16 @@ namespace RPG2D
             return null;
         }
 
-        public void RegisterPanel(UIPanelController panel)
+        public bool RegisterPanel(UIPanelController panel)
         {
-            if(panel == null || panel.PanelId == UIPanelId.None)
+            if (panel == null)
             {
-                return;
+                return false;
+            }
+
+            if (!EnsurePanelInitialized(panel))
+            {
+                return false;
             }
 
             if (panels.TryGetValue(panel.PanelId, out var oldPanel))
@@ -126,7 +130,7 @@ namespace RPG2D
                 if (oldPanel != null && oldPanel != panel)
                 {
                     Debug.LogError($"重复注册 UI 面板：{panel.PanelId}，已拒绝注册新面板。旧面板：{oldPanel.name}，新面板：{panel.name}");
-                    return;
+                    return false;
                 }
 
                 if (oldPanel == null)
@@ -152,6 +156,7 @@ namespace RPG2D
             }
 
             RefreshUIState();
+            return true;
         }
 
         public void UnregisterPanel(UIPanelController panel)
@@ -161,12 +166,47 @@ namespace RPG2D
                 return;
             }
 
-            if(panels.TryGetValue(panel.PanelId, out var currentPanel) && currentPanel == panel)
+            if (panels.TryGetValue(panel.PanelId, out var currentPanel) && currentPanel == panel)
             {
                 panels.Remove(panel.PanelId);
                 openedPanelStack.Remove(panel.PanelId);
                 RefreshUIState();
             }
+        }
+
+        private bool EnsurePanelInitialized(UIPanelController panel)
+        {
+            if (panel == null)
+            {
+                return false;
+            }
+
+            if (panel.IsInitialized)
+            {
+                return true;
+            }
+
+            if (panel.PanelId == UIPanelId.None)
+            {
+                Debug.LogError($"注册 UI 面板失败：{panel.name} 的 PanelId 不能为 None", panel);
+                return false;
+            }
+
+            var panelConfigDatabase = configSystem.UIPanelConfigDatabase;
+
+            if (panelConfigDatabase == null)
+            {
+                Debug.LogError($"注册 UI 面板失败：ConfigSystem 没有加载 UIPanelConfigDatabase，PanelId={panel.PanelId}", panel);
+                return false;
+            }
+
+            if (!panelConfigDatabase.TryGetConfig(panel.PanelId, out var config) || config == null)
+            {
+                Debug.LogError($"注册 UI 面板失败：UIPanelConfigDatabase 中找不到 {panel.PanelId} 的配置", panel);
+                return false;
+            }
+
+            return panel.Initialize(config);
         }
 
         public void OpenPanel(UIPanelId panelId, bool closeOtherPanels = true)
@@ -241,7 +281,7 @@ namespace RPG2D
         {
             CleanupInvalidPanels();
 
-            if (!panels.TryGetValue(panelId,out var panel) || panel == null)
+            if (!panels.TryGetValue(panelId, out var panel) || panel == null)
             {
                 return;
             }
@@ -264,7 +304,7 @@ namespace RPG2D
             panel.Close();
             openedPanelStack.Remove(panelId);
 
-            if(panel.CacheMode == UIPanelCacheMode.DestroyOnClose)
+            if (panel.CacheMode == UIPanelCacheMode.DestroyOnClose)
             {
                 panels.Remove(panelId);
                 Object.Destroy(panel.gameObject);
@@ -304,7 +344,7 @@ namespace RPG2D
             //因为 ClosePanel() 会修改 openedPanelStack，所以 CloseAllPanels() 里要先复制一份
             var panelIds = new List<UIPanelId>(openedPanelStack);
 
-            for (int i = panelIds.Count - 1; i >= 0 ; i--)
+            for (int i = panelIds.Count - 1; i >= 0; i--)
             {
                 ClosePanel(panelIds[i]);
             }
@@ -422,7 +462,7 @@ namespace RPG2D
 
             foreach (var pair in panels)
             {
-                if(pair.Value == null)
+                if (pair.Value == null)
                 {
                     invalidPanelIds.Add(pair.Key);
                 }
@@ -487,7 +527,7 @@ namespace RPG2D
 
         private void ApplySortOrder(UIPanelController targetPanel)
         {
-            if(targetPanel == null) return;
+            if (targetPanel == null) return;
 
             Transform parent = targetPanel.transform.parent;
 
@@ -500,9 +540,9 @@ namespace RPG2D
                 Transform child = parent.GetChild(i);
                 var panel = child.GetComponent<UIPanelController>();
 
-                if(panel == null || panel == targetPanel) continue;
-                
-                if(panel.SortOrder <= targetPanel.SortOrder)
+                if (panel == null || panel == targetPanel) continue;
+
+                if (panel.SortOrder <= targetPanel.SortOrder)
                 {
                     targetIndex = child.GetSiblingIndex() + 1;
                 }
@@ -511,15 +551,15 @@ namespace RPG2D
             targetPanel.transform.SetSiblingIndex(targetIndex);
         }
 
-        public UIPanelController LoadPanelFromConfig(UIPanelConfig config)
+        private UIPanelController LoadPanelFromConfig(UIPanelConfig config)
         {
-            if(config == null)
+            if (config == null)
             {
                 Debug.LogError("加载 UI 面板失败：UIPanelConfig 为空");
                 return null;
             }
 
-            if(config.PanelId == UIPanelId.None)
+            if (config.PanelId == UIPanelId.None)
             {
                 Debug.LogError("加载 UI 面板失败：PanelId 不能为 None");
                 return null;
@@ -531,16 +571,16 @@ namespace RPG2D
                 return null;
             }
 
-            if(panels.TryGetValue(config.PanelId, out var existingPanel) && existingPanel != null)
+            if (panels.TryGetValue(config.PanelId, out var existingPanel) && existingPanel != null)
             {
                 return existingPanel;
             }
 
-            GameObject prefab = Resources.Load<GameObject>(config.PrefabPath);
+            GameObject prefab = assetSystem.Load<GameObject>(config.PrefabPath);
 
-            if(prefab == null)
+            if (prefab == null)
             {
-                Debug.LogError($"加载 UI 面板失败：Resources 中找不到 {config.PrefabPath}");
+                Debug.LogError($"加载 UI 面板失败：找不到资源 {config.PrefabPath}");
                 return null;
             }
 
@@ -564,21 +604,21 @@ namespace RPG2D
                 return null;
             }
 
-            if (!panel.ValidateConfig())
+            if (!panel.Initialize(config))
             {
                 Object.Destroy(panelObj);
                 return null;
             }
 
             panel.Close();
-            RegisterPanel(panel);
+
+            if (!RegisterPanel(panel))
+            {
+                Object.Destroy(panelObj);
+                return null;
+            }
 
             return panel;
-        }
-
-        public void SetPanelConfigDatabase(UIPanelConfigDatabase database)
-        {
-            panelConfigDatabase = database;
         }
 
         private bool TryGetOrLoadPanel(UIPanelId panelId, out UIPanelController panel)
@@ -592,9 +632,11 @@ namespace RPG2D
 
             panel = null;
 
+            var panelConfigDatabase = configSystem.UIPanelConfigDatabase;
+
             if (panelConfigDatabase == null)
             {
-                Debug.LogWarning($"未注册 UI 面板：{panelId}，且没有设置 UIPanelConfigDatabase");
+                Debug.LogWarning($"未注册 UI 面板：{panelId}，且 ConfigSystem 没有加载 UIPanelConfigDatabase");
                 return false;
             }
 
@@ -630,14 +672,14 @@ namespace RPG2D
             {
                 var panel = pair.Value;
 
-                if(panel == null) continue;
+                if (panel == null) continue;
 
                 snapshot.RegisteredPanelInfos.Add(CreatePanelStatusInfo(panel));
             }
 
             foreach (var panelId in openedPanelStack)
             {
-                if(!panels.TryGetValue(panelId, out var panel) || panel == null) continue;
+                if (!panels.TryGetValue(panelId, out var panel) || panel == null) continue;
 
                 snapshot.OpenedPanelInfos.Add(CreatePanelStatusInfo(panel));
             }

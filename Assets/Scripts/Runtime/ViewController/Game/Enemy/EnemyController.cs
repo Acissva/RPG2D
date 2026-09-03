@@ -5,7 +5,7 @@ namespace RPG2D
 {
     public class EnemyController : RPG2DController
     {
-        [SerializeField] private EnemyConfig config;
+        private EnemyConfig config;
 
         private Rigidbody2D mRigidbody2D;
         private Vector2 spawnPosition;
@@ -16,17 +16,14 @@ namespace RPG2D
 
         private void Awake()
         {
-            if(!TryGetComponent<Rigidbody2D>(out mRigidbody2D))
+            if (!TryGetComponent<Rigidbody2D>(out mRigidbody2D))
             {
                 Debug.LogError($"{typeof(EnemyController)} requires Rigidbody2D");
             }
 
-            if(config == null)
-            {
-                config = this.GetSystem<IConfigSystem>().EnemyConfig;
-            }
+            config = this.GetSystem<IConfigSystem>().EnemyConfig;
 
-            if(config == null)
+            if (config == null)
             {
                 Debug.LogError($"{typeof(EnemyController)} requires EnemyConfig");
                 enabled = false;

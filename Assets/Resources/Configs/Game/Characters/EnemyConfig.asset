@@ -15,7 +15,6 @@ MonoBehaviour:
   identity:
     enemyId: enemy_001
     displayName: Enemy
-    enemyPrefab: {fileID: 0}
     enemyType: 0
   stats:
     maxHP: 3

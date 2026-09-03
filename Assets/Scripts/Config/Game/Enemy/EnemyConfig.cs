@@ -54,12 +54,12 @@ namespace RPG2D
     {
         [SerializeField] private string enemyId = "enemy_001";
         [SerializeField] private string displayName = "enemy_001";
-        [SerializeField] private GameObject enemyPrefab;
+        [SerializeField] private string enemyPrefabKey;
         [SerializeField] private EnemyType enemyType = EnemyType.Melee;
 
         public string EnemyId => enemyId;
         public string DisplayNameKey => displayName;
-        public GameObject EnemyPrefab => enemyPrefab;
+        public string EnemyPrefabKey => enemyPrefabKey;
         public EnemyType EnemyType => enemyType;
 
         public void Validate()

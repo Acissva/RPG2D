@@ -8,7 +8,10 @@ namespace RPG2D
         PlayerConfig PlayerConfig { get; }
 
         EnemyConfig EnemyConfig { get; }
+
         QuestConfigDatabase QuestConfigDatabase { get; }
+
+        UIPanelConfigDatabase UIPanelConfigDatabase { get; }
     }
 
     public class ConfigSystem : AbstractSystem, IConfigSystem
@@ -19,12 +22,18 @@ namespace RPG2D
 
         public QuestConfigDatabase QuestConfigDatabase { get; private set; }
 
+        public UIPanelConfigDatabase UIPanelConfigDatabase { get; private set; }
+
+        private IAssetSystem assetSystem;
+
         protected override void OnInit()
         {
-            //TODO:暂时使用Resources加载，后续再考虑 Addressables 或专门的配置加载系统
-            PlayerConfig = Resources.Load<PlayerConfig>("Configs/Game/Characters/PlayerConfig");
-            EnemyConfig = Resources.Load<EnemyConfig>("Configs/Game/Characters/EnemyConfig");
-            QuestConfigDatabase = Resources.Load<QuestConfigDatabase>("Configs/Game/Quest/QuestConfigDatabase");
+            assetSystem = this.GetSystem<IAssetSystem>();
+
+            PlayerConfig = assetSystem.Load<PlayerConfig>("Configs/Game/Characters/PlayerConfig");
+            EnemyConfig = assetSystem.Load<EnemyConfig>("Configs/Game/Characters/EnemyConfig");
+            QuestConfigDatabase = assetSystem.Load<QuestConfigDatabase>("Configs/Game/Quest/QuestConfigDatabase");
+            UIPanelConfigDatabase = assetSystem.Load<UIPanelConfigDatabase>("Configs/UI/UIPanelConfigDatabase");
 
             if (PlayerConfig == null)
             {
@@ -39,6 +48,11 @@ namespace RPG2D
             if (QuestConfigDatabase == null)
             {
                 Debug.LogError("Can not load QuestConfigDatabase from Resources/Configs/Game/Quest/QuestConfigDatabase");
+            }
+
+            if (UIPanelConfigDatabase == null)
+            {
+                Debug.LogError("Can not load UIPanelConfigDatabase from Resources/Configs/UI/UIPanelConfigDatabase");
             }
         }
     }
