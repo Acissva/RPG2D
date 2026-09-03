@@ -34,7 +34,7 @@ namespace RPG2D
             }
 
             //TODO:后续修改为掉落多物体
-            GameObject prefab = Resources.Load<GameObject>(DropPrefabRoot + dropTableId);
+            GameObject prefab = this.GetSystem<IAssetSystem>().Load<GameObject>(DropPrefabRoot + dropTableId);
             GameObject loot = prefab != null
                 ? Object.Instantiate(prefab, position, Quaternion.identity, RPG2D.DropLootsParent)
                 : CreateFallbackLoot(position);
@@ -43,7 +43,7 @@ namespace RPG2D
 
             LootPickup pickup = loot.GetComponent<LootPickup>();
 
-            if(pickup == null)
+            if (pickup == null)
             {
                 pickup = loot.AddComponent<LootPickup>();
             }

@@ -20,6 +20,7 @@ namespace RPG2D
             //注册System
             this.RegisterSystem<IRuntimeUpdateSystem>(new RuntimeUpdateSystem());   //特殊：由于后面有几个系统会使用Update，所以放最前面
             this.RegisterSystem<IRPG2DInputSystem>(new RPG2DInputSystem());
+            this.RegisterSystem<IAssetSystem>(new AssetSystem());
             this.RegisterSystem<IConfigSystem>(new ConfigSystem());
             this.RegisterSystem<IQuestSystem>(new QuestSystem());
             this.RegisterSystem<ITimeSystem>(new TimeSystem());
