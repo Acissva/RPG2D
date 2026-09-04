@@ -164,8 +164,12 @@ MonoBehaviour:
   interactionId: chest_gt_001
   closedPromptText: "\u6253\u5F00\u5B9D\u7BB1"
   openedPromptText: "\u67E5\u770B\u5B9D\u7BB1"
+  speakerName: "\u65C1\u767D"
   openedMessage: "\u5B9D\u7BB1\u5DF2\u6253\u5F00"
   emptyMessage: "\u5B9D\u7BB1\u5DF2\u7ECF\u7A7A\u4E86"
+  rewardItems:
+  - itemId: item_gt_herb_001
+    count: 3
   startOpened: 0
   targetRenderer: {fileID: 0}
   openedSprite: {fileID: 0}

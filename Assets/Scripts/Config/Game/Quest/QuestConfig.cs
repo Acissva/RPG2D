@@ -19,11 +19,13 @@ namespace RPG2D
         [SerializeField] private string displayName = "小镇公告确认";
         [SerializeField, TextArea] private string description = "镇民希望你去查看公告牌，然后回来告诉他。";
         [SerializeField] private List<QuestObjectiveConfig> objectives = new();
+        [SerializeField] private List<RewardItemConfig> rewards = new();
 
         public string QuestId => questId;
         public string DisplayName => displayName;
         public string Description => description;
         public IReadOnlyList<QuestObjectiveConfig> Objectives => objectives;
+        public IReadOnlyList<RewardItemConfig> Rewards => rewards;
 
         private void OnValidate()
         {
@@ -33,10 +35,16 @@ namespace RPG2D
             }
 
             objectives ??= new List<QuestObjectiveConfig>();
+            rewards ??= new List<RewardItemConfig>();
 
             for (int i = 0; i < objectives.Count; i++)
             {
                 objectives[i]?.Validate();
+            }
+
+            for (int i = 0; i < rewards.Count; i++)
+            {
+                rewards[i]?.Validate();
             }
         }
     }

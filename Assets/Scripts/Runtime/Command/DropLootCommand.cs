@@ -8,10 +8,10 @@ namespace RPG2D
         private const string DropPrefabRoot = "Prefabs/Drops/";
         private static Sprite defaultLootSprite;
 
-        private string dropTableId;
-        private Vector2 position;
-        private string sourceEnemyId;
-        private int experienceReward;
+        private readonly string dropTableId;
+        private readonly Vector2 position;
+        private readonly string sourceEnemyId;
+        private readonly int experienceReward;
 
         public DropLootCommand(string dropTableId, Vector2 position, string sourceEnemyId, int experienceReward)
         {
@@ -22,7 +22,7 @@ namespace RPG2D
         }
 
         public DropLootCommand(string dropTableId)
-            : this(dropTableId, Vector3.zero, string.Empty, 0)
+            : this(dropTableId, Vector2.zero, string.Empty, 0)
         {
         }
 
@@ -33,13 +33,64 @@ namespace RPG2D
                 return;
             }
 
-            //TODO:后续修改为掉落多物体
-            GameObject prefab = this.GetSystem<IAssetSystem>().Load<GameObject>(DropPrefabRoot + dropTableId);
-            GameObject loot = prefab != null
-                ? Object.Instantiate(prefab, position, Quaternion.identity, RPG2D.DropLootsParent)
-                : CreateFallbackLoot(position);
+            DropTableConfig dropTable = GetDropTableConfig();
 
-            loot.name = $"Loot_{dropTableId}";
+            if (dropTable == null)
+            {
+                Debug.LogWarning($"生成掉落失败：找不到掉落表，DropTableId={dropTableId}");
+                return;
+            }
+
+            if (dropTable.Entries.Count <= 0)
+            {
+                Debug.LogWarning($"生成掉落失败：掉落表为空，DropTableId={dropTableId}");
+                return;
+            }
+
+            for (int i = 0; i < dropTable.Entries.Count; i++)
+            {
+                DropEntryConfig entry = dropTable.Entries[i];
+
+                if (entry == null)
+                {
+                    continue;
+                }
+
+                if (!CanDropItem(entry.ItemId))
+                {
+                    Debug.LogWarning($"生成掉落失败：找不到物品配置，DropTableId={dropTableId}, ItemId={entry.ItemId}");
+                    continue;
+                }
+
+                int count = Random.Range(entry.MinCount, entry.MaxCount + 1);
+                CreateLoot(entry.ItemId, count, i);
+            }
+
+            if (experienceReward > 0)
+            {
+                Debug.Log($"敌人【{sourceEnemyId}】经验奖励暂未接入：{experienceReward}");
+            }
+        }
+
+        private DropTableConfig GetDropTableConfig()
+        {
+            IConfigSystem configSystem = this.GetSystem<IConfigSystem>();
+
+            return configSystem.DropTableConfigDatabase == null
+                ? null
+                : configSystem.DropTableConfigDatabase.GetDropTableConfig(dropTableId);
+        }
+
+        private void CreateLoot(string itemId, int count, int index)
+        {
+            GameObject prefab = this.GetSystem<IAssetSystem>().Load<GameObject>(DropPrefabRoot + dropTableId);
+            Vector2 spawnPosition = position + new Vector2(index * 0.25f, 0f);
+
+            GameObject loot = prefab != null
+                ? Object.Instantiate(prefab, spawnPosition, Quaternion.identity, RPG2D.DropLootsParent)
+                : CreateFallbackLoot(spawnPosition);
+
+            loot.name = $"Loot_{itemId}";
 
             LootPickup pickup = loot.GetComponent<LootPickup>();
 
@@ -48,7 +99,7 @@ namespace RPG2D
                 pickup = loot.AddComponent<LootPickup>();
             }
 
-            pickup.Init(dropTableId, sourceEnemyId, experienceReward);
+            pickup.Init(itemId, count, sourceEnemyId);
         }
 
         private GameObject CreateFallbackLoot(Vector3 spawnPosition)
@@ -95,5 +146,12 @@ namespace RPG2D
             return defaultLootSprite;
         }
 
+        private bool CanDropItem(string itemId)
+        {
+            IConfigSystem configSystem = this.GetSystem<IConfigSystem>();
+
+            return configSystem.ItemConfigDatabase != null
+                && configSystem.ItemConfigDatabase.ContainsItem(itemId);
+        }
     }
 }

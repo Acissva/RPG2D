@@ -16,6 +16,8 @@ namespace RPG2D
         [SerializeField] private string openedMessage = "宝箱已打开";
         [SerializeField] private string emptyMessage = "宝箱已经空了";
 
+        [SerializeField] private List<RewardItemConfig> rewardItems = new();
+
         [SerializeField] private bool startOpened;
         [SerializeField] private SpriteRenderer targetRenderer;
         [SerializeField] private Sprite openedSprite;
@@ -65,6 +67,15 @@ namespace RPG2D
 
             isOpened = true;
             RefreshVisual();
+
+            if (rewardItems.Count > 0)
+            {
+                this.SendCommand(new GrantRewardCommand(
+                    rewardItems,
+                    RewardSourceType.Chest,
+                    interactionId));
+            }
+
             ShowMessage(openedMessage);
         }
 
@@ -108,6 +119,16 @@ namespace RPG2D
             dialogueLines.Add(new DialogueLine(speakerName, text));
 
             this.GetSystem<IDialogueSystem>().StartDialogue(dialogueLines);
+        }
+
+        private void OnValidate()
+        {
+            rewardItems ??= new List<RewardItemConfig>();
+
+            for (int i = 0; i < rewardItems.Count; i++)
+            {
+                rewardItems[i]?.Validate();
+            }
         }
     }
 }
