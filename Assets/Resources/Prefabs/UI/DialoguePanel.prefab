@@ -441,7 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc1e7952fe562bb4aaa46c816886759a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: 3da9b1a4e9c480a4ba88ec28b2b6a909, type: 2}
+  panelId: 400
   speakerNameText: {fileID: 2961383701279573424}
   bodyText: {fileID: 5852578790943681515}
   hintText: {fileID: 1583351593837032683}

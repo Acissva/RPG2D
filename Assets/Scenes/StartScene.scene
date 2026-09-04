@@ -284,7 +284,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultOpenPanels: 
-  panelConfigDatabase: {fileID: 0}
   autoCreateMissingRoots: 0
   warnMissingRoots: 0
   hudRoot: {fileID: 0}
@@ -765,7 +764,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30f1b14918e9ae845b7dc74a665ecf80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: 7c5493bd69b72d44e9eace6228200d46, type: 2}
+  panelId: 300
 --- !u!1 &1205409631
 GameObject:
   m_ObjectHideFlags: 0
@@ -1360,7 +1359,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultOpenPanels: 2c010000
-  panelConfigDatabase: {fileID: 11400000, guid: fafccc1cece112d49835f870d2745283, type: 2}
   autoCreateMissingRoots: 1
   warnMissingRoots: 1
   hudRoot: {fileID: 0}
@@ -1904,7 +1902,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7d250c02b1a53f4ba2fcbd3d55b6203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: 5b052f2c326df3841bc4b805cd38f4e4, type: 2}
+  panelId: 200
   loadingText: {fileID: 1065672849}
   defaultText: "\u52A0\u8F7D\u4E2D..."
 --- !u!114 &2143334711

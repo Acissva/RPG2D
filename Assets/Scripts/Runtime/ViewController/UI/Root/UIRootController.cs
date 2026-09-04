@@ -14,8 +14,6 @@ namespace RPG2D
 
         [SerializeField] private List<UIPanelId> defaultOpenPanels = new();
 
-        [SerializeField] private UIPanelConfigDatabase panelConfigDatabase;
-
         private IUISystem uiSystem;
 
         [SerializeField] private bool autoCreateMissingRoots = true;
@@ -44,22 +42,14 @@ namespace RPG2D
             uiSystem = this.GetSystem<IUISystem>();
             uiSystem.RegisterRoot(this);
 
-            if (panelConfigDatabase != null)
-            {
-                uiSystem.SetPanelConfigDatabase(panelConfigDatabase);
-            }
-
             var panels = GetComponentsInChildren<UIPanelController>(true);
 
             foreach (var panel in panels)
             {
-                if (!panel.ValidateConfig())
+                if (uiSystem.RegisterPanel(panel))
                 {
-                    continue;
+                    registeredPanels.Add(panel);
                 }
-
-                uiSystem.RegisterPanel(panel);
-                registeredPanels.Add(panel);
             }
 
             CloseRegisteredPanels();

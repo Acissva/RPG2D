@@ -8,7 +8,14 @@ namespace RPG2D
         PlayerConfig PlayerConfig { get; }
 
         EnemyConfig EnemyConfig { get; }
+
         QuestConfigDatabase QuestConfigDatabase { get; }
+
+        UIPanelConfigDatabase UIPanelConfigDatabase { get; }
+
+        ItemConfigDatabase ItemConfigDatabase { get; }
+
+        DropTableConfigDatabase DropTableConfigDatabase { get; }
     }
 
     public class ConfigSystem : AbstractSystem, IConfigSystem
@@ -19,12 +26,24 @@ namespace RPG2D
 
         public QuestConfigDatabase QuestConfigDatabase { get; private set; }
 
+        public UIPanelConfigDatabase UIPanelConfigDatabase { get; private set; }
+
+        public ItemConfigDatabase ItemConfigDatabase { get; private set; }
+
+        public DropTableConfigDatabase DropTableConfigDatabase { get; private set; }
+
+        private IAssetSystem assetSystem;
+
         protected override void OnInit()
         {
-            //TODO:暂时使用Resources加载，后续再考虑 Addressables 或专门的配置加载系统
-            PlayerConfig = Resources.Load<PlayerConfig>("Configs/Game/Characters/PlayerConfig");
-            EnemyConfig = Resources.Load<EnemyConfig>("Configs/Game/Characters/EnemyConfig");
-            QuestConfigDatabase = Resources.Load<QuestConfigDatabase>("Configs/Game/Quest/QuestConfigDatabase");
+            assetSystem = this.GetSystem<IAssetSystem>();
+
+            PlayerConfig = assetSystem.Load<PlayerConfig>("Configs/Game/Characters/PlayerConfig");
+            EnemyConfig = assetSystem.Load<EnemyConfig>("Configs/Game/Characters/EnemyConfig");
+            QuestConfigDatabase = assetSystem.Load<QuestConfigDatabase>("Configs/Game/Quest/QuestConfigDatabase");
+            UIPanelConfigDatabase = assetSystem.Load<UIPanelConfigDatabase>("Configs/UI/UIPanelConfigDatabase");
+            ItemConfigDatabase = assetSystem.Load<ItemConfigDatabase>("Configs/Game/Item/ItemConfigDatabase");
+            DropTableConfigDatabase = assetSystem.Load<DropTableConfigDatabase>("Configs/Game/Drop/DropTableConfigDatabase");
 
             if (PlayerConfig == null)
             {
@@ -40,7 +59,21 @@ namespace RPG2D
             {
                 Debug.LogError("Can not load QuestConfigDatabase from Resources/Configs/Game/Quest/QuestConfigDatabase");
             }
+
+            if (UIPanelConfigDatabase == null)
+            {
+                Debug.LogError("Can not load UIPanelConfigDatabase from Resources/Configs/UI/UIPanelConfigDatabase");
+            }
+
+            if (ItemConfigDatabase == null)
+            {
+                Debug.LogError("Can not load ItemConfigDatabase from Resources/Configs/Game/Item/ItemConfigDatabase");
+            }
+
+            if (DropTableConfigDatabase == null)
+            {
+                Debug.LogError("Can not load DropTableConfigDatabase from Resources/Configs/Game/Drop/DropTableConfigDatabase");
+            }
         }
     }
-
 }
