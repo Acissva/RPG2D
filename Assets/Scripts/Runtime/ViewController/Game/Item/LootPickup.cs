@@ -1,24 +1,38 @@
+using QFramework;
 using UnityEngine;
 
 namespace RPG2D
 {
-    public class LootPickup : MonoBehaviour
+    public class LootPickup : RPG2DController
     {
-        [SerializeField] private string dropTableId;
-        [SerializeField] private string sourceEnemyId;
-        [SerializeField] private int experienceReward;
+        [SerializeField] private string itemId = "item_gt_slime_jelly_001";
+        [SerializeField, Min(1)] private int count = 1;
+        [SerializeField] private string sourceId;
 
-        public void Init(string dropTableId, string sourceEnemyId, int experienceReward)
+        public void Init(string itemId, int count, string sourceId)
         {
-            this.dropTableId = dropTableId;
-            this.sourceEnemyId = sourceEnemyId;
-            this.experienceReward = Mathf.Max(0, experienceReward);
+            this.itemId = itemId;
+            this.count = Mathf.Max(1, count);
+            this.sourceId = sourceId;
             EnsureTrigger();
         }
 
         private void Awake()
         {
             EnsureTrigger();
+        }
+
+        private void OnValidate()
+        {
+            if (string.IsNullOrWhiteSpace(itemId))
+            {
+                itemId = "item_gt_slime_jelly_001";
+            }
+
+            if (count < 1)
+            {
+                count = 1;
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -28,7 +42,15 @@ namespace RPG2D
                 return;
             }
 
-            Debug.Log($"拾取掉落：{dropTableId}，来源敌人：{sourceEnemyId}，经验：{experienceReward}");
+            bool added = this.SendCommand(new AddItemCommand(itemId, count));
+
+            if (!added)
+            {
+                Debug.LogWarning($"拾取掉落失败：ItemId={itemId}, Count={count}, SourceId={sourceId}", this);
+                return;
+            }
+
+            Debug.Log($"拾取掉落：{itemId} x{count}，来源：{sourceId}");
             Destroy(gameObject);
         }
 
@@ -48,9 +70,10 @@ namespace RPG2D
             if (rigidbody2D == null)
             {
                 rigidbody2D = gameObject.AddComponent<Rigidbody2D>();
-                rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
-                rigidbody2D.gravityScale = 0f;
             }
+
+            rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
+            rigidbody2D.gravityScale = 0f;
         }
     }
 }

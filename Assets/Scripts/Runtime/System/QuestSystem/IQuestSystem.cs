@@ -19,11 +19,13 @@ namespace RPG2D
     {
         private IQuestModel questModel;
         private IConfigSystem configSystem;
+        private IRewardSystem rewardSystem;
 
         protected override void OnInit()
         {
             questModel = this.GetModel<IQuestModel>();
             configSystem = this.GetSystem<IConfigSystem>();
+            rewardSystem = this.GetSystem<IRewardSystem>();
         }
 
         public QuestStatus GetQuestStatus(string questId)
@@ -228,7 +230,17 @@ namespace RPG2D
             }
 
             QuestLogEntry entry = GetQuestLogEntry(questId);
+            QuestConfig config = GetQuestConfig(questId);
+
             entry.SetStatus(QuestStatus.Completed);
+
+            if (config != null && config.Rewards.Count > 0)
+            {
+                rewardSystem.GrantRewards(
+                    config.Rewards,
+                    RewardSourceType.Quest,
+                    questId);
+            }
 
             IncreaseRevision();
 

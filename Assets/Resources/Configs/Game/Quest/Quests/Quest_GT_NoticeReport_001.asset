@@ -21,3 +21,8 @@ MonoBehaviour:
     description: "\u67E5\u770B\u8349\u5730\u5C0F\u9547\u516C\u544A\u724C"
     targetInteractionId: notice_board_gt_001
     requiredCount: 1
+  rewards:
+  - itemId: item_gt_notice_token_001
+    count: 1
+  - itemId: item_gt_herb_001
+    count: 2
