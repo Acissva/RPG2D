@@ -49,11 +49,6 @@ namespace RPG2D
                     Count = count,
                     NewTotalCount = stack.Count
                 });
-
-                this.SendEvent(new InventoryChangedEvent
-                {
-                    Revision = inventoryModel.InventoryRevision.Value
-                });
             }
 
             return changed;
@@ -84,11 +79,6 @@ namespace RPG2D
             }
 
             IncreaseRevision();
-
-            this.SendEvent(new InventoryChangedEvent
-            {
-                Revision = inventoryModel.InventoryRevision.Value
-            });
 
             return true;
         }

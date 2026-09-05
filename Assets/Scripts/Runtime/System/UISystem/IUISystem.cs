@@ -376,6 +376,8 @@ namespace RPG2D
 
             uiModel.TopPanelId.Value = topPanelId;
             uiModel.InputBlocked.Value = HasInputBlockingPanel();
+
+            uiModel.UIRevision.Value++;
         }
 
         public void CloseTopPanel()

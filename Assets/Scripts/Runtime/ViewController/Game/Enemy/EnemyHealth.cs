@@ -1,5 +1,4 @@
 using QFramework;
-using RPG2D.Utility;
 using UnityEngine;
 
 namespace RPG2D
@@ -97,6 +96,5 @@ namespace RPG2D
                 Destroy(gameObject);
             });
         }
-
     }
 }

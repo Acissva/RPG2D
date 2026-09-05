@@ -11,7 +11,7 @@ namespace RPG2D
 
     [CreateAssetMenu(
        fileName = "ItemConfig",
-       menuName = "RPG2D/Config/Game/Item Config")]
+       menuName = "RPG2D/Config/Game/Item/Items/Item Config")]
     public class ItemConfig : ScriptableObject
     {
         [SerializeField] private string itemId = "item_gt_herb_001";

@@ -12,30 +12,17 @@ namespace RPG2D
         [SerializeField] private Color selectedColor = new Color(0.7f, 0.9f, 1f, 1f);
 
         private Image image;
+        private IUIModel uiModel;
         private IUISystem uiSystem;
 
         private void Awake()
         {
             image = GetComponent<Image>();
+            uiModel = this.GetModel<IUIModel>();
             uiSystem = this.GetSystem<IUISystem>();
 
-            this.RegisterEvent<UIPanelOpenedEvent>(OnPanelOpened).UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<UIPanelClosedEvent>(OnPanelClosed).UnRegisterWhenGameObjectDestroyed(gameObject);
-        }
-
-        private void Start()
-        {
-            Refresh();
-        }
-
-        private void OnPanelOpened(UIPanelOpenedEvent e)
-        {
-            Refresh();
-        }
-
-        private void OnPanelClosed(UIPanelClosedEvent e)
-        {
-            Refresh();
+            uiModel.UIRevision.RegisterWithInitValue(_ => Refresh())
+                .UnRegisterWhenGameObjectDestroyed(gameObject);
         }
 
         private void Refresh()
@@ -45,7 +32,5 @@ namespace RPG2D
             bool selected = uiSystem.IsPanelOpen(targetPanelId);
             image.color = selected ? selectedColor : normalColor;
         }
-
-
     }
 }

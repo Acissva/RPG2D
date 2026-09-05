@@ -4,7 +4,7 @@ namespace RPG2D
 {
     [CreateAssetMenu(
         fileName = "PlayerConfig",
-        menuName = "RPG2D/Config/Game/Player Config")]
+        menuName = "RPG2D/Config/Game/Character/Player/Player Config")]
     public class PlayerConfig : ScriptableObject
     {
         [SerializeField, Min(0)] private int initialHP = 5;
