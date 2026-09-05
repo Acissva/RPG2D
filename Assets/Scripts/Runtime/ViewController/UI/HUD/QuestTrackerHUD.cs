@@ -15,27 +15,16 @@ namespace RPG2D
         [SerializeField] private string readyToTurnInStatusText = "可交付";
         [SerializeField] private string completedStatusText = "已完成";
 
+        private IQuestModel questModel;
         private IQuestSystem questSystem;
 
         private void Awake()
         {
+            questModel = this.GetModel<IQuestModel>();
             questSystem = this.GetSystem<IQuestSystem>();
 
-            this.RegisterEvent<QuestAcceptedEvent>(e => Refresh())
+            questModel.QuestRevision.RegisterWithInitValue(_ => Refresh())
                 .UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<QuestObjectiveProgressChangedEvent>(e => Refresh())
-                .UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<QuestReadyToTurnInEvent>(e => Refresh())
-                .UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<QuestCompletedEvent>(e => Refresh())
-                .UnRegisterWhenGameObjectDestroyed(gameObject);
-            this.RegisterEvent<TrackedQuestChangedEvent>(e => Refresh())
-                .UnRegisterWhenGameObjectDestroyed(gameObject);
-        }
-
-        private void Start()
-        {
-            Refresh();
         }
 
         private void Refresh()

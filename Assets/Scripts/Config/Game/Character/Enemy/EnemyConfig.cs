@@ -14,7 +14,7 @@ namespace RPG2D
 
     [CreateAssetMenu(
         fileName = "EnemyConfig",
-        menuName = "RPG2D/Config/Game/Enemy Config")]
+        menuName = "RPG2D/Config/Game/Character/Enemy/Enemy Config")]
     public class EnemyConfig : ScriptableObject
     {
         [SerializeField] private EnemyIdentityConfig identity = new EnemyIdentityConfig();

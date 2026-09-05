@@ -6,7 +6,7 @@ namespace RPG2D
 {
     [CreateAssetMenu(
         fileName = "DropTableConfig",
-        menuName = "RPG2D/Config/Game/Drop Table Config")]
+        menuName = "RPG2D/Config/Game/Drop/Tables/Drop Table Config")]
     public class DropTableConfig : ScriptableObject
     {
         [SerializeField] private string dropTableId = "drop_enemy_001";

@@ -20,7 +20,7 @@ namespace RPG2D
 
         private void Awake()
         {
-            if(hitCollider == null)
+            if (hitCollider == null)
             {
                 hitCollider = GetComponent<Collider2D>();
             }
@@ -31,8 +31,8 @@ namespace RPG2D
                 enabled = false;
                 return;
             }
-            
-            if(targetLayers.value == 0)
+
+            if (targetLayers.value == 0)
             {
                 Debug.LogWarning($"{nameof(AttackHitBox)} targetLayers is empty. This hitbox will not hit anything.", this);
             }
@@ -45,7 +45,7 @@ namespace RPG2D
         //命中开始帧调用
         public void Open(DamageInfo info)
         {
-            if(!isValid) return;
+            if (!isValid) return;
 
             damageInfo = info;
             hitTargets.Clear();
@@ -61,11 +61,11 @@ namespace RPG2D
         {
             isOpen = false;
 
-            if(hitCollider != null)
+            if (hitCollider != null)
             {
                 hitCollider.enabled = false;
             }
-            
+
             hitTargets.Clear();
         }
 
@@ -104,9 +104,9 @@ namespace RPG2D
 
         private void TryHit(Collider2D other)
         {
-            if(!isOpen || other == null) return;
+            if (!isOpen || other == null) return;
 
-            if(((1 << other.gameObject.layer) & targetLayers.value) == 0)
+            if (((1 << other.gameObject.layer) & targetLayers.value) == 0)
             {
                 return;
             }
@@ -115,8 +115,8 @@ namespace RPG2D
             //GetComponentInParent 会先查询自己，然后向上查询父物体，直到根节点
             IDamageable damageable = other.GetComponentInParent<IDamageable>();
 
-            if(damageable == null) return;
-            if(hitTargets.Contains(damageable)) return;
+            if (damageable == null) return;
+            if (hitTargets.Contains(damageable)) return;
             if (damageInfo.Attacker != null && other.transform.IsChildOf(damageInfo.Attacker.transform))
             {
                 return;
@@ -127,8 +127,5 @@ namespace RPG2D
             damageInfo.HitPoint = other.ClosestPoint(transform.position);
             damageable.TakeDamage(damageInfo);
         }
-
-
-
     }
 }

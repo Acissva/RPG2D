@@ -5,7 +5,7 @@ namespace RPG2D
 {
     [CreateAssetMenu(
        fileName = "ItemConfigDatabase",
-       menuName = "RPG2D/Config/Game/Item Config Database")]
+       menuName = "RPG2D/Config/Game/Item/Item Config Database")]
     public class ItemConfigDatabase : ScriptableObject
     {
         [SerializeField] private List<ItemConfig> items = new();

@@ -6,7 +6,7 @@ namespace RPG2D
     //全部任务的目录 / 索引
     [CreateAssetMenu(
         fileName = "QuestConfigDatabase",
-        menuName = "RPG2D/Config/Game/Quest Config Database")]
+        menuName = "RPG2D/Config/Game/Quest/Quest Config Database")]
     public class QuestConfigDatabase : ScriptableObject
     {
         [SerializeField] private List<QuestConfig> quests = new();

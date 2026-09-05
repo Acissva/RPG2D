@@ -9,7 +9,7 @@ namespace RPG2D
         string CurrentSceneName { get; }
         string LoadingSceneName { get; }
         bool IsLoading { get; }
-        float LoadingProgress { get; }
+        BindableProperty<float> LoadingProgress { get; }
 
         void LoadStartScene();
         void LoadMainGameScene();
@@ -26,7 +26,7 @@ namespace RPG2D
         private AsyncOperation loadingOperation;
         private string loadingSceneName;
         private bool isLoading;
-        private float loadingProgress;
+        private BindableProperty<float> loadingProgress = new BindableProperty<float>(0f);
 
         public string CurrentSceneName => SceneManager.GetActiveScene().name;
 
@@ -34,7 +34,7 @@ namespace RPG2D
 
         public bool IsLoading => isLoading;
 
-        public float LoadingProgress => loadingProgress;
+        public BindableProperty<float> LoadingProgress => loadingProgress;
 
 
         protected override void OnInit()
@@ -77,7 +77,7 @@ namespace RPG2D
                 return;
             }
 
-            loadingProgress = 0f;
+            loadingProgress.Value = 0f;
             isLoading = true;
             loadingSceneName = sceneName;
 
@@ -128,13 +128,7 @@ namespace RPG2D
         {
             isLoading = false;
 
-            loadingProgress = 1f;
-
-            this.SendEvent(new SceneLoadProgressEvent
-            {
-                SceneName = loadingSceneName,
-                Progress = loadingProgress
-            });
+            loadingProgress.Value = 1f;
 
             this.SendEvent(new SceneLoadCompletedEvent
             {
@@ -154,24 +148,18 @@ namespace RPG2D
             //这里意思是把 Unity 的 0 ~ 0.9 映射成 UI 上更好理解的 0 ~ 1
             float progress = Mathf.Clamp01(loadingOperation.progress / 0.9f);
 
-            if(Mathf.Approximately(progress, loadingProgress))
+            if (Mathf.Approximately(progress, loadingProgress.Value))
             {
                 return;
             }
 
-            loadingProgress = progress;
-
-            this.SendEvent(new SceneLoadProgressEvent
-            {
-                SceneName = loadingSceneName,
-                Progress = loadingProgress,
-            });
+            loadingProgress.Value = progress;
         }
 
         private void FailLoading(string fromSceneName, string toSceneName, string reason)
         {
             isLoading = false;
-            loadingProgress = 0f;
+            loadingProgress.Value = 0f;
             loadingOperation = null;
             loadingSceneName = string.Empty;
 

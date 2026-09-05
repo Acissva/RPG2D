@@ -5,7 +5,7 @@ namespace RPG2D
 {
     public class DropLootCommand : AbstractCommand
     {
-        private const string DropPrefabRoot = "Prefabs/Drops/";
+        private const string DropPrefabRoot = "Prefab/Drop/";
         private static Sprite defaultLootSprite;
 
         private readonly string dropTableId;

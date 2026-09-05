@@ -34,45 +34,52 @@ namespace RPG2D
 
         private IAssetSystem assetSystem;
 
+        private const string PlayerConfigPath = "Config/Game/Character/Player/PlayerConfig";
+        private const string EnemyConfigPath = "Config/Game/Character/Enemy/EnemyConfig";
+        private const string QuestConfigDatabasePath = "Config/Game/Quest/QuestConfigDatabase";
+        private const string UIPanelConfigDatabasePath = "Config/UI/UIPanelConfigDatabase";
+        private const string ItemConfigDatabasePath = "Config/Game/Item/ItemConfigDatabase";
+        private const string DropTableConfigDatabasePath = "Config/Game/Drop/DropTableConfigDatabase";
+
         protected override void OnInit()
         {
             assetSystem = this.GetSystem<IAssetSystem>();
 
-            PlayerConfig = assetSystem.Load<PlayerConfig>("Configs/Game/Characters/PlayerConfig");
-            EnemyConfig = assetSystem.Load<EnemyConfig>("Configs/Game/Characters/EnemyConfig");
-            QuestConfigDatabase = assetSystem.Load<QuestConfigDatabase>("Configs/Game/Quest/QuestConfigDatabase");
-            UIPanelConfigDatabase = assetSystem.Load<UIPanelConfigDatabase>("Configs/UI/UIPanelConfigDatabase");
-            ItemConfigDatabase = assetSystem.Load<ItemConfigDatabase>("Configs/Game/Item/ItemConfigDatabase");
-            DropTableConfigDatabase = assetSystem.Load<DropTableConfigDatabase>("Configs/Game/Drop/DropTableConfigDatabase");
+            PlayerConfig = assetSystem.Load<PlayerConfig>(PlayerConfigPath);
+            EnemyConfig = assetSystem.Load<EnemyConfig>(EnemyConfigPath);
+            QuestConfigDatabase = assetSystem.Load<QuestConfigDatabase>(QuestConfigDatabasePath);
+            UIPanelConfigDatabase = assetSystem.Load<UIPanelConfigDatabase>(UIPanelConfigDatabasePath);
+            ItemConfigDatabase = assetSystem.Load<ItemConfigDatabase>(ItemConfigDatabasePath);
+            DropTableConfigDatabase = assetSystem.Load<DropTableConfigDatabase>(DropTableConfigDatabasePath);
 
             if (PlayerConfig == null)
             {
-                Debug.LogError("Can not load PlayerConfig from Resources/Configs/Game/Characters/PlayerConfig");
+                Debug.LogError("Can not load PlayerConfig from " + PlayerConfigPath);
             }
 
             if (EnemyConfig == null)
             {
-                Debug.LogError("Can not load EnemyConfig from Resources/Configs/Game/Characters/EnemyConfig");
+                Debug.LogError("Can not load EnemyConfig from " + EnemyConfigPath);
             }
 
             if (QuestConfigDatabase == null)
             {
-                Debug.LogError("Can not load QuestConfigDatabase from Resources/Configs/Game/Quest/QuestConfigDatabase");
+                Debug.LogError("Can not load QuestConfigDatabase from " + QuestConfigDatabasePath);
             }
 
             if (UIPanelConfigDatabase == null)
             {
-                Debug.LogError("Can not load UIPanelConfigDatabase from Resources/Configs/UI/UIPanelConfigDatabase");
+                Debug.LogError("Can not load UIPanelConfigDatabase from " + UIPanelConfigDatabasePath);
             }
 
             if (ItemConfigDatabase == null)
             {
-                Debug.LogError("Can not load ItemConfigDatabase from Resources/Configs/Game/Item/ItemConfigDatabase");
+                Debug.LogError("Can not load ItemConfigDatabase from " + ItemConfigDatabasePath);
             }
 
             if (DropTableConfigDatabase == null)
             {
-                Debug.LogError("Can not load DropTableConfigDatabase from Resources/Configs/Game/Drop/DropTableConfigDatabase");
+                Debug.LogError("Can not load DropTableConfigDatabase from " + DropTableConfigDatabasePath);
             }
         }
     }
