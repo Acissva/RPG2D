@@ -16,6 +16,8 @@ namespace RPG2D
         ItemConfigDatabase ItemConfigDatabase { get; }
 
         DropTableConfigDatabase DropTableConfigDatabase { get; }
+
+        DungeonConfigDatabase DungeonConfigDatabase { get; }
     }
 
     public class ConfigSystem : AbstractSystem, IConfigSystem
@@ -32,6 +34,8 @@ namespace RPG2D
 
         public DropTableConfigDatabase DropTableConfigDatabase { get; private set; }
 
+        public DungeonConfigDatabase DungeonConfigDatabase { get; private set; }
+
         private IAssetSystem assetSystem;
 
         private const string PlayerConfigPath = "Config/Game/Character/Player/PlayerConfig";
@@ -40,6 +44,7 @@ namespace RPG2D
         private const string UIPanelConfigDatabasePath = "Config/UI/UIPanelConfigDatabase";
         private const string ItemConfigDatabasePath = "Config/Game/Item/ItemConfigDatabase";
         private const string DropTableConfigDatabasePath = "Config/Game/Drop/DropTableConfigDatabase";
+        private const string DungeonConfigDatabasePath = "Config/Game/Dungeon/DungeonConfigDatabase";
 
         protected override void OnInit()
         {
@@ -51,6 +56,7 @@ namespace RPG2D
             UIPanelConfigDatabase = assetSystem.Load<UIPanelConfigDatabase>(UIPanelConfigDatabasePath);
             ItemConfigDatabase = assetSystem.Load<ItemConfigDatabase>(ItemConfigDatabasePath);
             DropTableConfigDatabase = assetSystem.Load<DropTableConfigDatabase>(DropTableConfigDatabasePath);
+            DungeonConfigDatabase = assetSystem.Load<DungeonConfigDatabase>(DungeonConfigDatabasePath);
 
             if (PlayerConfig == null)
             {
@@ -80,6 +86,11 @@ namespace RPG2D
             if (DropTableConfigDatabase == null)
             {
                 Debug.LogError("Can not load DropTableConfigDatabase from " + DropTableConfigDatabasePath);
+            }
+
+            if (DungeonConfigDatabase == null)
+            {
+                Debug.LogError("Can not load DungeonConfigDatabase from " + DungeonConfigDatabasePath);
             }
         }
     }

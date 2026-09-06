@@ -5,6 +5,7 @@ namespace RPG2D
         Unknown,
         Quest,
         Chest,
-        Drop
+        Drop,
+        Dungeon,
     }
 }
