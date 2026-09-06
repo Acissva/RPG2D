@@ -12,7 +12,7 @@ namespace RPG2D
     //单个任务的静态配置
     [CreateAssetMenu(
         fileName = "QuestConfig",
-        menuName = "RPG2D/Config/Game/Quest Config")]
+        menuName = "RPG2D/Config/Game/Quest/Quests/Quest Config")]
     public class QuestConfig : ScriptableObject
     {
         [SerializeField] private string questId = "quest_gt_notice_report_001";

@@ -5,7 +5,7 @@ namespace RPG2D
 {
     [CreateAssetMenu(
         fileName = "DropTableConfigDatabase",
-        menuName = "RPG2D/Config/Game/Drop Table Config Database")]
+        menuName = "RPG2D/Config/Game/Drop/Drop Table Config Database")]
     public class DropTableConfigDatabase : ScriptableObject
     {
         [SerializeField] private List<DropTableConfig> dropTables = new();

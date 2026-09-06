@@ -14,24 +14,19 @@ namespace RPG2D
 
         //StringBuilder 是更好的习惯，尤其 UI 可能频繁刷新时，相比直接字符串相加，可以减少不必要的字符串分配
         private readonly StringBuilder stringBuilder = new();
+        private IInventoryModel inventoryModel;
         private IInventorySystem inventorySystem;
 
         private void Awake()
         {
+            inventoryModel = this.GetModel<IInventoryModel>();
             inventorySystem = this.GetSystem<IInventorySystem>();
 
-            this.RegisterEvent<InventoryChangedEvent>(OnInventoryChanged)
+            inventoryModel.InventoryRevision.RegisterWithInitValue(_ => Refresh())
                 .UnRegisterWhenGameObjectDestroyed(gameObject);
-
-            Refresh();
         }
 
         protected override void OnOpen()
-        {
-            Refresh();
-        }
-
-        private void OnInventoryChanged(InventoryChangedEvent e)
         {
             Refresh();
         }

@@ -9,20 +9,19 @@ namespace RPG2D
         [SerializeField] private TextMeshProUGUI loadingText;
         [SerializeField] private string defaultText = "加载中...";
 
+        private ISceneSystem sceneSystem;
+
         private void Awake()
         {
-            this.RegisterEvent<SceneLoadProgressEvent>(OnSceneLoadProgress)
+            sceneSystem = this.GetSystem<ISceneSystem>();
+
+            sceneSystem.LoadingProgress.RegisterWithInitValue(RefreshProgress)
                 .UnRegisterWhenGameObjectDestroyed(gameObject);
         }
 
         protected override void OnOpen()
         {
-            RefreshProgress(0f);
-        }
-
-        private void OnSceneLoadProgress(SceneLoadProgressEvent e)
-        {
-            RefreshProgress(e.Progress);
+            RefreshProgress(sceneSystem.LoadingProgress.Value);
         }
 
         private void RefreshProgress(float progress)
@@ -35,7 +34,5 @@ namespace RPG2D
             int percent = Mathf.RoundToInt(progress * 100f);
             loadingText.text = $"{defaultText} {percent}%";
         }
-        
     }
 }
-

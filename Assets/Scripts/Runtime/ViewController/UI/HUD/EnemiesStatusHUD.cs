@@ -38,7 +38,7 @@ namespace RPG2D
 
             if (healthBarViewPrefab == null)
             {
-                healthBarViewPrefab = assetSystem.Load<GameObject>("Prefabs/UI/HealthBar");
+                healthBarViewPrefab = assetSystem.Load<GameObject>("Prefab/UI/HealthBar");
             }
             else
             {
@@ -52,7 +52,7 @@ namespace RPG2D
 
             if (healthBarViewPrefab == null)
             {
-                Debug.LogError("Can not find HealthBar Prefab : Prefabs/UI/HealthBar");
+                Debug.LogError("Can not find HealthBar Prefab : Prefab/UI/HealthBar");
                 enabled = false;
                 return;
             }
@@ -119,12 +119,10 @@ namespace RPG2D
 
             healthBarViews.Add(enemy.gameObject.GetInstanceID(), healthBarView);
 
-            enemy.Stats.CurrentHP.Register(e =>
+            enemy.Stats.CurrentHP.RegisterWithInitValue(_ =>
             {
                 healthBarView.Refresh(enemy.Stats.HPRatio);
             }).UnRegisterWhenGameObjectDestroyed(enemy);
-
-            healthBarView.Refresh(1);
         }
 
         private void RemoveEnemy(int enemyInstanceId)
@@ -135,8 +133,5 @@ namespace RPG2D
                 healthBarViews.Remove(enemyInstanceId);
             }
         }
-
-
     }
-
 }
