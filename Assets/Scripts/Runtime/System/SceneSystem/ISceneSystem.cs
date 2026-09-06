@@ -13,6 +13,7 @@ namespace RPG2D
 
         void LoadStartScene();
         void LoadMainGameScene();
+        void LoadScene(string sceneName);
     }
 
     public class SceneSystem : AbstractSystem, ISceneSystem
@@ -55,7 +56,7 @@ namespace RPG2D
             LoadScene(MainGameSceneName);
         }
 
-        private void LoadScene(string sceneName)
+        public void LoadScene(string sceneName)
         {
             if (string.IsNullOrWhiteSpace(sceneName))
             {
