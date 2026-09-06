@@ -6,7 +6,6 @@ namespace RPG2D
     public interface IDungeonModel : IModel
     {
         string CurrentDungeonId { get; set; }
-        string CurrentRoomId { get; set; }
         DungeonState DungeonState { get; set; }
         Dictionary<string, DungeonRoomRuntimeState> RoomStates { get; }
         BindableProperty<int> DungeonRevision { get; }
@@ -18,7 +17,6 @@ namespace RPG2D
     public class DungeonModel : AbstractModel, IDungeonModel
     {
         public string CurrentDungeonId { get; set; } = string.Empty;
-        public string CurrentRoomId { get; set; } = string.Empty;
         public DungeonState DungeonState { get; set; } = DungeonState.None;
 
         public Dictionary<string, DungeonRoomRuntimeState> RoomStates { get; } =

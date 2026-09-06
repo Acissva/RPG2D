@@ -83,14 +83,12 @@ namespace RPG2D
         [SerializeField] private string roomId = "room_gt_test_combat_001";
         [SerializeField] private DungeonRoomType roomType = DungeonRoomType.Combat;
         [SerializeField] private bool requiredForDungeonCompletion = true;
-        [SerializeField] private string encounterId = "encounter_gt_test_001";
         [SerializeField, Min(0)] private int expectedEnemyCount = 1;
         [SerializeField] private List<RewardItemConfig> completionRewards = new();
 
         public string RoomId => roomId;
         public DungeonRoomType RoomType => roomType;
         public bool RequiredForDungeonCompletion => requiredForDungeonCompletion;
-        public string EncounterId => encounterId;
         public int ExpectedEnemyCount => expectedEnemyCount;
         public IReadOnlyList<RewardItemConfig> CompletionRewards => completionRewards;
 
@@ -99,11 +97,6 @@ namespace RPG2D
             if (string.IsNullOrWhiteSpace(roomId))
             {
                 roomId = "room_gt_test_combat_001";
-            }
-
-            if (string.IsNullOrWhiteSpace(encounterId))
-            {
-                encounterId = roomId;
             }
 
             if (expectedEnemyCount < 0)

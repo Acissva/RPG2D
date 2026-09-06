@@ -4,7 +4,6 @@ namespace RPG2D
     {
         None,
         Running,
-        Cleared,
         Completed
     }
 

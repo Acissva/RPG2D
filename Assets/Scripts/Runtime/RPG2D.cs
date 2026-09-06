@@ -17,7 +17,6 @@ namespace RPG2D
             this.RegisterModel<IDialogueModel>(new DialogueModel());
             this.RegisterModel<IQuestModel>(new QuestModel());
             this.RegisterModel<IInventoryModel>(new InventoryModel());
-            this.RegisterModel<IEncounterModel>(new EncounterModel());
             this.RegisterModel<IDungeonModel>(new DungeonModel());
 
             //注册System
@@ -30,7 +29,6 @@ namespace RPG2D
             this.RegisterSystem<IQuestSystem>(new QuestSystem());
             this.RegisterSystem<ITimeSystem>(new TimeSystem());
             this.RegisterSystem<IEnemyRegistrySystem>(new EnemyRegistrySystem());
-            this.RegisterSystem<IEncounterSystem>(new EncounterSystem());
             this.RegisterSystem<IDungeonSystem>(new DungeonSystem());
             this.RegisterSystem<IUISystem>(new UISystem());
             this.RegisterSystem<IDialogueSystem>(new DialogueSystem());

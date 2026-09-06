@@ -21,7 +21,6 @@ MonoBehaviour:
   rooms:
   - roomId: room_gt_test_combat_001
     roomType: 1
-    encounterId: encounter_gt_test_001
     expectedEnemyCount: 1
     completionRewards: []
   completionRewards:
