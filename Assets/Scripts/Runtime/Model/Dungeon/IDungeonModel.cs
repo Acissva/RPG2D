@@ -7,6 +7,7 @@ namespace RPG2D
     {
         string CurrentDungeonId { get; set; }
         DungeonState DungeonState { get; set; }
+        string PlayerRoomId { get; set; }
         Dictionary<string, DungeonRoomRuntimeState> RoomStates { get; }
         BindableProperty<int> DungeonRevision { get; }
         bool HasGrantedCompletionReward { get; set; }
@@ -18,6 +19,7 @@ namespace RPG2D
     {
         public string CurrentDungeonId { get; set; } = string.Empty;
         public DungeonState DungeonState { get; set; } = DungeonState.None;
+        public string PlayerRoomId { get; set; } = string.Empty;
 
         public Dictionary<string, DungeonRoomRuntimeState> RoomStates { get; } =
             new Dictionary<string, DungeonRoomRuntimeState>();

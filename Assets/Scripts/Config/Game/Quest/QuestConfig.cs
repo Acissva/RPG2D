@@ -7,6 +7,7 @@ namespace RPG2D
     public enum QuestObjectiveType
     {
         InteractWithObject,
+        CompleteDungeon
     }
 
     //单个任务的静态配置
@@ -60,12 +61,18 @@ namespace RPG2D
         /// 这个任务目标关联的世界交互对象 ID
         /// </summary>
         [SerializeField] private string targetInteractionId = "notice_board_gt_001";
+        /// <summary>
+        /// 这个任务目标关联的副本 ID
+        /// </summary>
+        [SerializeField]
+        private string targetDungeonId = "dungeon_gt_test_001";
         [SerializeField, Min(1)] private int requiredCount = 1;
 
         public string ObjectiveId => objectiveId;
         public QuestObjectiveType ObjectiveType => objectiveType;
         public string Description => description;
         public string TargetInteractionId => targetInteractionId;
+        public string TargetDungeonId => targetDungeonId;
         public int RequiredCount => requiredCount;
 
         public void Validate()
