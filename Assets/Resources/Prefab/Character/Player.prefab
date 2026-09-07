@@ -285,7 +285,6 @@ GameObject:
   serializedVersion: 7
   m_Component:
   - component: {fileID: 5230963883678415804}
-  - component: {fileID: 608968119388135779}
   m_Layer: 0
   m_HasEditorInfo: 1
   m_Name: Visual
@@ -311,26 +310,6 @@ Transform:
   - {fileID: 2686333026945875812}
   m_Father: {fileID: 2800365756979010711}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &608968119388135779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4072830981419753647}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abcdb1ce249308b4d9f84265ae13e8a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sortingPoint: {fileID: 2800365756979010711}
-  orderPerUnit: 10
-  orderOffset: 0
-  updateEveryFrame: 1
-  applyInEditMode: 1
-  preferSortingGroup: 1
-  includeChildRenderers: 1
-  includeInactiveChildren: 0
 --- !u!1 &4585840731049336037
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,6 +715,7 @@ GameObject:
   - component: {fileID: 684007129059928178}
   - component: {fileID: 4734948374394838914}
   - component: {fileID: 6070612712986850516}
+  - component: {fileID: 4150587913613808197}
   m_Layer: 7
   m_HasEditorInfo: 1
   m_Name: Player
@@ -889,3 +869,23 @@ MonoBehaviour:
   isTargetable: 1
   threatPriority: 0
   aimPoint: {fileID: 0}
+--- !u!114 &4150587913613808197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7859840664435002712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abcdb1ce249308b4d9f84265ae13e8a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sortingPoint: {fileID: 2800365756979010711}
+  orderPerUnit: 10
+  orderOffset: 0
+  updateEveryFrame: 1
+  applyInEditMode: 1
+  preferSortingGroup: 1
+  includeChildRenderers: 1
+  includeInactiveChildren: 0

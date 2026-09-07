@@ -48,6 +48,8 @@ namespace RPG2D
         private bool hasAppliedAttackHit;
         private AttackPhase attackPhase = AttackPhase.None;
 
+        private bool hasReportedCombatEngaged;
+
         public EnemyBrainState CurrentState { get; private set; }
         public float StateElapsed => Time.time - stateEnterTime;
 
@@ -90,6 +92,11 @@ namespace RPG2D
 
             lastObservedHP = Stats.CurrentHP.Value;
             ChangeState(EnemyBrainState.Spawn);
+        }
+
+        private void OnDestroy()
+        {
+            ReportCombatDisengaged();
         }
 
         private void Update()
@@ -366,29 +373,43 @@ namespace RPG2D
             switch (state)
             {
                 case EnemyBrainState.Idle:
+                    ReportCombatDisengaged();
                     motor.Stop();
+                    break;
+
+                case EnemyBrainState.Patrol:
+                    ReportCombatDisengaged();
                     break;
 
                 case EnemyBrainState.Alert:
                     motor.Stop();
                     sensor.Scan();
+                    ReportCombatEngagedIfPlayerTarget();
+                    break;
+
+                case EnemyBrainState.Chase:
+                    ReportCombatEngagedIfPlayerTarget();
                     break;
 
                 case EnemyBrainState.Attack:
+                    ReportCombatEngagedIfPlayerTarget();
                     BeginAttackWindup();
                     break;
 
                 case EnemyBrainState.Hurt:
+                    ReportCombatEngagedIfPlayerTarget();
                     attackPhase = AttackPhase.None;
                     motor.Stop();
                     break;
 
                 case EnemyBrainState.Return:
+                    ReportCombatDisengaged();
                     sensor.ClearCurrentTarget();
                     motor.ReturnToSpawn();
                     break;
 
                 case EnemyBrainState.Dead:
+                    ReportCombatDisengaged();
                     motor.StopImmediately();
                     enabled = false;
                     break;
@@ -501,12 +522,49 @@ namespace RPG2D
             lastObservedHP = Stats.CurrentHP.Value;
         }
 
+        private void ReportCombatEngagedIfPlayerTarget()
+        {
+            if (hasReportedCombatEngaged || !IsCurrentTargetPlayer())
+            {
+                return;
+            }
+
+            this.SendCommand(new ReportCombatSourceEngagedCommand(
+                GetCombatSourceId(),
+                "Enemy",
+                Stats != null ? Stats.EnemyId : string.Empty));
+
+            hasReportedCombatEngaged = true;
+        }
+
+        private void ReportCombatDisengaged()
+        {
+            if (!hasReportedCombatEngaged)
+            {
+                return;
+            }
+
+            this.SendCommand(new ReportCombatSourceDisengagedCommand(GetCombatSourceId()));
+            hasReportedCombatEngaged = false;
+        }
+
+        private bool IsCurrentTargetPlayer()
+        {
+            return sensor != null
+                && sensor.CurrentTarget != null
+                && sensor.CurrentTarget.Faction == FactionType.Player;
+        }
+
+        private string GetCombatSourceId()
+        {
+            return $"enemy:{gameObject.GetInstanceID()}";
+        }
+
         private EnemyBrainState GetDefaultState()
         {
             return defaultState == DefaultState.Patrol
                 ? EnemyBrainState.Patrol
                 : EnemyBrainState.Idle;
         }
-
     }
 }

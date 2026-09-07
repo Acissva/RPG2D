@@ -11,6 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e40c3148ed9c1be4bb6bfeba2ced24f4, type: 3}
   m_Name: QuestConfigDatabase
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   quests:
   - {fileID: 11400000, guid: ad50c692b36b23145b61e48b128303a8, type: 2}
+  - {fileID: 11400000, guid: 058c446ba7e1acf4eb703cb726a81ed4, type: 2}
