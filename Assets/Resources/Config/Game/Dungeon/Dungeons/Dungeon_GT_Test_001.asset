@@ -19,9 +19,20 @@ MonoBehaviour:
   returnSceneName: MainGameScene
   returnSpawnPointId: spawn_main_dungeon_gate
   rooms:
+  - roomId: room_gt_test_start_001
+    roomType: 0
+    requiredForDungeonCompletion: 0
+    expectedEnemyCount: 0
+    completionRewards: []
   - roomId: room_gt_test_combat_001
     roomType: 1
+    requiredForDungeonCompletion: 1
     expectedEnemyCount: 1
+    completionRewards: []
+  - roomId: room_gt_test_exit_001
+    roomType: 3
+    requiredForDungeonCompletion: 0
+    expectedEnemyCount: 0
     completionRewards: []
   completionRewards:
   - itemId: item_gt_herb_001

@@ -26,6 +26,46 @@ namespace RPG2D
             questModel = this.GetModel<IQuestModel>();
             configSystem = this.GetSystem<IConfigSystem>();
             rewardSystem = this.GetSystem<IRewardSystem>();
+
+            this.RegisterEvent<DungeonCompletedEvent>(
+                OnDungeonCompleted);
+        }
+
+        private void OnDungeonCompleted(DungeonCompletedEvent dungeonCompletedEvent)
+        {
+            if (string.IsNullOrWhiteSpace(dungeonCompletedEvent.DungeonId))
+            {
+                return;
+            }
+
+            foreach (QuestLogEntry entry in questModel.QuestLog.Values)
+            {
+                if (entry == null || entry.Status != QuestStatus.InProgress)
+                {
+                    continue;
+                }
+
+                QuestConfig config = GetQuestConfig(entry.QuestId);
+
+                if (config == null)
+                {
+                    continue;
+                }
+
+                for (int i = 0; i < config.Objectives.Count; i++)
+                {
+                    QuestObjectiveConfig objective = config.Objectives[i];
+
+                    if (objective == null
+                        || objective.ObjectiveType != QuestObjectiveType.CompleteDungeon
+                        || objective.TargetDungeonId != dungeonCompletedEvent.DungeonId)
+                    {
+                        continue;
+                    }
+
+                    AddObjectiveProgress(entry.QuestId, objective.ObjectiveId, 1);
+                }
+            }
         }
 
         public QuestStatus GetQuestStatus(string questId)

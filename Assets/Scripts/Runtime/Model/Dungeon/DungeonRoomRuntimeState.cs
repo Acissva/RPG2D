@@ -12,6 +12,8 @@ namespace RPG2D
         public string RoomId { get; }
         public DungeonRoomState State { get; set; }
         public int ActualEnemyCount { get; set; }
+        public bool HasPlayerEntered { get; set; }
+        public bool IsLocked { get; set; }
         public bool HasGrantedCompletionReward { get; set; }
 
         public bool IsCompleted => State == DungeonRoomState.Completed;

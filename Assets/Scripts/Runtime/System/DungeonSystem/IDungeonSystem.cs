@@ -13,6 +13,11 @@ namespace RPG2D
         bool CompleteRoom(string roomId);
         bool IsRoomCompleted(string roomId);
         void RefreshDungeonCompletion();
+        string GetPlayerRoomId();
+        bool IsRoomLocked(string roomId);
+        DungeonRoomRuntimeState GetRoomRuntimeState(string roomId);
+        void EnterRoom(string roomId);
+        void LeaveRoom(string roomId);
     }
 
     public class DungeonSystem : AbstractSystem, IDungeonSystem
@@ -69,6 +74,7 @@ namespace RPG2D
 
             dungeonModel.CurrentDungeonId = config.DungeonId;
             dungeonModel.DungeonState = DungeonState.Loading;
+            dungeonModel.PlayerRoomId = string.Empty;
             dungeonModel.HasGrantedCompletionReward = false;
             InitializeRoomStates(config);
             dungeonModel.LastReturnSceneName = config.ReturnSceneName;
@@ -117,6 +123,43 @@ namespace RPG2D
             }
         }
 
+        private bool CompleteRoom(DungeonConfig config, DungeonRoomConfig roomConfig)
+        {
+            if (config == null || roomConfig == null || string.IsNullOrWhiteSpace(roomConfig.RoomId))
+            {
+                return false;
+            }
+
+            DungeonRoomRuntimeState roomState = GetRoomRuntimeState(roomConfig.RoomId);
+
+            if (roomState == null)
+            {
+                Debug.LogWarning($"Can not find completed dungeon room runtime state: {roomConfig.RoomId}");
+                return false;
+            }
+
+            if (roomState.State == DungeonRoomState.Completed)
+            {
+                return false;
+            }
+
+            if (!roomState.HasGrantedCompletionReward && roomConfig.CompletionRewards.Count > 0)
+            {
+                roomState.HasGrantedCompletionReward = true;
+
+                rewardSystem.GrantRewards(
+                    roomConfig.CompletionRewards,
+                    RewardSourceType.Dungeon,
+                    $"{config.DungeonId}/{roomConfig.RoomId}");
+            }
+
+            roomState.State = DungeonRoomState.Completed;
+            roomState.IsLocked = false;
+            IncreaseRevision();
+
+            return true;
+        }
+
         public bool CompleteRoom(string roomId)
         {
             DungeonConfig config = GetCurrentDungeonConfig();
@@ -142,8 +185,91 @@ namespace RPG2D
 
         public bool IsRoomCompleted(string roomId)
         {
-            DungeonRoomRuntimeState roomState = GetRoomState(roomId);
+            DungeonRoomRuntimeState roomState = GetRoomRuntimeState(roomId);
             return roomState != null && roomState.IsCompleted;
+        }
+
+        public string GetPlayerRoomId()
+        {
+            return dungeonModel.PlayerRoomId;
+        }
+
+        public bool IsRoomLocked(string roomId)
+        {
+            DungeonRoomRuntimeState roomState = GetRoomRuntimeState(roomId);
+            return roomState != null && roomState.IsLocked;
+        }
+
+        public DungeonRoomRuntimeState GetRoomRuntimeState(string roomId)
+        {
+            if (string.IsNullOrWhiteSpace(roomId))
+            {
+                return null;
+            }
+
+            dungeonModel.RoomStates.TryGetValue(
+                roomId,
+                out DungeonRoomRuntimeState roomState);
+
+            return roomState;
+        }
+
+        public void EnterRoom(string roomId)
+        {
+            if (dungeonModel.DungeonState != DungeonState.Running)
+            {
+                return;
+            }
+
+            DungeonConfig config = GetCurrentDungeonConfig();
+            DungeonRoomConfig roomConfig = GetRoomConfig(config, roomId);
+
+            if (roomConfig == null)
+            {
+                Debug.LogWarning($"Can not enter dungeon room: {roomId}");
+                return;
+            }
+
+            DungeonRoomRuntimeState roomState = GetRoomRuntimeState(roomId);
+
+            if (roomState == null)
+            {
+                Debug.LogWarning(
+                    $"Can not find dungeon room runtime state: {roomId}");
+                return;
+            }
+
+            bool shouldLockRoom =
+                IsCombatOrBossRoom(roomConfig)
+                && !roomState.IsCompleted;
+
+            bool hasChanged =
+                dungeonModel.PlayerRoomId != roomId
+                || !roomState.HasPlayerEntered
+                || roomState.IsLocked != shouldLockRoom;
+
+            if (!hasChanged)
+            {
+                return;
+            }
+
+            dungeonModel.PlayerRoomId = roomId;
+            roomState.HasPlayerEntered = true;
+            roomState.IsLocked = shouldLockRoom;
+            IncreaseRevision();
+        }
+
+        public void LeaveRoom(string roomId)
+        {
+            if (dungeonModel.DungeonState != DungeonState.Running
+                || string.IsNullOrWhiteSpace(roomId)
+                || dungeonModel.PlayerRoomId != roomId)
+            {
+                return;
+            }
+
+            dungeonModel.PlayerRoomId = string.Empty;
+            IncreaseRevision();
         }
 
         public void RefreshDungeonCompletion()
@@ -200,7 +326,7 @@ namespace RPG2D
                     continue;
                 }
 
-                DungeonRoomRuntimeState roomState = GetRoomState(room.RoomId);
+                DungeonRoomRuntimeState roomState = GetRoomRuntimeState(room.RoomId);
 
                 if (roomState == null)
                 {
@@ -267,42 +393,6 @@ namespace RPG2D
             }
 
             return GetAliveEnemiesForRoom(roomConfig).Count <= 0;
-        }
-
-        private bool CompleteRoom(DungeonConfig config, DungeonRoomConfig roomConfig)
-        {
-            if (config == null || roomConfig == null || string.IsNullOrWhiteSpace(roomConfig.RoomId))
-            {
-                return false;
-            }
-
-            DungeonRoomRuntimeState roomState = GetRoomState(roomConfig.RoomId);
-
-            if (roomState == null)
-            {
-                Debug.LogWarning($"Can not find completed dungeon room runtime state: {roomConfig.RoomId}");
-                return false;
-            }
-
-            if (roomState.State == DungeonRoomState.Completed)
-            {
-                return false;
-            }
-
-            if (!roomState.HasGrantedCompletionReward && roomConfig.CompletionRewards.Count > 0)
-            {
-                roomState.HasGrantedCompletionReward = true;
-
-                rewardSystem.GrantRewards(
-                    roomConfig.CompletionRewards,
-                    RewardSourceType.Dungeon,
-                    $"{config.DungeonId}/{roomConfig.RoomId}");
-            }
-
-            roomState.State = DungeonRoomState.Completed;
-            IncreaseRevision();
-
-            return true;
         }
 
         private void CompleteDungeon(DungeonConfig config)
@@ -403,16 +493,6 @@ namespace RPG2D
             return null;
         }
 
-        private DungeonRoomRuntimeState GetRoomState(string roomId)
-        {
-            if (string.IsNullOrWhiteSpace(roomId))
-            {
-                return null;
-            }
-
-            dungeonModel.RoomStates.TryGetValue(roomId, out DungeonRoomRuntimeState roomState);
-            return roomState;
-        }
 
         private int CountCompletedRooms()
         {
@@ -535,6 +615,7 @@ namespace RPG2D
         {
             dungeonModel.CurrentDungeonId = string.Empty;
             dungeonModel.DungeonState = DungeonState.None;
+            dungeonModel.PlayerRoomId = string.Empty;
             dungeonModel.HasGrantedCompletionReward = false;
             dungeonModel.RoomStates.Clear();
             dungeonModel.LastReturnSceneName = string.Empty;
