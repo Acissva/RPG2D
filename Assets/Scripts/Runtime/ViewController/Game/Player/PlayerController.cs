@@ -4,6 +4,7 @@ using UnityEngine;
 namespace RPG2D
 {
     [RequireComponent(typeof(PlayerMovement))]
+    [RequireComponent(typeof(CombatTarget2D))]
     public class PlayerController : RPG2DController
     {
         private IPlayerModel playerModel;
@@ -11,6 +12,7 @@ namespace RPG2D
         private IInputReader inputReader;
 
         private PlayerMovement playerMovement;
+        private CombatTarget2D combatTarget;
 
         private Vector2 moveDir;
 
@@ -21,15 +23,15 @@ namespace RPG2D
             inputReader = this.GetSystem<IRPG2DInputSystem>().InputReader;
 
             playerMovement = GetComponent<PlayerMovement>();
+            combatTarget = GetComponent<CombatTarget2D>();
 
-            //TODO:初始化玩家数据，暂时放在这里，有了主菜单后放到开始命令中
-            this.SendCommand<InitialPlayerCommand>();
-
+            playerModel.LifeState.RegisterWithInitValue(OnLifeStateChanged)
+                .UnRegisterWhenGameObjectDestroyed(gameObject);
         }
 
         private void Update()
         {
-            if (uiModel.InputBlocked.Value)
+            if (uiModel.InputBlocked.Value || playerModel.LifeState.Value != PlayerLifeState.Alive)
             {
                 StopMove();
                 return;
@@ -52,6 +54,16 @@ namespace RPG2D
             playerMovement.SetMoveInput(Vector2.zero, 0f);
         }
 
+        private void OnLifeStateChanged(PlayerLifeState lifeState)
+        {
+            bool isAlive = lifeState == PlayerLifeState.Alive;
+
+            combatTarget.SetTargetable(isAlive);
+
+            if (!isAlive)
+            {
+                StopMove();
+            }
+        }
     }
 }
-

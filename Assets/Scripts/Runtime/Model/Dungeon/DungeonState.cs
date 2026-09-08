@@ -6,6 +6,7 @@ namespace RPG2D
         Loading,
         Running,
         Completed,
+        Failed,
         Exiting
     }
 }

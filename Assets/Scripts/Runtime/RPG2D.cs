@@ -25,6 +25,7 @@ namespace RPG2D
             this.RegisterSystem<IRPG2DInputSystem>(new RPG2DInputSystem());
             this.RegisterSystem<IAssetSystem>(new AssetSystem());
             this.RegisterSystem<IConfigSystem>(new ConfigSystem());
+            this.RegisterSystem<IPlayerSystem>(new PlayerSystem());
             this.RegisterSystem<IInventorySystem>(new InventorySystem());
             this.RegisterSystem<IRewardSystem>(new RewardSystem());
             this.RegisterSystem<IQuestSystem>(new QuestSystem());
@@ -35,7 +36,8 @@ namespace RPG2D
             this.RegisterSystem<IUISystem>(new UISystem());
             this.RegisterSystem<IDialogueSystem>(new DialogueSystem());
             this.RegisterSystem<ISceneSystem>(new SceneSystem());
-
+            this.RegisterSystem<ITravelSystem>(new TravelSystem());
+            this.RegisterSystem<IGameFlowSystem>(new GameFlowSystem());
         }
 
 

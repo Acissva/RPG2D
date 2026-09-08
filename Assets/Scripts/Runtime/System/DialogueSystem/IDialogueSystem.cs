@@ -83,6 +83,8 @@ namespace RPG2D
 
         public void EndDialogue()
         {
+            bool wasPlaying = IsPlaying;
+
             currentLines.Clear();
 
             dialogueModel.IsPlaying.Value = false;
@@ -91,7 +93,10 @@ namespace RPG2D
             dialogueModel.CurrentLineIndex.Value = -1;
             dialogueModel.TotalLineCount.Value = 0;
 
-            Debug.Log("对话结束");
+            if (wasPlaying)
+            {
+                Debug.Log("对话结束");
+            }
         }
 
         private void ShowLine(int lineIndex)
