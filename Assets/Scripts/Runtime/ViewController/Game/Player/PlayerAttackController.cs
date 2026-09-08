@@ -7,9 +7,11 @@ namespace RPG2D
     {
         [SerializeField] private Camera worldCamera;
 
+        public IWeapon currentWeapon;
+
         private IInputReader inputReader;
         private IUIModel uiModel;
-        public IWeapon currentWeapon;
+        private IPlayerModel playerModel;
 
         public Vector2 AimDir { get; private set; } = Vector2.right;
         public bool IsAttacking => currentWeapon != null && currentWeapon.IsAttacking;
@@ -30,11 +32,12 @@ namespace RPG2D
 
             inputReader = this.GetSystem<IRPG2DInputSystem>().InputReader;
             uiModel = this.GetModel<IUIModel>();
+            playerModel = this.GetModel<IPlayerModel>();
         }
 
         private void Update()
         {
-            if (uiModel.InputBlocked.Value)
+            if (uiModel.InputBlocked.Value || playerModel.LifeState.Value != PlayerLifeState.Alive)
             {
                 return;
             }

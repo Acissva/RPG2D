@@ -13,6 +13,7 @@ namespace RPG2D
         bool CompleteQuest(string questId);
         void SetTrackedQuest(string questId);
         QuestTrackerSnapshot GetTrackedQuestSnapshot();
+        void ResetForNewGame();
     }
 
     public class QuestSystem : AbstractSystem, IQuestSystem
@@ -290,6 +291,30 @@ namespace RPG2D
             });
 
             return true;
+        }
+
+        public void ResetForNewGame()
+        {
+            bool trackedQuestChanged = !string.IsNullOrEmpty(questModel.TrackedQuestId.Value);
+
+            bool hasRuntimeState = trackedQuestChanged || questModel.QuestLog.Count > 0;
+
+            if (!hasRuntimeState)
+            {
+                return;
+            }
+
+            questModel.QuestLog.Clear();
+            questModel.TrackedQuestId.Value = string.Empty;
+            IncreaseRevision();
+
+            if (trackedQuestChanged)
+            {
+                this.SendEvent(new TrackedQuestChangedEvent
+                {
+                    QuestId = string.Empty
+                });
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ namespace RPG2D
         int GetItemCount(string itemId);
         bool HasItem(string itemId, int count);
         InventorySnapshot GetInventorySnapshot();
+        void ResetForNewGame();
     }
 
     public class InventorySystem : AbstractSystem, IInventorySystem
@@ -175,6 +176,17 @@ namespace RPG2D
         private void IncreaseRevision()
         {
             inventoryModel.InventoryRevision.Value++;
+        }
+
+        public void ResetForNewGame()
+        {
+            if (inventoryModel.Items.Count == 0)
+            {
+                return;
+            }
+
+            inventoryModel.Items.Clear();
+            IncreaseRevision();
         }
     }
 }
