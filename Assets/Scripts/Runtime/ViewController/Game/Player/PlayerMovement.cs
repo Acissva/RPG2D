@@ -33,6 +33,21 @@ namespace RPG2D
             moveSpeed = speed;
         }
 
+        public void ResetMotion()
+        {
+            moveDir = Vector2.zero;
+            moveSpeed = 0f;
+            movementEffects.Clear();
+
+            if (mRigidbody2D == null)
+            {
+                return;
+            }
+
+            mRigidbody2D.velocity = Vector2.zero;
+            mRigidbody2D.angularVelocity = 0f;
+        }
+
         public void AddMovementEffect(IMovementEffect effect)
         {
             movementEffects.Add(effect);
@@ -40,7 +55,7 @@ namespace RPG2D
 
         private void FixedUpdate()
         {
-            if(mRigidbody2D == null) return;
+            if (mRigidbody2D == null) return;
 
             var velocity = moveDir * moveSpeed;
 
@@ -60,8 +75,5 @@ namespace RPG2D
             mRigidbody2D.velocity = velocity;
 
         }
-
     }
 }
-
- 

@@ -10,6 +10,7 @@ namespace RPG2D
 
         private IInputReader inputReader;
         private IUIModel uiModel;
+        private IPlayerModel playerModel;
 
         [Tooltip("Player 根节点")]
         [SerializeField] private GameObject interactorRoot;     //交互控制器一般不挂在Player根节点，所以这里需要获取Player根节点
@@ -39,13 +40,14 @@ namespace RPG2D
         {
             inputReader = this.GetSystem<IRPG2DInputSystem>().InputReader;
             uiModel = this.GetModel<IUIModel>();
+            playerModel = this.GetModel<IPlayerModel>();
 
             CacheInteractorRoot();
         }
 
         private void Update()
         {
-            if (uiModel.InputBlocked.Value)
+            if (uiModel.InputBlocked.Value || playerModel.LifeState.Value != PlayerLifeState.Alive)
             {
                 CurrentInteractable = null;
                 return;

@@ -1,5 +1,4 @@
 using QFramework;
-using UnityEngine;
 
 namespace RPG2D
 {
@@ -14,16 +13,7 @@ namespace RPG2D
 
         protected override void OnExecute()
         {
-            IPlayerModel playerModel = this.GetModel<IPlayerModel>();
-
-            int currentHP = playerModel.HP.Value;
-            int maxHP = playerModel.MaxHP.Value;
-            int nextHP = Mathf.Clamp(currentHP - damage, 0, maxHP);
-
-            playerModel.HP.Value = nextHP;
-
-            Debug.Log("玩家受到伤害：" + damage + "\n" + "当前血量：" + playerModel.HP.Value);
+            this.GetSystem<IPlayerSystem>().TakeDamage(damage);
         }
     }
 }
-

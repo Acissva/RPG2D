@@ -18,6 +18,8 @@ namespace RPG2D
         DungeonRoomRuntimeState GetRoomRuntimeState(string roomId);
         void EnterRoom(string roomId);
         void LeaveRoom(string roomId);
+        void ResetForNewGame();
+        bool FailCurrentDungeon();
     }
 
     public class DungeonSystem : AbstractSystem, IDungeonSystem
@@ -27,6 +29,7 @@ namespace RPG2D
         private ISceneSystem sceneSystem;
         private IEnemyRegistrySystem enemyRegistrySystem;
         private IRewardSystem rewardSystem;
+        private ITravelSystem travelSystem;
 
         protected override void OnInit()
         {
@@ -35,9 +38,11 @@ namespace RPG2D
             sceneSystem = this.GetSystem<ISceneSystem>();
             enemyRegistrySystem = this.GetSystem<IEnemyRegistrySystem>();
             rewardSystem = this.GetSystem<IRewardSystem>();
+            travelSystem = this.GetSystem<ITravelSystem>();
 
-            this.RegisterEvent<SceneLoadCompletedEvent>(OnSceneLoadCompleted);
             this.RegisterEvent<EnemyDeadEvent>(OnEnemyDead);
+            this.RegisterEvent<TravelCompletedEvent>(OnTravelCompleted);
+            this.RegisterEvent<TravelFailedEvent>(OnTravelFailed);
         }
 
         public bool CanEnterDungeon(string dungeonId)
@@ -47,7 +52,7 @@ namespace RPG2D
                 return false;
             }
 
-            if (sceneSystem.IsLoading)
+            if (sceneSystem.IsLoading || travelSystem.IsTraveling)
             {
                 return false;
             }
@@ -81,8 +86,17 @@ namespace RPG2D
             dungeonModel.LastReturnSpawnPointId = config.ReturnSpawnPointId;
             IncreaseRevision();
 
-            sceneSystem.LoadScene(config.SceneName);
-            return true;
+            bool accepted = travelSystem.Travel(new TravelRequest(config.SceneName, config.EntranceSpawnPointId));
+
+            if (accepted)
+            {
+                return true;
+            }
+
+            Debug.LogError($"进入副本迁移请求被拒绝：{config.DungeonId}");
+
+            ClearCurrentDungeon();
+            return false;
         }
 
         public bool ExitCurrentDungeon()
@@ -93,15 +107,36 @@ namespace RPG2D
                 return false;
             }
 
-            string returnSceneName = string.IsNullOrWhiteSpace(dungeonModel.LastReturnSceneName)
-                ? SceneSystem.MainGameSceneName
-                : dungeonModel.LastReturnSceneName;
+            string returnSceneName =
+                string.IsNullOrWhiteSpace(
+                    dungeonModel.LastReturnSceneName)
+                    ? SceneSystem.MainGameSceneName
+                    : dungeonModel.LastReturnSceneName;
+
+            string returnSpawnPointId =
+                dungeonModel.LastReturnSpawnPointId;
+
+            if (string.IsNullOrWhiteSpace(returnSpawnPointId))
+            {
+                Debug.LogError("退出副本失败：返回出生点 ID 为空。");
+                return false;
+            }
 
             dungeonModel.DungeonState = DungeonState.Exiting;
             IncreaseRevision();
 
-            sceneSystem.LoadScene(returnSceneName);
-            return true;
+            bool accepted = travelSystem.Travel(new TravelRequest(returnSceneName, returnSpawnPointId));
+
+            if (accepted)
+            {
+                return true;
+            }
+
+            dungeonModel.DungeonState = DungeonState.Completed;
+            IncreaseRevision();
+
+            Debug.LogError("退出副本迁移请求被拒绝。");
+            return false;
         }
 
         public bool IsCurrentDungeonCompleted()
@@ -109,17 +144,36 @@ namespace RPG2D
             return dungeonModel.DungeonState == DungeonState.Completed;
         }
 
-        private void OnSceneLoadCompleted(SceneLoadCompletedEvent sceneLoadCompletedEvent)
+        private void OnTravelCompleted(TravelCompletedEvent travelCompletedEvent)
         {
             if (dungeonModel.DungeonState == DungeonState.Loading)
             {
-                TryStartDungeonAfterSceneLoaded(sceneLoadCompletedEvent.SceneName);
+                TryStartDungeonAfterSceneLoaded(travelCompletedEvent.SceneName);
+                return;
+            }
+
+            if (dungeonModel.DungeonState == DungeonState.Exiting || dungeonModel.DungeonState == DungeonState.Failed)
+            {
+                ClearCurrentDungeon();
+            }
+        }
+
+        private void OnTravelFailed(TravelFailedEvent travelFailedEvent)
+        {
+            if (dungeonModel.DungeonState == DungeonState.Loading)
+            {
+                Debug.LogError($"进入副本迁移失败：" + $"{travelFailedEvent.Reason}");
+
+                ClearCurrentDungeon();
                 return;
             }
 
             if (dungeonModel.DungeonState == DungeonState.Exiting)
             {
-                ClearCurrentDungeon();
+                dungeonModel.DungeonState = DungeonState.Completed;
+                IncreaseRevision();
+
+                Debug.LogError($"退出副本迁移失败：" + $"{travelFailedEvent.Reason}");
             }
         }
 
@@ -626,6 +680,41 @@ namespace RPG2D
         private void IncreaseRevision()
         {
             dungeonModel.DungeonRevision.Value++;
+        }
+
+        public void ResetForNewGame()
+        {
+            ClearCurrentDungeon();
+        }
+
+        public bool FailCurrentDungeon()
+        {
+            if (string.IsNullOrWhiteSpace(dungeonModel.CurrentDungeonId))
+            {
+                return false;
+            }
+
+            DungeonState currentState = dungeonModel.DungeonState;
+
+            if (currentState != DungeonState.Loading && currentState != DungeonState.Running && currentState != DungeonState.Completed)
+            {
+                return false;
+            }
+
+            string failedDungeonId = dungeonModel.CurrentDungeonId;
+            string failedRoomId = dungeonModel.PlayerRoomId;
+
+            dungeonModel.DungeonState = DungeonState.Failed;
+            IncreaseRevision();
+
+            this.SendEvent(new DungeonFailedEvent
+            {
+                DungeonId = failedDungeonId,
+                PlayerRoomId = failedRoomId
+            });
+
+            Debug.Log($"副本失败：{failedDungeonId}，玩家所在房间：{failedRoomId}");
+            return true;
         }
     }
 }
