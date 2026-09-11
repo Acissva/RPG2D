@@ -383,7 +383,6 @@ namespace RPG2D
 
                 case EnemyBrainState.Alert:
                     motor.Stop();
-                    sensor.Scan();
                     ReportCombatEngagedIfPlayerTarget();
                     break;
 
