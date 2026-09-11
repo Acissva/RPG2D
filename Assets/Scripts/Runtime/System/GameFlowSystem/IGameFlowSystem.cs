@@ -5,20 +5,22 @@ namespace RPG2D
 {
     public interface IGameFlowSystem : ISystem
     {
+        void ResetSession();
     }
 
     public class GameFlowSystem : AbstractSystem, IGameFlowSystem
     {
         public const string MainRespawnPointId = "spawn_main_respawn";
 
-        private const float RespawnDelaySeconds = 0.75f;
+        private const float RespawnDelaySeconds = 3f;
+        private TimerHandle respawnTimer;
 
         private IPlayerSystem playerSystem;
         private ITravelSystem travelSystem;
         private IDungeonSystem dungeonSystem;
         private ICombatStateSystem combatStateSystem;
         private IDungeonModel dungeonModel;
-        private ITimeSystem timeSystem;
+        private ITimerSystem timerSystem;
 
         protected override void OnInit()
         {
@@ -27,9 +29,15 @@ namespace RPG2D
             dungeonSystem = this.GetSystem<IDungeonSystem>();
             combatStateSystem = this.GetSystem<ICombatStateSystem>();
             dungeonModel = this.GetModel<IDungeonModel>();
-            timeSystem = this.GetSystem<ITimeSystem>();
+            timerSystem = this.GetSystem<ITimerSystem>();
 
             this.RegisterEvent<PlayerDiedEvent>(OnPlayerDied);
+        }
+
+        public void ResetSession()
+        {
+            timerSystem.CancelScope(TimerScope.Session);
+            respawnTimer = default;
         }
 
         private void OnPlayerDied(PlayerDiedEvent playerDiedEvent)
@@ -75,7 +83,14 @@ namespace RPG2D
 
         private void ScheduleRespawn(TravelRequest request, string context)
         {
-            timeSystem.AddDelayTask(RespawnDelaySeconds, () => RequestRespawn(request, context));
+            CancelPendingRespawn();
+
+            respawnTimer = timerSystem.Schedule(RespawnDelaySeconds, () =>
+            {
+                respawnTimer = default;
+                RequestRespawn(request, context);
+            },
+            TimerScope.Session);
         }
 
         private void RequestRespawn(TravelRequest request, string context)
@@ -95,6 +110,17 @@ namespace RPG2D
 
             playerSystem.CancelRespawn(request.OperationId);
             Debug.LogError($"{context}重生失败：迁移请求被拒绝。");
+        }
+
+        private void CancelPendingRespawn()
+        {
+            if (!respawnTimer.IsValid)
+            {
+                return;
+            }
+
+            timerSystem.Cancel(respawnTimer);
+            respawnTimer = default;
         }
     }
 }

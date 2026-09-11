@@ -13,6 +13,7 @@ namespace RPG2D
         private static readonly int getHurtAnimHash = Animator.StringToHash("GetHurt");
 
         private bool isDead;
+        private TimerHandle deathVisualTimer;
 
         private void Awake()
         {
@@ -84,17 +85,29 @@ namespace RPG2D
             string dropTableId = stats.DropTableId;
             int experienceReward = stats.ExperienceReward;
 
-            this.GetSystem<ITimeSystem>().AddDelayTask(1.5f, () =>
-            {
-                this.SendCommand(new EnemyDeathCommand(
-                    enemyId,
-                    instanceID,
-                    pos,
-                    dropTableId,
-                    experienceReward));
+            this.SendCommand(new EnemyDeathCommand(enemyId, instanceID, pos, dropTableId, experienceReward));
 
-                Destroy(gameObject);
-            });
+            deathVisualTimer = this.GetSystem<ITimerSystem>().Schedule(
+                1.5f,
+                DestroyAfterDeathAnimation,
+                TimerScope.Scene);
+        }
+
+        private void DestroyAfterDeathAnimation()
+        {
+            deathVisualTimer = default;
+            Destroy(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            if (!deathVisualTimer.IsValid)
+            {
+                return;
+            }
+
+            this.GetSystem<ITimerSystem>().Cancel(deathVisualTimer);
+            deathVisualTimer = default;
         }
     }
 }

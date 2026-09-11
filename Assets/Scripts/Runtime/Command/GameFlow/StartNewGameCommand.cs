@@ -13,6 +13,7 @@ namespace RPG2D
                 return;
             }
 
+            this.GetSystem<IGameFlowSystem>().ResetSession();
             this.GetSystem<IInventorySystem>().ResetForNewGame();
             this.GetSystem<IQuestSystem>().ResetForNewGame();
             this.GetSystem<IDungeonSystem>().ResetForNewGame();

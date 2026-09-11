@@ -29,7 +29,7 @@ namespace RPG2D
             this.RegisterSystem<IInventorySystem>(new InventorySystem());
             this.RegisterSystem<IRewardSystem>(new RewardSystem());
             this.RegisterSystem<IQuestSystem>(new QuestSystem());
-            this.RegisterSystem<ITimeSystem>(new TimeSystem());
+            this.RegisterSystem<ITimerSystem>(new TimerSystem());
             this.RegisterSystem<ICombatStateSystem>(new CombatStateSystem());
             this.RegisterSystem<IEnemyRegistrySystem>(new EnemyRegistrySystem());
             this.RegisterSystem<IDungeonSystem>(new DungeonSystem());
