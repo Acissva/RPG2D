@@ -499,11 +499,6 @@ namespace RPG2D
 
                 return;
             }
-
-            if (target.Faction == FactionType.Player)
-            {
-                this.SendCommand(new HurtPlayerCommand(damage));
-            }
         }
 
         private void TryEnterHurtByHpChange()
