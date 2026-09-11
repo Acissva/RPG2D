@@ -1,4 +1,5 @@
 using QFramework;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,12 +11,7 @@ namespace RPG2D
         bool EnterDungeon(string dungeonId);
         bool ExitCurrentDungeon();
         bool IsCurrentDungeonCompleted();
-        bool CompleteRoom(string roomId);
-        bool IsRoomCompleted(string roomId);
-        void RefreshDungeonCompletion();
-        string GetPlayerRoomId();
         bool IsRoomLocked(string roomId);
-        DungeonRoomRuntimeState GetRoomRuntimeState(string roomId);
         void EnterRoom(string roomId);
         void LeaveRoom(string roomId);
         void ResetForNewGame();
@@ -31,6 +27,8 @@ namespace RPG2D
         private IRewardSystem rewardSystem;
         private ITravelSystem travelSystem;
 
+        private Guid pendingTravelOperationId;
+
         protected override void OnInit()
         {
             dungeonModel = this.GetModel<IDungeonModel>();
@@ -43,11 +41,17 @@ namespace RPG2D
             this.RegisterEvent<EnemyDeadEvent>(OnEnemyDead);
             this.RegisterEvent<TravelCompletedEvent>(OnTravelCompleted);
             this.RegisterEvent<TravelFailedEvent>(OnTravelFailed);
+            this.RegisterEvent<TravelStartedEvent>(OnTravelStarted);
         }
 
         public bool CanEnterDungeon(string dungeonId)
         {
             if (string.IsNullOrWhiteSpace(dungeonId))
+            {
+                return false;
+            }
+
+            if (dungeonModel.DungeonState != DungeonState.None)
             {
                 return false;
             }
@@ -86,7 +90,10 @@ namespace RPG2D
             dungeonModel.LastReturnSpawnPointId = config.ReturnSpawnPointId;
             IncreaseRevision();
 
-            bool accepted = travelSystem.Travel(new TravelRequest(config.SceneName, config.EntranceSpawnPointId));
+            TravelRequest travelRequest = new TravelRequest(config.SceneName, config.EntranceSpawnPointId);
+            pendingTravelOperationId = travelRequest.OperationId;
+
+            bool accepted = travelSystem.Travel(travelRequest);
 
             if (accepted)
             {
@@ -95,6 +102,7 @@ namespace RPG2D
 
             Debug.LogError($"进入副本迁移请求被拒绝：{config.DungeonId}");
 
+            pendingTravelOperationId = Guid.Empty;
             ClearCurrentDungeon();
             return false;
         }
@@ -122,21 +130,49 @@ namespace RPG2D
                 return false;
             }
 
+            TravelRequest travelRequest = new TravelRequest(returnSceneName, returnSpawnPointId);
+            pendingTravelOperationId = travelRequest.OperationId;
+
             dungeonModel.DungeonState = DungeonState.Exiting;
             IncreaseRevision();
 
-            bool accepted = travelSystem.Travel(new TravelRequest(returnSceneName, returnSpawnPointId));
+            bool accepted = travelSystem.Travel(travelRequest);
 
             if (accepted)
             {
                 return true;
             }
 
+            pendingTravelOperationId = Guid.Empty;
             dungeonModel.DungeonState = DungeonState.Completed;
             IncreaseRevision();
 
             Debug.LogError("退出副本迁移请求被拒绝。");
             return false;
+        }
+
+        private void OnTravelStarted(TravelStartedEvent travelStartedEvent)
+        {
+            if (dungeonModel.DungeonState != DungeonState.Failed || pendingTravelOperationId != Guid.Empty)
+            {
+                return;
+            }
+
+            string returnSceneName = string.IsNullOrWhiteSpace(dungeonModel.LastReturnSceneName)
+                ? SceneSystem.MainGameSceneName
+                : dungeonModel.LastReturnSceneName;
+
+            if (!string.Equals(travelStartedEvent.TargetSceneName, returnSceneName, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            if (!string.Equals(travelStartedEvent.TargetSpawnPointId, dungeonModel.LastReturnSpawnPointId, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            pendingTravelOperationId = travelStartedEvent.OperationId;
         }
 
         public bool IsCurrentDungeonCompleted()
@@ -148,12 +184,36 @@ namespace RPG2D
         {
             if (dungeonModel.DungeonState == DungeonState.Loading)
             {
+                if (travelCompletedEvent.OperationId != pendingTravelOperationId)
+                {
+                    return;
+                }
+
+                pendingTravelOperationId = Guid.Empty;
                 TryStartDungeonAfterSceneLoaded(travelCompletedEvent.SceneName);
                 return;
             }
 
-            if (dungeonModel.DungeonState == DungeonState.Exiting || dungeonModel.DungeonState == DungeonState.Failed)
+            if (dungeonModel.DungeonState == DungeonState.Exiting)
             {
+                if (travelCompletedEvent.OperationId != pendingTravelOperationId)
+                {
+                    return;
+                }
+
+                pendingTravelOperationId = Guid.Empty;
+                ClearCurrentDungeon();
+                return;
+            }
+
+            if (dungeonModel.DungeonState == DungeonState.Failed)
+            {
+                if (travelCompletedEvent.OperationId != pendingTravelOperationId)
+                {
+                    return;
+                }
+
+                pendingTravelOperationId = Guid.Empty;
                 ClearCurrentDungeon();
             }
         }
@@ -162,6 +222,12 @@ namespace RPG2D
         {
             if (dungeonModel.DungeonState == DungeonState.Loading)
             {
+                if (travelFailedEvent.OperationId != pendingTravelOperationId)
+                {
+                    return;
+                }
+
+                pendingTravelOperationId = Guid.Empty;
                 Debug.LogError($"进入副本迁移失败：" + $"{travelFailedEvent.Reason}");
 
                 ClearCurrentDungeon();
@@ -170,10 +236,28 @@ namespace RPG2D
 
             if (dungeonModel.DungeonState == DungeonState.Exiting)
             {
+                if (travelFailedEvent.OperationId != pendingTravelOperationId)
+                {
+                    return;
+                }
+
+                pendingTravelOperationId = Guid.Empty;
+
                 dungeonModel.DungeonState = DungeonState.Completed;
                 IncreaseRevision();
 
                 Debug.LogError($"退出副本迁移失败：" + $"{travelFailedEvent.Reason}");
+            }
+
+            if (dungeonModel.DungeonState == DungeonState.Failed)
+            {
+                if (travelFailedEvent.OperationId != pendingTravelOperationId)
+                {
+                    return;
+                }
+
+                pendingTravelOperationId = Guid.Empty;
+                Debug.LogError($"副本失败返回迁移失败：{travelFailedEvent.Reason}");
             }
         }
 
@@ -214,38 +298,10 @@ namespace RPG2D
             return true;
         }
 
-        public bool CompleteRoom(string roomId)
-        {
-            DungeonConfig config = GetCurrentDungeonConfig();
-
-            if (config == null)
-            {
-                return false;
-            }
-
-            DungeonRoomConfig roomConfig = GetRoomConfig(config, roomId);
-
-            if (roomConfig == null)
-            {
-                Debug.LogWarning($"Can not find completed dungeon room: {roomId}");
-                return false;
-            }
-
-            bool completed = CompleteRoom(config, roomConfig);
-            RefreshDungeonCompletion();
-
-            return completed;
-        }
-
-        public bool IsRoomCompleted(string roomId)
+        private bool IsRoomCompleted(string roomId)
         {
             DungeonRoomRuntimeState roomState = GetRoomRuntimeState(roomId);
             return roomState != null && roomState.IsCompleted;
-        }
-
-        public string GetPlayerRoomId()
-        {
-            return dungeonModel.PlayerRoomId;
         }
 
         public bool IsRoomLocked(string roomId)
@@ -254,7 +310,7 @@ namespace RPG2D
             return roomState != null && roomState.IsLocked;
         }
 
-        public DungeonRoomRuntimeState GetRoomRuntimeState(string roomId)
+        private DungeonRoomRuntimeState GetRoomRuntimeState(string roomId)
         {
             if (string.IsNullOrWhiteSpace(roomId))
             {
@@ -326,7 +382,7 @@ namespace RPG2D
             IncreaseRevision();
         }
 
-        public void RefreshDungeonCompletion()
+        private void RefreshDungeonCompletion()
         {
             if (dungeonModel.DungeonState != DungeonState.Running)
             {
@@ -667,6 +723,7 @@ namespace RPG2D
 
         private void ClearCurrentDungeon()
         {
+            pendingTravelOperationId = Guid.Empty;
             dungeonModel.CurrentDungeonId = string.Empty;
             dungeonModel.DungeonState = DungeonState.None;
             dungeonModel.PlayerRoomId = string.Empty;

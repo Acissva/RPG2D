@@ -80,7 +80,7 @@ namespace RPG2D
 
         private void RequestRespawn(TravelRequest request, string context)
         {
-            if (!playerSystem.BeginRespawn())
+            if (!playerSystem.BeginRespawn(request.OperationId))
             {
                 Debug.LogError($"{context}重生失败：玩家无法进入 Respawning 状态。");
                 return;
@@ -93,7 +93,7 @@ namespace RPG2D
                 return;
             }
 
-            playerSystem.CancelRespawn();
+            playerSystem.CancelRespawn(request.OperationId);
             Debug.LogError($"{context}重生失败：迁移请求被拒绝。");
         }
     }

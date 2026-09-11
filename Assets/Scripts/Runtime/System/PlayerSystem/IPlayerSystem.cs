@@ -1,4 +1,5 @@
 using QFramework;
+using System;
 using UnityEngine;
 
 namespace RPG2D
@@ -7,14 +8,16 @@ namespace RPG2D
     {
         bool InitializeNewGame();
         bool TakeDamage(int damage);
-        bool BeginRespawn();
-        bool CancelRespawn();
+        bool BeginRespawn(Guid travelOperationId);
+        bool CancelRespawn(Guid travelOperationId);
     }
 
     public class PlayerSystem : AbstractSystem, IPlayerSystem
     {
         private IPlayerModel playerModel;
         private IConfigSystem configSystem;
+
+        private Guid respawnTravelOperationId;
 
         protected override void OnInit()
         {
@@ -45,6 +48,8 @@ namespace RPG2D
             playerModel.HP.Value = initialHP;
             playerModel.MoveSpeed.Value = moveSpeed;
             playerModel.LifeState.Value = PlayerLifeState.Alive;
+
+            respawnTravelOperationId = Guid.Empty;
 
             return true;
         }
@@ -85,24 +90,26 @@ namespace RPG2D
             return true;
         }
 
-        public bool BeginRespawn()
+        public bool BeginRespawn(Guid travelOperationId)
         {
-            if (playerModel.LifeState.Value != PlayerLifeState.Dead)
+            if (travelOperationId == Guid.Empty || playerModel.LifeState.Value != PlayerLifeState.Dead)
             {
                 return false;
             }
 
+            respawnTravelOperationId = travelOperationId;
             playerModel.LifeState.Value = PlayerLifeState.Respawning;
             return true;
         }
 
-        public bool CancelRespawn()
+        public bool CancelRespawn(Guid travelOperationId)
         {
-            if (playerModel.LifeState.Value != PlayerLifeState.Respawning)
+            if (travelOperationId != respawnTravelOperationId || playerModel.LifeState.Value != PlayerLifeState.Respawning)
             {
                 return false;
             }
 
+            respawnTravelOperationId = Guid.Empty;
             playerModel.LifeState.Value = PlayerLifeState.Dead;
             return true;
         }
@@ -113,6 +120,13 @@ namespace RPG2D
             {
                 return;
             }
+
+            if (travelCompletedEvent.OperationId != respawnTravelOperationId)
+            {
+                return;
+            }
+
+            respawnTravelOperationId = Guid.Empty;
 
             int restoredHP = Mathf.Max(1, playerModel.MaxHP.Value);
 
@@ -134,7 +148,7 @@ namespace RPG2D
 
         private void OnTravelFailed(TravelFailedEvent travelFailedEvent)
         {
-            if (!CancelRespawn())
+            if (!CancelRespawn(travelFailedEvent.OperationId))
             {
                 return;
             }

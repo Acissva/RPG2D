@@ -1,4 +1,5 @@
 using QFramework;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,7 +14,7 @@ namespace RPG2D
 
         void LoadStartScene();
         void LoadMainGameScene();
-        void LoadScene(string sceneName);
+        bool LoadScene(string sceneName, Guid operationId);
     }
 
     public class SceneSystem : AbstractSystem, ISceneSystem
@@ -25,6 +26,7 @@ namespace RPG2D
         private IUISystem uiSystem;
 
         private AsyncOperation loadingOperation;
+        private Guid loadingOperationId;
         private string loadingSceneName;
         private bool isLoading;
         private BindableProperty<float> loadingProgress = new BindableProperty<float>(0f);
@@ -48,26 +50,36 @@ namespace RPG2D
 
         public void LoadStartScene()
         {
-            LoadScene(StartSceneName);
+            LoadScene(StartSceneName, Guid.NewGuid());
         }
 
         public void LoadMainGameScene()
         {
-            LoadScene(MainGameSceneName);
+            LoadScene(MainGameSceneName, Guid.NewGuid());
         }
 
-        public void LoadScene(string sceneName)
+        /// <returns>
+        /// false：请求在开始前就被拒绝，没有发送 Started <br />
+        /// true：请求已经进入 Scene 生命周期并发送 Started，不代表最终加载成功
+        /// </returns>
+        public bool LoadScene(string sceneName, Guid operationId)
         {
+            if (operationId == Guid.Empty)
+            {
+                Debug.LogError("场景加载失败：OperationId 无效");
+                return false;
+            }
+
             if (string.IsNullOrWhiteSpace(sceneName))
             {
                 Debug.LogError("场景加载失败：sceneName 为空");
-                return;
+                return false;
             }
 
             if (isLoading)
             {
                 Debug.LogWarning($"场景正在加载中，忽略新的加载请求：{sceneName}");
-                return;
+                return false;
             }
 
             var fromSceneName = CurrentSceneName;
@@ -75,15 +87,17 @@ namespace RPG2D
             if (fromSceneName == sceneName)
             {
                 Debug.LogWarning($"已经在目标场景中，忽略重复加载：{sceneName}");
-                return;
+                return false;
             }
 
             loadingProgress.Value = 0f;
             isLoading = true;
             loadingSceneName = sceneName;
+            loadingOperationId = operationId;
 
             this.SendEvent(new SceneLoadStartedEvent
             {
+                OperationId = loadingOperationId,
                 FromSceneName = fromSceneName,
                 ToSceneName = sceneName
             });
@@ -96,16 +110,18 @@ namespace RPG2D
             {
                 loadingOperation = SceneManager.LoadSceneAsync(sceneName);
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 FailLoading(fromSceneName, sceneName, e.Message);
-                return;
+                return true;
             }
 
             if (loadingOperation == null)
             {
                 FailLoading(fromSceneName, sceneName, "SceneManager.LoadSceneAsync 返回空，请检查场景是否已加入 Build Settings");
             }
+
+            return true;
         }
 
         private void OnUpdate()
@@ -127,20 +143,23 @@ namespace RPG2D
 
         private void FinishLoading()
         {
-            isLoading = false;
+            Guid completedOperationId = loadingOperationId;
+            string completedSceneName = loadingSceneName;
 
+            loadingOperationId = Guid.Empty;
             loadingProgress.Value = 1f;
-
-            this.SendEvent(new SceneLoadCompletedEvent
-            {
-                SceneName = loadingSceneName,
-            });
+            loadingOperation = null;
+            loadingSceneName = string.Empty;
+            isLoading = false;
 
             uiSystem?.ClosePanel(UIPanelId.Loading);
             uiSystem?.CleanupInvalidUIReferences();
 
-            loadingOperation = null;
-            loadingSceneName = string.Empty;
+            this.SendEvent(new SceneLoadCompletedEvent
+            {
+                OperationId = completedOperationId,
+                SceneName = completedSceneName
+            });
         }
 
         private void UpdateLoadingProgress()
@@ -159,6 +178,9 @@ namespace RPG2D
 
         private void FailLoading(string fromSceneName, string toSceneName, string reason)
         {
+            Guid failedOperationId = loadingOperationId;
+
+            loadingOperationId = Guid.Empty;
             isLoading = false;
             loadingProgress.Value = 0f;
             loadingOperation = null;
@@ -171,6 +193,7 @@ namespace RPG2D
 
             this.SendEvent(new SceneLoadFailedEvent
             {
+                OperationId = failedOperationId,
                 FromSceneName = fromSceneName,
                 ToSceneName = toSceneName,
                 Reason = reason
@@ -178,4 +201,3 @@ namespace RPG2D
         }
     }
 }
-

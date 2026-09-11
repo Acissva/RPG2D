@@ -25,11 +25,9 @@ namespace RPG2D
         {
             sceneSystem = this.GetSystem<ISceneSystem>();
 
-            this.RegisterEvent<SceneLoadCompletedEvent>(
-                OnSceneLoadCompleted);
+            this.RegisterEvent<SceneLoadCompletedEvent>(OnSceneLoadCompleted);
 
-            this.RegisterEvent<SceneLoadFailedEvent>(
-                OnSceneLoadFailed);
+            this.RegisterEvent<SceneLoadFailedEvent>(OnSceneLoadFailed);
         }
 
         public bool Travel(TravelRequest request)
@@ -46,9 +44,17 @@ namespace RPG2D
                 return false;
             }
 
-            var normalizedRequest = new TravelRequest(
-                request.TargetSceneName?.Trim(),
-                request.TargetSpawnPointId?.Trim());
+            //TravelRequest 是 struct，属于值类型，不是引用类型
+            //这里采用复制而不是重新调用构造方法，主要是为了保留同一个 OperationId (GUID)
+            TravelRequest normalizedRequest = request;      //这行会复制一份完整的 TravelRequest
+            normalizedRequest.TargetSceneName = request.TargetSceneName?.Trim();
+            normalizedRequest.TargetSpawnPointId = request.TargetSpawnPointId?.Trim();
+
+            if (normalizedRequest.OperationId == Guid.Empty)
+            {
+                Debug.LogError("迁移请求失败：OperationId 无效。");
+                return false;
+            }
 
             if (string.IsNullOrEmpty(normalizedRequest.TargetSceneName))
             {
@@ -76,21 +82,24 @@ namespace RPG2D
 
             this.SendEvent(new TravelStartedEvent
             {
+                OperationId = pendingRequest.OperationId,
                 FromSceneName = fromSceneName,
                 TargetSceneName = pendingRequest.TargetSceneName,
                 TargetSpawnPointId = pendingRequest.TargetSpawnPointId
             });
 
-            if (string.Equals(
-                    currentSceneName,
-                    pendingRequest.TargetSceneName,
-                    StringComparison.Ordinal))
+            if (string.Equals(currentSceneName, pendingRequest.TargetSceneName, StringComparison.Ordinal))
             {
                 CompleteTravelAtSpawnPoint();
             }
             else
             {
-                sceneSystem.LoadScene(pendingRequest.TargetSceneName);
+                bool accepted = sceneSystem.LoadScene(pendingRequest.TargetSceneName, pendingRequest.OperationId);
+
+                if (!accepted)
+                {
+                    FailTravel("SceneSystem 拒绝了场景加载请求。");
+                }
             }
 
             return true;
@@ -99,6 +108,11 @@ namespace RPG2D
         private void OnSceneLoadCompleted(SceneLoadCompletedEvent e)
         {
             if (!IsTraveling)
+            {
+                return;
+            }
+
+            if (e.OperationId != pendingRequest.OperationId)
             {
                 return;
             }
@@ -122,10 +136,12 @@ namespace RPG2D
                 return;
             }
 
-            if (!string.Equals(
-                    e.ToSceneName,
-                    pendingRequest.TargetSceneName,
-                    StringComparison.Ordinal))
+            if (e.OperationId != pendingRequest.OperationId)
+            {
+                return;
+            }
+
+            if (!string.Equals(e.ToSceneName, pendingRequest.TargetSceneName, StringComparison.Ordinal))
             {
                 FailTravel($"场景加载失败事件与迁移目标不一致：{e.ToSceneName}");
                 return;
@@ -165,6 +181,7 @@ namespace RPG2D
 
             this.SendEvent(new TravelCompletedEvent
             {
+                OperationId = completedRequest.OperationId,
                 FromSceneName = completedFromSceneName,
                 SceneName = completedRequest.TargetSceneName,
                 SpawnPointId = completedRequest.TargetSpawnPointId
@@ -174,8 +191,7 @@ namespace RPG2D
         private bool TryPlacePlayerAtSpawnPoint(string spawnPointId, out string reason)
         {
             PlayerSpawnPoint targetSpawnPoint = null;
-            PlayerSpawnPoint[] spawnPoints =
-                UnityEngine.Object.FindObjectsOfType<PlayerSpawnPoint>();
+            PlayerSpawnPoint[] spawnPoints = UnityEngine.Object.FindObjectsOfType<PlayerSpawnPoint>();
 
             foreach (PlayerSpawnPoint spawnPoint in spawnPoints)
             {
@@ -257,6 +273,7 @@ namespace RPG2D
 
             this.SendEvent(new TravelFailedEvent
             {
+                OperationId = failedRequest.OperationId,
                 FromSceneName = failedFromSceneName,
                 TargetSceneName = failedRequest.TargetSceneName,
                 TargetSpawnPointId = failedRequest.TargetSpawnPointId,
