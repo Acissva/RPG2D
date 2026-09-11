@@ -1,5 +1,4 @@
 using QFramework;
-using RPG2D.Utility;
 using UnityEngine;
 
 namespace RPG2D
@@ -8,9 +7,6 @@ namespace RPG2D
     {
         protected override void Init()
         {
-            //注册Utility
-            this.RegisterUtility<IObjectPoolUtility>(new ObjectPoolUtility());
-
             //注册Model
             this.RegisterModel<IPlayerModel>(new PlayerModel());
             this.RegisterModel<IUIModel>(new UIModel());
@@ -30,6 +26,7 @@ namespace RPG2D
             this.RegisterSystem<IRewardSystem>(new RewardSystem());
             this.RegisterSystem<IQuestSystem>(new QuestSystem());
             this.RegisterSystem<ITimerSystem>(new TimerSystem());
+            this.RegisterSystem<IObjectPoolSystem>(new ObjectPoolSystem());
             this.RegisterSystem<ICombatStateSystem>(new CombatStateSystem());
             this.RegisterSystem<IEnemyRegistrySystem>(new EnemyRegistrySystem());
             this.RegisterSystem<IDungeonSystem>(new DungeonSystem());

@@ -1,9 +1,9 @@
 using QFramework;
 using UnityEngine;
 
-namespace RPG2D.Utility
+namespace RPG2D
 {
-    public interface IObjectPoolUtility : IUtility
+    public interface IObjectPoolSystem : ISystem
     {
         void Preload(GameObject prefab, int count);
 

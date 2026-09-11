@@ -1,10 +1,11 @@
+using QFramework;
 using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace RPG2D.Utility
+namespace RPG2D
 {
-    public sealed class ObjectPoolUtility : IObjectPoolUtility
+    public sealed class ObjectPoolSystem : AbstractSystem, IObjectPoolSystem
     {
         private const string RootName = "[RPG2D ObjectPool]";
 
@@ -15,6 +16,11 @@ namespace RPG2D.Utility
         private readonly HashSet<GameObject> inactiveInstances = new();
 
         private Transform root;
+
+        protected override void OnInit()
+        {
+            this.RegisterEvent<SceneLoadStartedEvent>(_ => ClearAll());
+        }
 
         public void Preload(GameObject prefab, int count)
         {
@@ -83,7 +89,7 @@ namespace RPG2D.Utility
 
             EnsurePool(prefab);
 
-            NotifyDeSpawned(instance);
+            NotifyDespawned(instance);
 
             instance.SetActive(false);
             instance.transform.SetParent(root, false);
@@ -118,7 +124,6 @@ namespace RPG2D.Utility
             pools.Remove(prefab);
         }
 
-        //TODO:后续实现场景切换后，注意切换时调用对象池的ClearAll
         public void ClearAll()
         {
             foreach (Queue<GameObject> pool in pools.Values)
@@ -219,16 +224,14 @@ namespace RPG2D.Utility
             }
         }
 
-        private static void NotifyDeSpawned(GameObject instance)
+        private static void NotifyDespawned(GameObject instance)
         {
             IPoolable[] poolables = instance.GetComponentsInChildren<IPoolable>(true);
 
             foreach (IPoolable poolable in poolables)
             {
-                poolable.OnDeSpawned();
+                poolable.OnDespawned();
             }
         }
-
-
     }
 }

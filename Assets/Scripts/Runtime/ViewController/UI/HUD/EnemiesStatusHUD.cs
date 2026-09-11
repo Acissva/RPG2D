@@ -1,5 +1,4 @@
 using QFramework;
-using RPG2D.Utility;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ namespace RPG2D
     {
         private IAssetSystem assetSystem;
         private IEnemyRegistrySystem enemyRegistrySystem;
-        private IObjectPoolUtility poolUtility;
+        private IObjectPoolSystem objectPoolSystem;
 
         [Header("相机")]
         [SerializeField] private Camera renderTargetCamera;
@@ -23,7 +22,7 @@ namespace RPG2D
         {
             assetSystem = this.GetSystem<IAssetSystem>();
             enemyRegistrySystem = this.GetSystem<IEnemyRegistrySystem>();
-            poolUtility = this.GetUtility<IObjectPoolUtility>();
+            objectPoolSystem = this.GetSystem<IObjectPoolSystem>();
 
             if (renderTargetCamera == null)
             {
@@ -108,12 +107,12 @@ namespace RPG2D
 
         private void AddEnemy(EnemyController enemy)
         {
-            GameObject healthBarViewObj = poolUtility.Spawn(healthBarViewPrefab, Vector2.zero, Quaternion.identity, transform);
+            GameObject healthBarViewObj = objectPoolSystem.Spawn(healthBarViewPrefab, Vector2.zero, Quaternion.identity, transform);
             HealthBarView healthBarView = healthBarViewObj.GetComponent<HealthBarView>();
 
             if (healthBarView == null)
             {
-                poolUtility.Despawn(healthBarViewObj);
+                objectPoolSystem.Despawn(healthBarViewObj);
                 return;
             }
 
@@ -129,7 +128,7 @@ namespace RPG2D
         {
             if (healthBarViews.TryGetValue(enemyInstanceId, out var view))
             {
-                poolUtility.Despawn(view.gameObject);
+                objectPoolSystem.Despawn(view.gameObject);
                 healthBarViews.Remove(enemyInstanceId);
             }
         }

@@ -1,4 +1,4 @@
-namespace RPG2D.Utility
+namespace RPG2D
 {
     /// <summary>
     /// 需要在对象池生成前后执行方法，可继承该接口
@@ -6,7 +6,7 @@ namespace RPG2D.Utility
     public interface IPoolable
     {
         void OnSpawned();
-        void OnDeSpawned();
+        void OnDespawned();
     }
 }
 
