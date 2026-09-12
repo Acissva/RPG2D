@@ -1,6 +1,5 @@
 using QFramework;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace RPG2D
@@ -449,7 +448,7 @@ namespace RPG2D
                     roomState.State = DungeonRoomState.Running;
                 }
 
-                int actualEnemyCount = GetAliveEnemiesForRoom(room).Count;
+                int actualEnemyCount = enemyRegistrySystem.CountAliveEnemiesInRoom(room.RoomId);
                 roomState.ActualEnemyCount = actualEnemyCount;
 
                 if (IsCombatOrBossRoom(room)
@@ -502,7 +501,7 @@ namespace RPG2D
                 return false;
             }
 
-            return GetAliveEnemiesForRoom(roomConfig).Count <= 0;
+            return enemyRegistrySystem.CountAliveEnemiesInRoom(roomConfig.RoomId) <= 0;
         }
 
         private void CompleteDungeon(DungeonConfig config)
@@ -671,54 +670,8 @@ namespace RPG2D
             }
 
             Debug.LogWarning(
-                $"Dungeon room enemy count mismatch. RoomId={roomConfig.RoomId}, Expected={roomConfig.ExpectedEnemyCount}, Actual={actualEnemyCount}. Check DungeonRoomEnemyMarker.RoomId on room enemies.");
-        }
-
-        private List<EnemyController> GetAliveEnemiesForRoom(DungeonRoomConfig roomConfig)
-        {
-            List<EnemyController> enemies = new List<EnemyController>();
-
-            if (roomConfig == null || string.IsNullOrWhiteSpace(roomConfig.RoomId))
-            {
-                return enemies;
-            }
-
-            foreach (EnemyController enemy in GetCurrentAliveEnemies())
-            {
-                if (enemy == null)
-                {
-                    continue;
-                }
-
-                if (!enemy.TryGetComponent(out DungeonRoomEnemyMarker marker))
-                {
-                    continue;
-                }
-
-                if (marker.RoomId == roomConfig.RoomId)
-                {
-                    enemies.Add(enemy);
-                }
-            }
-
-            return enemies;
-        }
-
-        private List<EnemyController> GetCurrentAliveEnemies()
-        {
-            List<EnemyController> enemies = new List<EnemyController>();
-
-            foreach (EnemyController enemy in enemyRegistrySystem.AreaEnemies)
-            {
-                if (enemy == null || enemy.Stats == null || !enemy.Stats.IsAlive)
-                {
-                    continue;
-                }
-
-                enemies.Add(enemy);
-            }
-
-            return enemies;
+                $"Dungeon room enemy count mismatch. RoomId={roomConfig.RoomId}, Expected={roomConfig.ExpectedEnemyCount}, Actual={actualEnemyCount}. " +
+                $"Check the registered room ID of scene enemies.");
         }
 
         private void ClearCurrentDungeon()

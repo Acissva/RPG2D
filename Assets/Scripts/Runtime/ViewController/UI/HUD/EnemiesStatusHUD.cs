@@ -69,9 +69,7 @@ namespace RPG2D
 
         private void Init()
         {
-            var enemies = enemyRegistrySystem.Enemies;
-
-            foreach (EnemyController enemy in enemies)
+            foreach (EnemyViewInfo enemy in enemyRegistrySystem.EnemyViews)
             {
                 AddEnemy(enemy);
             }
@@ -84,29 +82,32 @@ namespace RPG2D
 
         private void RefreshUI()
         {
-            var enemies = enemyRegistrySystem.Enemies;
-
-            foreach (var enemy in enemies)
+            foreach (EnemyViewInfo enemy in enemyRegistrySystem.EnemyViews)
             {
-                if (enemy == null || enemy.Stats == null)
+                if (enemy == null || enemy.TargetTransform == null || enemy.Stats == null)
                 {
                     continue;
                 }
 
-                if (healthBarViews.TryGetValue(enemy.gameObject.GetInstanceID(), out HealthBarView healthBarView))
+                if (healthBarViews.TryGetValue(enemy.InstanceId, out HealthBarView healthBarView))
                 {
-                    Vector3 tempPos = renderTargetCamera.WorldToScreenPoint(enemy.transform.position + new Vector3(healthBarViewOffset.x, healthBarViewOffset.y, 0));
+                    Vector3 tempPos = renderTargetCamera.WorldToScreenPoint(enemy.TargetTransform.position + new Vector3(healthBarViewOffset.x, healthBarViewOffset.y, 0));
                     healthBarView.transform.position = new Vector3(tempPos.x, tempPos.y, healthBarView.transform.position.z);
                 }
-                else if (!enemy.Stats.IsDead)
+                else if (enemy.Stats.IsAlive)
                 {
                     AddEnemy(enemy);
                 }
             }
         }
 
-        private void AddEnemy(EnemyController enemy)
+        private void AddEnemy(EnemyViewInfo enemy)
         {
+            if (enemy == null || enemy.TargetTransform == null || enemy.Stats == null || enemy.Stats.IsDead || healthBarViews.ContainsKey(enemy.InstanceId))
+            {
+                return;
+            }
+
             GameObject healthBarViewObj = objectPoolSystem.Spawn(healthBarViewPrefab, Vector2.zero, Quaternion.identity, transform);
             HealthBarView healthBarView = healthBarViewObj.GetComponent<HealthBarView>();
 
@@ -116,12 +117,12 @@ namespace RPG2D
                 return;
             }
 
-            healthBarViews.Add(enemy.gameObject.GetInstanceID(), healthBarView);
+            healthBarViews.Add(enemy.InstanceId, healthBarView);
 
             enemy.Stats.CurrentHP.RegisterWithInitValue(_ =>
             {
                 healthBarView.Refresh(enemy.Stats.HPRatio);
-            }).UnRegisterWhenGameObjectDestroyed(enemy);
+            }).UnRegisterWhenGameObjectDestroyed(enemy.TargetTransform);
         }
 
         private void RemoveEnemy(int enemyInstanceId)
