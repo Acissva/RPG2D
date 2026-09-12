@@ -23,7 +23,6 @@ namespace RPG2D
         public const string MainGameSceneName = "MainGameScene";
 
         private IRuntimeUpdateSystem runtimeUpdateSystem;
-        private IUISystem uiSystem;
 
         private AsyncOperation loadingOperation;
         private Guid loadingOperationId;
@@ -43,7 +42,6 @@ namespace RPG2D
         protected override void OnInit()
         {
             runtimeUpdateSystem = this.GetSystem<IRuntimeUpdateSystem>();
-            uiSystem = this.GetSystem<IUISystem>();
 
             runtimeUpdateSystem.RegisterUpdate(OnUpdate);
         }
@@ -102,10 +100,6 @@ namespace RPG2D
                 ToSceneName = sceneName
             });
 
-            uiSystem?.CloseAllPanels();
-            uiSystem?.CleanupInvalidUIReferences();
-            uiSystem?.OpenPanel(UIPanelId.Loading, false);
-
             try
             {
                 loadingOperation = SceneManager.LoadSceneAsync(sceneName);
@@ -152,9 +146,6 @@ namespace RPG2D
             loadingSceneName = string.Empty;
             isLoading = false;
 
-            uiSystem?.ClosePanel(UIPanelId.Loading);
-            uiSystem?.CleanupInvalidUIReferences();
-
             this.SendEvent(new SceneLoadCompletedEvent
             {
                 OperationId = completedOperationId,
@@ -185,9 +176,6 @@ namespace RPG2D
             loadingProgress.Value = 0f;
             loadingOperation = null;
             loadingSceneName = string.Empty;
-
-            uiSystem?.ClosePanel(UIPanelId.Loading);
-            uiSystem?.CleanupInvalidUIReferences();
 
             Debug.LogError($"场景切换失败：{fromSceneName} -> {toSceneName}，原因：{reason}");
 
