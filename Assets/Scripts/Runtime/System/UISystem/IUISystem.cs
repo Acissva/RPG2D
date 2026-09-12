@@ -18,8 +18,7 @@ namespace RPG2D
         void OpenPanel(UIPanelId panelId, bool closeOtherPanels = true);
         void ClosePanel(UIPanelId panelId);
         void TogglePanel(UIPanelId panelId, bool closeOtherPanels = true);
-        void CloseTopPanel();
-        void CloseTopClosablePanel();
+
         void CloseAllPanels();
 
         void ShowConfirmPopup(string message, Action onConfirm);
@@ -36,6 +35,7 @@ namespace RPG2D
         private readonly List<UIRootController> roots = new();
         private readonly Dictionary<UIPanelId, UIPanelController> panels = new();
         private readonly List<UIPanelId> openedPanelStack = new();
+        private readonly List<UIPanelId> lastPublishedOpenedPanelStack = new();
 
         private IUIModel uiModel;
         private IAssetSystem assetSystem;
@@ -66,13 +66,7 @@ namespace RPG2D
                 return;
             }
 
-            if (uiModel.TopPanelId.Value == UIPanelId.None)
-            {
-                return;
-            }
-
-            inputReader.ConsumeAction(InputActionType.UIBack);
-            CloseTopClosablePanel();
+            HandleUIBack();
         }
 
         public void RegisterRoot(UIRootController root)
@@ -229,7 +223,7 @@ namespace RPG2D
                 return;
             }
 
-            var previousTopPanelId = uiModel.TopPanelId.Value;
+            var previousTopInputPanelId = uiModel.TopInputPanelId.Value;
 
             ApplySortOrder(panel);
 
@@ -237,16 +231,16 @@ namespace RPG2D
             MarkPanelOpen(panelId);
             RefreshUIState();
 
-            var currentTopPanelId = uiModel.TopPanelId.Value;
+            var currentTopInputPanelId = uiModel.TopInputPanelId.Value;
 
             this.SendEvent(new UIPanelOpenedEvent
             {
                 PanelId = panelId,
                 PanelGroup = panel.PanelGroup,
                 Layer = panel.Layer,
-                PreviousTopPanelId = previousTopPanelId,
-                CurrentTopPanelId = uiModel.TopPanelId.Value,
-                IsTopPanelChanged = previousTopPanelId != currentTopPanelId,
+                PreviousTopInputPanelId = previousTopInputPanelId,
+                CurrentTopInputPanelId = uiModel.TopInputPanelId.Value,
+                IsTopInputPanelChanged = previousTopInputPanelId != currentTopInputPanelId,
             });
         }
 
@@ -297,7 +291,7 @@ namespace RPG2D
                 return;
             }
 
-            var previousTopPanelId = uiModel.TopPanelId.Value;
+            var previousTopInputPanelId = uiModel.TopInputPanelId.Value;
             var panelGroup = panel.PanelGroup;
             var layer = panel.Layer;
 
@@ -312,16 +306,16 @@ namespace RPG2D
 
             RefreshUIState();
 
-            var currentTopPanelId = uiModel.TopPanelId.Value;
+            var currentTopInputPanelId = uiModel.TopInputPanelId.Value;
 
             this.SendEvent(new UIPanelClosedEvent
             {
                 PanelId = panelId,
                 PanelGroup = panelGroup,
                 Layer = layer,
-                PreviousTopPanelId = previousTopPanelId,
-                CurrentTopPanelId = currentTopPanelId,
-                IsTopPanelChanged = previousTopPanelId != currentTopPanelId,
+                PreviousTopInputPanelId = previousTopInputPanelId,
+                CurrentTopInputPanelId = currentTopInputPanelId,
+                IsTopInputPanelChanged = previousTopInputPanelId != currentTopInputPanelId,
             });
         }
 
@@ -354,8 +348,7 @@ namespace RPG2D
 
         public bool IsPanelOpen(UIPanelId panelId)
         {
-            CleanupInvalidPanels();
-
+            RefreshUIState();
             return openedPanelStack.Contains(panelId);
         }
 
@@ -370,48 +363,24 @@ namespace RPG2D
         {
             CleanupInvalidPanels();
 
-            var topPanelId = openedPanelStack.Count > 0
-                ? openedPanelStack[openedPanelStack.Count - 1]
-                : UIPanelId.None;
+            UIPanelId topInputPanelId = FindTopInputPanelId();
+            bool inputBlocked = HasInputBlockingPanel();
 
-            uiModel.TopPanelId.Value = topPanelId;
-            uiModel.InputBlocked.Value = HasInputBlockingPanel();
+            bool stateChanged = topInputPanelId != uiModel.TopInputPanelId.Value
+                || inputBlocked != uiModel.InputBlocked.Value
+                || HasOpenedPanelStackChanged();
 
-            uiModel.UIRevision.Value++;
-        }
-
-        public void CloseTopPanel()
-        {
-            CleanupInvalidPanels();
-
-            var topPanelId = uiModel.TopPanelId.Value;
-
-            if (topPanelId == UIPanelId.None) return;
-
-            ClosePanel(topPanelId);
-        }
-
-        public void CloseTopClosablePanel()
-        {
-            CleanupInvalidPanels();
-
-            for (int i = openedPanelStack.Count - 1; i >= 0; i--)
+            if (!stateChanged)
             {
-                var panelId = openedPanelStack[i];
-
-                if (!panels.TryGetValue(panelId, out var panel) || panel == null)
-                {
-                    continue;
-                }
-
-                if (!panel.CloseOnBack)
-                {
-                    continue;
-                }
-
-                ClosePanel(panelId);
                 return;
             }
+
+            lastPublishedOpenedPanelStack.Clear();
+            lastPublishedOpenedPanelStack.AddRange(openedPanelStack);
+
+            uiModel.TopInputPanelId.Value = topInputPanelId;
+            uiModel.InputBlocked.Value = inputBlocked;
+            uiModel.UIRevision.Value++;
         }
 
         public void ShowConfirmPopup(string message, Action onConfirm)
@@ -656,11 +625,11 @@ namespace RPG2D
         public UIStatusSnapshot GetStatusSnapshot()
         {
             CleanupInvalidRoots();
-            CleanupInvalidPanels();
+            RefreshUIState();
 
             var snapshot = new UIStatusSnapshot
             {
-                TopPanelId = uiModel.TopPanelId.Value,
+                TopInputPanelId = uiModel.TopInputPanelId.Value,
                 InputBlocked = uiModel.InputBlocked.Value,
                 RootCount = roots.Count,
                 RegisteredPanelCount = panels.Count,
@@ -726,7 +695,7 @@ namespace RPG2D
                  */
                 //分开写可以帮助发现“系统状态”和“实际显示状态”是否偏离
                 IsGameObjectActive = panel.IsOpen,
-                IsTopPanel = uiModel.TopPanelId.Value == panel.PanelId,
+                IsTopInputPanel = uiModel.TopInputPanelId.Value == panel.PanelId,
                 CloseOnBack = panel.CloseOnBack,
                 BlockInput = panel.BlockInput,
 
@@ -759,6 +728,86 @@ namespace RPG2D
             CleanupInvalidRoots();
             RefreshUIState();       // RefreshUIState() 内部已经调用 CleanupInvalidPanels()
         }
+
+        private UIPanelId FindTopInputPanelId()
+        {
+            UIPanelController topInputPanel = null;
+            int topOpenedIndex = -1;
+
+            for (int i = 0; i < openedPanelStack.Count; i++)
+            {
+                UIPanelId panelId = openedPanelStack[i];
+
+                if (!panels.TryGetValue(panelId, out UIPanelController panel) || panel == null)
+                {
+                    continue;
+                }
+
+                if (!panel.BlockInput && !panel.CloseOnBack)
+                {
+                    continue;
+                }
+
+                if (topInputPanel == null || HasHigherInputPriority(panel, i, topInputPanel, topOpenedIndex))
+                {
+                    topInputPanel = panel;
+                    topOpenedIndex = i;
+                }
+            }
+
+            return topInputPanel == null ? UIPanelId.None : topInputPanel.PanelId;
+        }
+
+        private static bool HasHigherInputPriority(UIPanelController candidate, int candidateOpenedIndex, UIPanelController current, int currentOpenedIndex)
+        {
+            if (candidate.Layer != current.Layer)
+            {
+                return (int)candidate.Layer > (int)current.Layer;
+            }
+
+            if (candidate.SortOrder != current.SortOrder)
+            {
+                return candidate.SortOrder > current.SortOrder;
+            }
+
+            return candidateOpenedIndex > currentOpenedIndex;
+        }
+
+        private void HandleUIBack()
+        {
+            UIPanelId topInputPanelId = uiModel.TopInputPanelId.Value;
+
+            if (topInputPanelId == UIPanelId.None)
+            {
+                return;
+            }
+
+            inputReader.ConsumeAction(InputActionType.UIBack);
+
+            if (!panels.TryGetValue(topInputPanelId, out UIPanelController panel) || panel == null || !panel.CloseOnBack)
+            {
+                return;
+            }
+
+            ClosePanel(topInputPanelId);
+        }
+
+        private bool HasOpenedPanelStackChanged()
+        {
+            if (openedPanelStack.Count != lastPublishedOpenedPanelStack.Count)
+            {
+                return true;
+            }
+
+            for (int i = 0; i < openedPanelStack.Count; i++)
+            {
+                if (openedPanelStack[i] != lastPublishedOpenedPanelStack[i])
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
-

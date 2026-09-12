@@ -4,7 +4,7 @@ namespace RPG2D
 {
     public interface IUIModel : IModel
     {
-        BindableProperty<UIPanelId> TopPanelId { get; }
+        BindableProperty<UIPanelId> TopInputPanelId { get; }
 
         /// <summary>
         /// 是否阻挡玩家操作输入
@@ -12,14 +12,14 @@ namespace RPG2D
         BindableProperty<bool> InputBlocked { get; }
 
         /// <summary>
-        /// UI 状态修订版本号，用于通知依赖 UI 打开状态的表现刷新。
+        /// UI 状态修订版本号，仅在已打开面板栈、顶部输入面板或输入阻挡状态真实变化时递增，用于通知 UI 更新
         /// </summary>
         BindableProperty<int> UIRevision { get; }
     }
 
     public class UIModel : AbstractModel, IUIModel
     {
-        public BindableProperty<UIPanelId> TopPanelId { get; } = new BindableProperty<UIPanelId>(UIPanelId.None);
+        public BindableProperty<UIPanelId> TopInputPanelId { get; } = new BindableProperty<UIPanelId>(UIPanelId.None);
 
         public BindableProperty<bool> InputBlocked { get; } = new BindableProperty<bool>(false);
 

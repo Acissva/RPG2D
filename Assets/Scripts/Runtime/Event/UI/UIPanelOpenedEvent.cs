@@ -6,9 +6,8 @@ namespace RPG2D
         public UIPanelGroup PanelGroup;
         public UILayer Layer;
 
-        public UIPanelId PreviousTopPanelId;
-        public UIPanelId CurrentTopPanelId;
-        public bool IsTopPanelChanged;
+        public UIPanelId PreviousTopInputPanelId;
+        public UIPanelId CurrentTopInputPanelId;
+        public bool IsTopInputPanelChanged;
     }
 }
-
