@@ -33,7 +33,7 @@ namespace RPG2D
             this.RegisterSystem<IUISystem>(new UISystem());
             this.RegisterSystem<IDialogueSystem>(new DialogueSystem());
             this.RegisterSystem<ISceneSystem>(new SceneSystem());
-            this.RegisterSystem<ITravelSystem>(new TravelSystem());
+            this.RegisterSystem<ITravelSystem>(new TravelSystem(new TravelSceneAdapter()));
             this.RegisterSystem<IGameFlowSystem>(new GameFlowSystem());
         }
 
