@@ -18,7 +18,9 @@ namespace RPG2D
         [SerializeField] private bool blockInput = true;
 
         [SerializeField] private int sortOrder = 0;
-        [SerializeField] private string prefabPath;
+
+        [SerializeField] private string prefabAssetKey;
+
         [SerializeField] private UIPanelCacheMode cacheMode = UIPanelCacheMode.SceneObject;
 
         public UIPanelId PanelId => panelId;
@@ -27,7 +29,7 @@ namespace RPG2D
         public bool CloseOnBack => closeOnBack;
         public bool BlockInput => blockInput;
         public int SortOrder => sortOrder;
-        public string PrefabPath => prefabPath;
+        public string PrefabAssetKey => prefabAssetKey;
         public UIPanelCacheMode CacheMode => cacheMode;
     }
 }
