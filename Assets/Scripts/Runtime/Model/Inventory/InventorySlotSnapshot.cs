@@ -7,7 +7,6 @@ namespace RPG2D
         public string Description { get; }
         public ItemType ItemType { get; }
         public int Count { get; }
-        public int MaxStack { get; }
         public string IconAssetKey { get; }
 
         public InventorySlotSnapshot(
@@ -16,7 +15,6 @@ namespace RPG2D
             string description,
             ItemType itemType,
             int count,
-            int maxStack,
             string iconAssetKey)
         {
             ItemId = itemId;
@@ -24,7 +22,6 @@ namespace RPG2D
             Description = description;
             ItemType = itemType;
             Count = count;
-            MaxStack = maxStack;
             IconAssetKey = iconAssetKey;
         }
     }

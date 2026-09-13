@@ -16,12 +16,6 @@ namespace RPG2D
         Boss
     }
 
-    public enum DungeonCompletionRule
-    {
-        RequiredRoomsCompleted,
-        SceneLoaded
-    }
-
     [CreateAssetMenu(
         fileName = "DungeonConfig",
         menuName = "RPG2D/Config/Game/Dungeon/Dungeons/Dungeon Config")]
