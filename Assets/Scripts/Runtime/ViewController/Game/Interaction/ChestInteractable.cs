@@ -65,17 +65,23 @@ namespace RPG2D
                 return;
             }
 
-            isOpened = true;
-            RefreshVisual();
-
             if (rewardItems.Count > 0)
             {
-                this.SendCommand(new GrantRewardCommand(
+                bool rewardsGranted = this.SendCommand(new GrantRewardCommand(
                     rewardItems,
                     RewardSourceType.Chest,
                     interactionId));
+
+                if (!rewardsGranted)
+                {
+                    Debug.LogWarning($"宝箱打开失败：奖励未完整发放，InteractionId={interactionId}");
+                    ShowMessage("宝箱暂时无法打开。");
+                    return;
+                }
             }
 
+            isOpened = true;
+            RefreshVisual();
             ShowMessage(openedMessage);
         }
 

@@ -296,16 +296,27 @@ namespace RPG2D
             QuestLogEntry entry = GetQuestLogEntry(questId);
             QuestConfig config = GetQuestConfig(questId);
 
-            entry.SetStatus(QuestStatus.Completed);
-
-            if (config != null && config.Rewards.Count > 0)
+            if (config == null)
             {
-                rewardSystem.GrantRewards(
+                Debug.LogWarning($"任务完成失败：找不到任务配置，QuestId={questId}");
+                return false;
+            }
+
+            if (config.Rewards.Count > 0)
+            {
+                bool rewardsGranted = rewardSystem.GrantRewards(
                     config.Rewards,
                     RewardSourceType.Quest,
                     questId);
+
+                if (!rewardsGranted)
+                {
+                    Debug.LogWarning($"任务完成失败：奖励未完整发放，QuestId={questId}");
+                    return false;
+                }
             }
 
+            entry.SetStatus(QuestStatus.Completed);
             IncreaseRevision();
 
             this.SendEvent(new QuestCompletedEvent
