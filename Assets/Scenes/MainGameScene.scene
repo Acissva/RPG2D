@@ -10672,27 +10672,17 @@ MonoBehaviour:
   notStartedDialogueLines:
   - speakerName: "\u526F\u672C\u5B88\u536B"
     text: "\u524D\u9762\u7684\u6D4B\u8BD5\u526F\u672C\u91CC\u51FA\u73B0\u4E86\u53F2\u83B1\u59C6\uFF0C\u80FD\u8BF7\u4F60\u8FDB\u53BB\u6E05\u7406\u4E00\u4E0B\u5417\uFF1F"
-    speakerNameKey: 
-    textKey: 
   - speakerName: "\u526F\u672C\u5B88\u536B"
     text: "\u6E05\u7406\u5B8C\u6210\u540E\u56DE\u6765\u5411\u6211\u62A5\u544A\uFF0C\u6211\u4F1A\u51C6\u5907\u597D\u62A5\u916C\u3002"
-    speakerNameKey: 
-    textKey: 
   inProgressDialogueLines:
   - speakerName: "\u526F\u672C\u5B88\u536B"
     text: "\u6D4B\u8BD5\u526F\u672C\u5C31\u5728\u65C1\u8FB9\uFF0C\u6E05\u7406\u5B8C\u6210\u540E\u518D\u56DE\u6765\u627E\u6211\u3002"
-    speakerNameKey: 
-    textKey: 
   readyToTurnInDialogueLines:
   - speakerName: "\u526F\u672C\u5B88\u536B"
     text: "\u4F60\u5DF2\u7ECF\u6E05\u7406\u4E86\u6D4B\u8BD5\u526F\u672C\uFF1F\u5E72\u5F97\u6F02\u4EAE\uFF0C\u8FD9\u662F\u7ED9\u4F60\u7684\u62A5\u916C\u3002"
-    speakerNameKey: 
-    textKey: 
   completedDialogueLines:
   - speakerName: "\u526F\u672C\u5B88\u536B"
     text: "\u8C22\u8C22\u4F60\u7684\u5E2E\u52A9\uFF0C\u9644\u8FD1\u6682\u65F6\u5B89\u5168\u4E86\u3002"
-    speakerNameKey: 
-    textKey: 
 --- !u!1 &560077292
 GameObject:
   m_ObjectHideFlags: 0
@@ -10755,27 +10745,17 @@ MonoBehaviour:
   notStartedDialogueLines:
   - speakerName: "\u9547\u6C11"
     text: "\u4F60\u6765\u5F97\u6B63\u597D\uFF0C\u80FD\u5E2E\u6211\u770B\u770B\u516C\u544A\u724C\u4E0A\u6709\u6CA1\u6709\u65B0\u7684\u901A\u77E5\u5417\uFF1F"
-    speakerNameKey: 
-    textKey: 
   - speakerName: "\u9547\u6C11"
     text: "\u770B\u5B8C\u540E\u56DE\u6765\u544A\u8BC9\u6211\u4E00\u58F0\u3002"
-    speakerNameKey: 
-    textKey: 
   inProgressDialogueLines:
   - speakerName: "\u9547\u6C11"
     text: "\u516C\u544A\u724C\u5C31\u5728\u9644\u8FD1\uFF0C\u9EBB\u70E6\u4F60\u5148\u53BB\u770B\u4E00\u773C\u3002"
-    speakerNameKey: 
-    textKey: 
   readyToTurnInDialogueLines:
   - speakerName: "\u9547\u6C11"
     text: "\u4F60\u5DF2\u7ECF\u770B\u8FC7\u516C\u544A\u724C\u4E86\uFF1F\u592A\u597D\u4E86\uFF0C\u8C22\u8C22\u4F60\u3002"
-    speakerNameKey: 
-    textKey: 
   completedDialogueLines:
   - speakerName: "\u9547\u6C11"
     text: "\u8C22\u8C22\u4F60\u7684\u5E2E\u5FD9\uFF0C\u5C0F\u9547\u7684\u7B2C\u4E00\u4EFD\u59D4\u6258\u5B8C\u6210\u4E86\u3002"
-    speakerNameKey: 
-    textKey: 
 --- !u!1 &636947790
 GameObject:
   m_ObjectHideFlags: 0
