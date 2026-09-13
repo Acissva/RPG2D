@@ -8,7 +8,5 @@ namespace RPG2D
         public int EnemyInstanceId;
         public Vector3 Position;
         public string DropTableId;
-        public int ExperienceReward;
     }
 }
-

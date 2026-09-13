@@ -83,9 +83,8 @@ namespace RPG2D
             int instanceID = gameObject.GetInstanceID();
             Vector3 pos = transform.position;
             string dropTableId = stats.DropTableId;
-            int experienceReward = stats.ExperienceReward;
 
-            this.SendCommand(new EnemyDeathCommand(enemyId, instanceID, pos, dropTableId, experienceReward));
+            this.SendCommand(new EnemyDeathCommand(enemyId, instanceID, pos, dropTableId));
 
             deathVisualTimer = this.GetSystem<ITimerSystem>().Schedule(
                 1.5f,

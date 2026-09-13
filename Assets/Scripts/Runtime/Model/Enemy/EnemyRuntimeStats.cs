@@ -1,17 +1,12 @@
 using QFramework;
 using System;
-using System.Collections.Generic;
 
 namespace RPG2D
 {
     [Serializable]
     public class EnemyRuntimeStats
     {
-        private readonly List<string> attackSkillIds = new List<string>();
-
         public string EnemyId { get; private set; }
-        public string DisplayNameKey { get; private set; }
-        public EnemyType EnemyType { get; private set; }
 
         public int MaxHP { get; private set; }
         public BindableProperty<int> CurrentHP { get; private set; } = new BindableProperty<int>();
@@ -37,10 +32,6 @@ namespace RPG2D
         public float PatrolRadius { get; private set; }
 
         /// <summary>
-        /// 技能列表
-        /// </summary>
-        public IReadOnlyList<string> AttackSkillIds => attackSkillIds;
-        /// <summary>
         /// 受击硬直时间
         /// </summary>
         public float HitStunDuration { get; private set; }
@@ -62,10 +53,6 @@ namespace RPG2D
         /// 掉落物列表
         /// </summary>
         public string DropTableId { get; private set; }
-        /// <summary>
-        /// 经验奖励
-        /// </summary>
-        public int ExperienceReward { get; private set; }
 
         public bool IsAlive => CurrentHP.Value > 0;
         public bool IsDead => CurrentHP.Value <= 0;
@@ -79,8 +66,6 @@ namespace RPG2D
             }
 
             EnemyId = config.Identity.EnemyId;
-            DisplayNameKey = config.Identity.DisplayNameKey;
-            EnemyType = config.Identity.EnemyType;
 
             MaxHP = config.Stats.MaxHP;
             CurrentHP.Value = MaxHP;
@@ -96,9 +81,6 @@ namespace RPG2D
             LeashRadius = config.Perception.LeashRadius;
             PatrolRadius = config.Perception.PatrolRadius;
 
-            attackSkillIds.Clear();
-            attackSkillIds.AddRange(config.Combat.AttackSkillIds);
-
             HitStunDuration = config.Combat.HitStunDuration;
             AttackCooldown = config.Combat.AttackCooldown;
             AttackWindupDuration = config.Combat.AttackWindupDuration;
@@ -106,7 +88,6 @@ namespace RPG2D
             AttackRecoveryDuration = config.Combat.AttackRecoveryDuration;
 
             DropTableId = config.Reward.DropTableId;
-            ExperienceReward = config.Reward.ExperienceReward;
         }
 
         /// <summary>

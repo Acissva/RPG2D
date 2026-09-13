@@ -11,19 +11,12 @@ namespace RPG2D
         private readonly string dropTableId;
         private readonly Vector2 position;
         private readonly string sourceEnemyId;
-        private readonly int experienceReward;
 
-        public DropLootCommand(string dropTableId, Vector2 position, string sourceEnemyId, int experienceReward)
+        public DropLootCommand(string dropTableId, Vector2 position, string sourceEnemyId)
         {
             this.dropTableId = dropTableId;
             this.position = position;
             this.sourceEnemyId = sourceEnemyId;
-            this.experienceReward = experienceReward;
-        }
-
-        public DropLootCommand(string dropTableId)
-            : this(dropTableId, Vector2.zero, string.Empty, 0)
-        {
         }
 
         protected override void OnExecute()
@@ -64,11 +57,6 @@ namespace RPG2D
 
                 int count = Random.Range(entry.MinCount, entry.MaxCount + 1);
                 CreateLoot(entry.ItemId, count, i);
-            }
-
-            if (experienceReward > 0)
-            {
-                Debug.Log($"敌人【{sourceEnemyId}】经验奖励暂未接入：{experienceReward}");
             }
         }
 
