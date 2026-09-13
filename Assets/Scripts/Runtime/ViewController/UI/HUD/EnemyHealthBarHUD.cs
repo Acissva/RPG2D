@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RPG2D
 {
-    public class EnemiesStatusHUD : RPG2DController
+    public class EnemyHealthBarHUD : RPG2DController
     {
         private IAssetSystem assetSystem;
         private IEnemyRegistrySystem enemyRegistrySystem;
@@ -43,7 +43,7 @@ namespace RPG2D
             {
                 if (!healthBarViewPrefab.GetComponent<HealthBarView>())
                 {
-                    Debug.LogError("EnemiesStatusHUD init fault : HealthBarViewPrefab requires HealthBarView");
+                    Debug.LogError("EnemyHealthBarHUD init fault : HealthBarViewPrefab requires HealthBarView");
                     enabled = false;
                     return;
                 }
@@ -56,7 +56,7 @@ namespace RPG2D
                 return;
             }
 
-            this.RegisterEvent<EnemyDeadEvent>(e =>
+            this.RegisterEvent<EnemyDiedEvent>(e =>
             {
                 RemoveEnemy(e.EnemyInstanceId);
             }).UnRegisterWhenGameObjectDestroyed(gameObject);

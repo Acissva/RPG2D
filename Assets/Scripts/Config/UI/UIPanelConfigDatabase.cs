@@ -12,11 +12,11 @@ namespace RPG2D
 
         public bool TryGetConfig(UIPanelId panelId, out UIPanelConfig config)
         {
-            BuildCondigMapIfNeeded();
+            BuildConfigMapIfNeeded();
             return configMap.TryGetValue(panelId, out config);
         }
 
-        private void BuildCondigMapIfNeeded()
+        private void BuildConfigMapIfNeeded()
         {
             if (configMap != null)
             {

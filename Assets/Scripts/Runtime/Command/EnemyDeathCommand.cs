@@ -20,7 +20,7 @@ namespace RPG2D
 
         protected override void OnExecute()
         {
-            this.SendEvent(new EnemyDeadEvent
+            this.SendEvent(new EnemyDiedEvent
             {
                 EnemyId = enemyId,
                 EnemyInstanceId = enemyInstanceId,

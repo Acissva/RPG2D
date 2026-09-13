@@ -2410,7 +2410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   logPanelEvents: 0
   logInputBlocked: 0
-  onlyLogTopPanelChanged: 0
+  onlyLogTopInputPanelChanged: 0
   logSnapshotAfterPanelEvent: 0
   logSnapshotOnHotkey: 1
   logDetailedSnapshot: 0
@@ -59496,7 +59496,7 @@ GameObject:
   - component: {fileID: 1383779766}
   m_Layer: 0
   m_HasEditorInfo: 1
-  m_Name: EnemiesStatusHUD
+  m_Name: EnemyHealthBarHUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

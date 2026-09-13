@@ -29,7 +29,7 @@ namespace RPG2D
 
         protected override void OnInit()
         {
-            this.RegisterEvent<EnemyDeadEvent>(e =>
+            this.RegisterEvent<EnemyDiedEvent>(e =>
             {
                 UnregisterEnemy(e.EnemyInstanceId);
             });

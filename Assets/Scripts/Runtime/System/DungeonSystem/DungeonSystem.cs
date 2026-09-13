@@ -24,7 +24,7 @@ namespace RPG2D
             rewardSystem = this.GetSystem<IRewardSystem>();
             travelSystem = this.GetSystem<ITravelSystem>();
 
-            this.RegisterEvent<EnemyDeadEvent>(OnEnemyDead);
+            this.RegisterEvent<EnemyDiedEvent>(OnEnemyDied);
             this.RegisterEvent<TravelCompletedEvent>(OnTravelCompleted);
             this.RegisterEvent<TravelFailedEvent>(OnTravelFailed);
             this.RegisterEvent<TravelStartedEvent>(OnTravelStarted);
@@ -455,7 +455,7 @@ namespace RPG2D
             }
         }
 
-        private void OnEnemyDead(EnemyDeadEvent enemyDeadEvent)
+        private void OnEnemyDied(EnemyDiedEvent enemyDiedEvent)
         {
             if (dungeonModel.DungeonState != DungeonState.Running)
             {

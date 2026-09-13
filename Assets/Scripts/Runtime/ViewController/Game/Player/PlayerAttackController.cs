@@ -7,7 +7,7 @@ namespace RPG2D
     {
         [SerializeField] private Camera worldCamera;
 
-        public IWeapon currentWeapon;
+        private IWeapon currentWeapon;
 
         private IInputReader inputReader;
         private IUIModel uiModel;

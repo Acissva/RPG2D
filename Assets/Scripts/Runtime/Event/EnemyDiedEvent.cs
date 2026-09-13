@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace RPG2D
 {
-    public struct EnemyDeadEvent
+    public struct EnemyDiedEvent
     {
         public string EnemyId;
         public int EnemyInstanceId;
