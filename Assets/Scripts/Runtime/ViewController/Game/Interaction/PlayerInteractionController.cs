@@ -62,7 +62,12 @@ namespace RPG2D
 
             if (inputReader.ConsumeAction(InputActionType.Interact))
             {
-                CurrentInteractable.Interact(InteractorGameObject);
+                IInteractable interactable = CurrentInteractable;
+                string interactionId = interactable.InteractionId;
+
+                interactable.Interact(InteractorGameObject);
+                this.SendCommand(new ReportInteractionCommand(interactionId));
+
                 RefreshCurrentInteractable();
             }
         }

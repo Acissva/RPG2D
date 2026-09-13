@@ -11964,7 +11964,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   logPanelEvents: 0
   logInputBlocked: 0
-  onlyLogTopPanelChanged: 0
+  onlyLogTopInputPanelChanged: 0
   logSnapshotAfterPanelEvent: 0
   logSnapshotOnHotkey: 1
   logDetailedSnapshot: 0
@@ -12778,11 +12778,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1553045234}
   m_CullTransparentMesh: 1
---- !u!1 &1585112340 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6235899702021338896, guid: e1a8f71b045d2ed45b4383c2c92aa3e4, type: 3}
-  m_PrefabInstance: {fileID: 1831720919}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1606680328
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24430,6 +24425,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1766853740540351853, guid: e1a8f71b045d2ed45b4383c2c92aa3e4, type: 3}
+      propertyPath: message
+      value: "\u516C\u544A\u724C\u4E0A\u5199\u7740\uFF1A\u6B22\u8FCE\u6765\u5230\u8349\u5730\u5C0F\u9547\u3002"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766853740540351853, guid: e1a8f71b045d2ed45b4383c2c92aa3e4, type: 3}
+      propertyPath: promptText
+      value: "\u67E5\u770B\u516C\u544A"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766853740540351853, guid: e1a8f71b045d2ed45b4383c2c92aa3e4, type: 3}
+      propertyPath: speakerName
+      value: "\u516C\u544A\u724C"
+      objectReference: {fileID: 0}
     - target: {fileID: 2029826324056372235, guid: e1a8f71b045d2ed45b4383c2c92aa3e4, type: 3}
       propertyPath: m_Size.x
       value: 4.968752
@@ -24466,38 +24473,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: prop_gt_notice_board_01
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1766853740540351853, guid: e1a8f71b045d2ed45b4383c2c92aa3e4, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6235899702021338896, guid: e1a8f71b045d2ed45b4383c2c92aa3e4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1831720925}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e1a8f71b045d2ed45b4383c2c92aa3e4, type: 3}
 --- !u!4 &1831720920 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 967211769488191993, guid: e1a8f71b045d2ed45b4383c2c92aa3e4, type: 3}
   m_PrefabInstance: {fileID: 1831720919}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1831720925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1585112340}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f73ab33e670e7db488b37607bb660016, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionId: notice_board_gt_001
-  promptText: "\u67E5\u770B\u516C\u544A"
-  questId: quest_gt_notice_report_001
-  objectiveId: objective_read_notice_board
-  speakerName: "\u516C\u544A\u724C"
-  message: "\u516C\u544A\u724C\u4E0A\u5199\u7740\uFF1A\u6B22\u8FCE\u6765\u5230\u8349\u5730\u5C0F\u9547\u3002"
 --- !u!1 &1861168140
 GameObject:
   m_ObjectHideFlags: 0
