@@ -22,28 +22,7 @@ namespace RPG2D
             this.RegisterEvent<SceneLoadStartedEvent>(_ => ClearAll());
         }
 
-        public void Preload(GameObject prefab, int count)
-        {
-            if (prefab == null || count <= 0)
-            {
-                return;
-            }
-
-            EnsurePool(prefab);
-
-            for (int i = 0; i < count; i++)
-            {
-                GameObject instance = CreateInstance(prefab);
-                pools[prefab].Enqueue(instance);
-                inactiveInstances.Add(instance);
-            }
-        }
-
-        public GameObject Spawn(
-            GameObject prefab,
-            Vector3 position,
-            Quaternion rotation,
-            Transform parent = null)
+        public GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
         {
             if (prefab == null)
             {
@@ -63,16 +42,6 @@ namespace RPG2D
             instance.SetActive(true);
 
             return instance;
-        }
-
-        public T Spawn<T>(
-            GameObject prefab,
-            Vector3 position,
-            Quaternion rotation,
-            Transform parent = null) where T : Component
-        {
-            GameObject instance = Spawn(prefab, position, rotation, parent);
-            return instance != null ? instance.GetComponent<T>() : null;
         }
 
         public void Despawn(GameObject instance)
@@ -98,33 +67,7 @@ namespace RPG2D
             pools[prefab].Enqueue(instance);
         }
 
-        public void Release(GameObject instance)
-        {
-            if (!instanceToPrefab.TryGetValue(instance, out GameObject prefab))
-            {
-                Object.Destroy(instance);
-                return;
-            }
-
-            Despawn(instance);
-        }
-
-        public void Clear(GameObject prefab)
-        {
-            if (prefab == null || !pools.TryGetValue(prefab, out Queue<GameObject> pool))
-            {
-                return;
-            }
-
-            while (pool.Count > 0)
-            {
-                DestroyPooledInstance(pool.Dequeue());
-            }
-
-            pools.Remove(prefab);
-        }
-
-        public void ClearAll()
+        private void ClearAll()
         {
             foreach (Queue<GameObject> pool in pools.Values)
             {
@@ -138,11 +81,6 @@ namespace RPG2D
             inactiveInstances.Clear();
             instanceToPrefab.Clear();
             root = null;
-        }
-
-        public bool IsPooled(GameObject instance)
-        {
-            return instance != null && instanceToPrefab.ContainsKey(instance);
         }
 
         private void EnsurePool(GameObject prefab)
