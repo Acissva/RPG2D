@@ -40,6 +40,30 @@ namespace RPG2D
         private void OnValidate()
         {
             dropTables ??= new List<DropTableConfig>();
+
+            HashSet<string> dropTableIds = new();
+
+            for (int i = 0; i < dropTables.Count; i++)
+            {
+                DropTableConfig dropTable = dropTables[i];
+
+                if (dropTable == null)
+                {
+                    Debug.LogError($"{nameof(DropTableConfigDatabase)} 的 DropTables[{i}] 为空。", this);
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(dropTable.DropTableId))
+                {
+                    Debug.LogError($"{nameof(DropTableConfigDatabase)} 中存在 DropTableId 为空的配置，索引={i}。", dropTable);
+                    continue;
+                }
+
+                if (!dropTableIds.Add(dropTable.DropTableId))
+                {
+                    Debug.LogError($"{nameof(DropTableConfigDatabase)} 中存在重复 DropTableId：{dropTable.DropTableId}。", dropTable);
+                }
+            }
         }
     }
 }

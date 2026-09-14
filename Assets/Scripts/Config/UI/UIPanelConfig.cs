@@ -31,6 +31,24 @@ namespace RPG2D
         public int SortOrder => sortOrder;
         public string PrefabAssetKey => prefabAssetKey;
         public UIPanelCacheMode CacheMode => cacheMode;
+
+        private void OnValidate()
+        {
+            if (panelId == UIPanelId.None)
+            {
+                Debug.LogError($"{nameof(UIPanelConfig)} {name} 的 PanelId 不能为 None。", this);
+            }
+
+            if (cacheMode == UIPanelCacheMode.None)
+            {
+                Debug.LogError($"{nameof(UIPanelConfig)} {panelId} 的 CacheMode 不能为 None。", this);
+            }
+
+            if (cacheMode != UIPanelCacheMode.SceneObject && string.IsNullOrWhiteSpace(prefabAssetKey))
+            {
+                Debug.LogError($"{nameof(UIPanelConfig)} {panelId} 使用 {cacheMode} 模式时必须配置 PrefabAssetKey。", this);
+            }
+        }
     }
 }
 

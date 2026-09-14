@@ -53,20 +53,79 @@ namespace RPG2D
 
             if (string.IsNullOrWhiteSpace(sceneName))
             {
+                Debug.LogError($"{nameof(DungeonConfig)} {dungeonId} 的 SceneName 为空，已恢复默认值。", this);
                 sceneName = "Dungeon_GT_Test_001";
+            }
+
+            if (string.IsNullOrWhiteSpace(entranceSpawnPointId))
+            {
+                Debug.LogError($"{nameof(DungeonConfig)} {dungeonId} 的 EntranceSpawnPointId 为空。", this);
+            }
+
+            if (string.IsNullOrWhiteSpace(returnSceneName))
+            {
+                Debug.LogError($"{nameof(DungeonConfig)} {dungeonId} 的 ReturnSceneName 为空。", this);
+            }
+
+            if (string.IsNullOrWhiteSpace(returnSpawnPointId))
+            {
+                Debug.LogError($"{nameof(DungeonConfig)} {dungeonId} 的 ReturnSpawnPointId 为空。", this);
             }
 
             rooms ??= new List<DungeonRoomConfig>();
             completionRewards ??= new List<RewardItemConfig>();
 
+            if (rooms.Count == 0)
+            {
+                Debug.LogError($"{nameof(DungeonConfig)} {dungeonId} 没有配置任何房间。", this);
+            }
+
+            HashSet<string> roomIds = new();
+
             for (int i = 0; i < rooms.Count; i++)
             {
-                rooms[i]?.Validate();
+                DungeonRoomConfig room = rooms[i];
+
+                if (room == null)
+                {
+                    Debug.LogError($"{nameof(DungeonConfig)} {dungeonId} 的 Rooms[{i}] 为空。", this);
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(room.RoomId))
+                {
+                    Debug.LogError($"{nameof(DungeonConfig)} {dungeonId} 中存在 RoomId 为空的房间，索引={i}。", this);
+                }
+
+                room.Validate();
+
+                if (!roomIds.Add(room.RoomId))
+                {
+                    Debug.LogError($"{nameof(DungeonConfig)} {dungeonId} 中存在重复 RoomId：{room.RoomId}。", this);
+                }
+
+                for (int rewardIndex = 0; rewardIndex < room.CompletionRewards.Count; rewardIndex++)
+                {
+                    RewardItemConfig reward = room.CompletionRewards[rewardIndex];
+
+                    if (reward == null)
+                    {
+                        Debug.LogError($"{nameof(DungeonConfig)} {dungeonId} 的房间 {room.RoomId} 存在空奖励条目，索引={rewardIndex}。", this);
+                    }
+                }
             }
 
             for (int i = 0; i < completionRewards.Count; i++)
             {
-                completionRewards[i]?.Validate();
+                RewardItemConfig reward = completionRewards[i];
+
+                if (reward == null)
+                {
+                    Debug.LogError($"{nameof(DungeonConfig)} {dungeonId} 的 CompletionRewards[{i}] 为空。", this);
+                    continue;
+                }
+
+                reward.Validate();
             }
         }
     }

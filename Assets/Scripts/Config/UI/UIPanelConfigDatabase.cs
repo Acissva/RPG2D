@@ -23,26 +23,39 @@ namespace RPG2D
                 return;
             }
 
+            panelConfigs ??= new List<UIPanelConfig>();
             configMap = new Dictionary<UIPanelId, UIPanelConfig>();
 
-            foreach (var config in panelConfigs)
+            for (int i = 0; i < panelConfigs.Count; i++)
             {
-                if (config == null) continue;
+                UIPanelConfig config = panelConfigs[i];
+
+                if (config == null)
+                {
+                    Debug.LogError($"{nameof(UIPanelConfigDatabase)} 的 PanelConfigs[{i}] 为空。", this);
+                    continue;
+                }
 
                 if (config.PanelId == UIPanelId.None)
                 {
-                    Debug.LogError($"{nameof(UIPanelConfigDatabase)} 中存在 PanelId=None 的配置", this);
+                    Debug.LogError($"{nameof(UIPanelConfigDatabase)} 中存在 PanelId=None 的配置。", config);
                     continue;
                 }
 
                 if (configMap.ContainsKey(config.PanelId))
                 {
-                    Debug.LogError($"{nameof(UIPanelConfigDatabase)} 中存在重复配置：{config.PanelId}", this);
+                    Debug.LogError($"{nameof(UIPanelConfigDatabase)} 中存在重复配置：{config.PanelId}。", config);
                     continue;
                 }
 
                 configMap.Add(config.PanelId, config);
             }
+        }
+
+        private void OnValidate()
+        {
+            configMap = null;
+            BuildConfigMapIfNeeded();
         }
     }
 }
