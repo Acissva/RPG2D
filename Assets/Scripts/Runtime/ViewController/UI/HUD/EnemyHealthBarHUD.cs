@@ -1,0 +1,137 @@
+using QFramework;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace RPG2D
+{
+    public class EnemyHealthBarHUD : RPG2DController
+    {
+        private IAssetSystem assetSystem;
+        private IEnemyRegistrySystem enemyRegistrySystem;
+        private IObjectPoolSystem objectPoolSystem;
+
+        [Header("相机")]
+        [SerializeField] private Camera renderTargetCamera;
+
+        [Header("血条")]
+        private Dictionary<int, HealthBarView> healthBarViews = new();
+        [SerializeField] private GameObject healthBarViewPrefab;
+        [SerializeField] private Vector2 healthBarViewOffset = new Vector2(0, 1);
+
+        private void Awake()
+        {
+            assetSystem = this.GetSystem<IAssetSystem>();
+            enemyRegistrySystem = this.GetSystem<IEnemyRegistrySystem>();
+            objectPoolSystem = this.GetSystem<IObjectPoolSystem>();
+
+            if (renderTargetCamera == null)
+            {
+                renderTargetCamera = Camera.main;
+
+                if (renderTargetCamera == null)
+                {
+                    enabled = false;
+                    return;
+                }
+            }
+
+            if (healthBarViewPrefab == null)
+            {
+                healthBarViewPrefab = assetSystem.Load<GameObject>("Prefab/UI/HealthBar");
+            }
+            else
+            {
+                if (!healthBarViewPrefab.GetComponent<HealthBarView>())
+                {
+                    Debug.LogError("EnemyHealthBarHUD init fault : HealthBarViewPrefab requires HealthBarView");
+                    enabled = false;
+                    return;
+                }
+            }
+
+            if (healthBarViewPrefab == null)
+            {
+                Debug.LogError("Can not find HealthBar Prefab : Prefab/UI/HealthBar");
+                enabled = false;
+                return;
+            }
+
+            this.RegisterEvent<EnemyDiedEvent>(e =>
+            {
+                RemoveEnemy(e.EnemyInstanceId);
+            }).UnRegisterWhenGameObjectDestroyed(gameObject);
+        }
+
+        private void Start()
+        {
+            Init();
+        }
+
+        private void Init()
+        {
+            foreach (EnemyViewInfo enemy in enemyRegistrySystem.EnemyViews)
+            {
+                AddEnemy(enemy);
+            }
+        }
+
+        private void Update()
+        {
+            RefreshUI();
+        }
+
+        private void RefreshUI()
+        {
+            foreach (EnemyViewInfo enemy in enemyRegistrySystem.EnemyViews)
+            {
+                if (enemy == null || enemy.TargetTransform == null || enemy.Stats == null)
+                {
+                    continue;
+                }
+
+                if (healthBarViews.TryGetValue(enemy.InstanceId, out HealthBarView healthBarView))
+                {
+                    Vector3 tempPos = renderTargetCamera.WorldToScreenPoint(enemy.TargetTransform.position + new Vector3(healthBarViewOffset.x, healthBarViewOffset.y, 0));
+                    healthBarView.transform.position = new Vector3(tempPos.x, tempPos.y, healthBarView.transform.position.z);
+                }
+                else if (enemy.Stats.IsAlive)
+                {
+                    AddEnemy(enemy);
+                }
+            }
+        }
+
+        private void AddEnemy(EnemyViewInfo enemy)
+        {
+            if (enemy == null || enemy.TargetTransform == null || enemy.Stats == null || enemy.Stats.IsDead || healthBarViews.ContainsKey(enemy.InstanceId))
+            {
+                return;
+            }
+
+            GameObject healthBarViewObj = objectPoolSystem.Spawn(healthBarViewPrefab, Vector2.zero, Quaternion.identity, transform);
+            HealthBarView healthBarView = healthBarViewObj.GetComponent<HealthBarView>();
+
+            if (healthBarView == null)
+            {
+                objectPoolSystem.Despawn(healthBarViewObj);
+                return;
+            }
+
+            healthBarViews.Add(enemy.InstanceId, healthBarView);
+
+            enemy.Stats.CurrentHP.RegisterWithInitValue(_ =>
+            {
+                healthBarView.Refresh(enemy.Stats.HPRatio);
+            }).UnRegisterWhenGameObjectDestroyed(enemy.TargetTransform);
+        }
+
+        private void RemoveEnemy(int enemyInstanceId)
+        {
+            if (healthBarViews.TryGetValue(enemyInstanceId, out var view))
+            {
+                objectPoolSystem.Despawn(view.gameObject);
+                healthBarViews.Remove(enemyInstanceId);
+            }
+        }
+    }
+}

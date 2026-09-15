@@ -40,6 +40,30 @@ namespace RPG2D
         private void OnValidate()
         {
             dungeons ??= new List<DungeonConfig>();
+
+            HashSet<string> dungeonIds = new();
+
+            for (int i = 0; i < dungeons.Count; i++)
+            {
+                DungeonConfig dungeon = dungeons[i];
+
+                if (dungeon == null)
+                {
+                    Debug.LogError($"{nameof(DungeonConfigDatabase)} 的 Dungeons[{i}] 为空。", this);
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(dungeon.DungeonId))
+                {
+                    Debug.LogError($"{nameof(DungeonConfigDatabase)} 中存在 DungeonId 为空的配置，索引={i}。", dungeon);
+                    continue;
+                }
+
+                if (!dungeonIds.Add(dungeon.DungeonId))
+                {
+                    Debug.LogError($"{nameof(DungeonConfigDatabase)} 中存在重复 DungeonId：{dungeon.DungeonId}。", dungeon);
+                }
+            }
         }
     }
 }

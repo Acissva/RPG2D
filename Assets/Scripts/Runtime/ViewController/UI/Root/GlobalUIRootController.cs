@@ -6,7 +6,7 @@ namespace RPG2D
 
         protected override void Awake()
         {
-            if(instance != null && instance != this)
+            if (instance != null && instance != this)
             {
                 Destroy(gameObject);
                 return;
@@ -17,18 +17,43 @@ namespace RPG2D
             DontDestroyOnLoad(gameObject);
 
             base.Awake();
+
+            EnsureSceneTransitionPresenter();
+            EnsureDialoguePresenter();
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
 
-            if(instance == this)
+            if (instance == this)
             {
                 instance = null;
             }
         }
 
+        private void EnsureSceneTransitionPresenter()
+        {
+            SceneTransitionPresenter presenter = GetComponent<SceneTransitionPresenter>();
+
+            if (presenter == null)
+            {
+                presenter = gameObject.AddComponent<SceneTransitionPresenter>();
+            }
+
+            presenter.Initialize();
+        }
+
+        private void EnsureDialoguePresenter()
+        {
+            DialoguePresenter presenter = GetComponent<DialoguePresenter>();
+
+            if (presenter == null)
+            {
+                presenter = gameObject.AddComponent<DialoguePresenter>();
+            }
+
+            presenter.Initialize();
+        }
     }
 }
-

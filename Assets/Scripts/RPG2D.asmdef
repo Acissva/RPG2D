@@ -1,0 +1,18 @@
+{
+    "name": "RPG2D",
+    "rootNamespace": "RPG2D",
+    "references": [
+        "GUID:39fed593948099f489ef45b66a3dfab2",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:2bafac87e7f4b9b418d9448d219b01ab"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

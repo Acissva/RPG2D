@@ -1,0 +1,20 @@
+{
+    "name": "RPG2D.Editor",
+    "rootNamespace": "RPG2D.Editor",
+    "references": [
+        "GUID:39fed593948099f489ef45b66a3dfab2",
+        "GUID:c6865c3d0460a6648b67f347a9ecc007",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

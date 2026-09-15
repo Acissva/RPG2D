@@ -40,6 +40,30 @@ namespace RPG2D
         private void OnValidate()
         {
             items ??= new List<ItemConfig>();
+
+            HashSet<string> itemIds = new();
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                ItemConfig item = items[i];
+
+                if (item == null)
+                {
+                    Debug.LogError($"{nameof(ItemConfigDatabase)} 的 Items[{i}] 为空。", this);
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(item.ItemId))
+                {
+                    Debug.LogError($"{nameof(ItemConfigDatabase)} 中存在 ItemId 为空的配置，索引={i}。", item);
+                    continue;
+                }
+
+                if (!itemIds.Add(item.ItemId))
+                {
+                    Debug.LogError($"{nameof(ItemConfigDatabase)} 中存在重复 ItemId：{item.ItemId}。", item);
+                }
+            }
         }
     }
 }

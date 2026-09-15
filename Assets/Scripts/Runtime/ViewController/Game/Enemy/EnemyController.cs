@@ -34,7 +34,14 @@ namespace RPG2D
 
             Stats.Init(config);
 
-            this.GetSystem<IEnemyRegistrySystem>().RegisterEnemy(this);
+            string roomId = string.Empty;
+
+            if (TryGetComponent(out DungeonRoomEnemyMarker roomMarker))
+            {
+                roomId = roomMarker.RoomId;
+            }
+
+            this.GetSystem<IEnemyRegistrySystem>().RegisterEnemy(gameObject.GetInstanceID(), roomId, Stats, transform);
         }
 
         private void Start()
@@ -45,9 +52,7 @@ namespace RPG2D
 
         private void OnDestroy()
         {
-            this.GetSystem<IEnemyRegistrySystem>().UnregisterEnemy(this);
+            this.GetSystem<IEnemyRegistrySystem>().UnregisterEnemy(gameObject.GetInstanceID());
         }
-
     }
 }
-

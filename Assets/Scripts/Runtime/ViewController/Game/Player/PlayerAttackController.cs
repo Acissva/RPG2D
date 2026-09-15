@@ -7,7 +7,7 @@ namespace RPG2D
     {
         [SerializeField] private Camera worldCamera;
 
-        public IWeapon currentWeapon;
+        private IWeapon currentWeapon;
 
         private IInputReader inputReader;
         private IUIModel uiModel;
@@ -59,19 +59,16 @@ namespace RPG2D
         {
             if (worldCamera == null) return;
 
-            Vector3 mouseScreenPos = Input.mousePosition;
-            mouseScreenPos.z = transform.position.z - worldCamera.transform.position.z;
+            Vector3 pointerScreenPosition = inputReader.PointerScreenPosition;
+            pointerScreenPosition.z = transform.position.z - worldCamera.transform.position.z;
 
-            Vector2 mouseWorldPos = worldCamera.ScreenToWorldPoint(mouseScreenPos);
-            Vector2 playerPos = transform.position;
+            Vector2 pointerWorldPosition = worldCamera.ScreenToWorldPoint(pointerScreenPosition);
+            Vector2 direction = pointerWorldPosition - (Vector2)transform.position;
 
-            Vector2 dir = mouseWorldPos - playerPos;
-
-            if (dir.sqrMagnitude > 0.0001f)
+            if (direction.sqrMagnitude > 0.0001f)
             {
-                AimDir = dir.normalized;
+                AimDir = direction.normalized;
             }
         }
-
     }
 }

@@ -10,7 +10,7 @@ namespace RPG2D
 
         [SerializeField] private bool logPanelEvents = true;
         [SerializeField] private bool logInputBlocked = true;
-        [SerializeField] private bool onlyLogTopPanelChanged = false;
+        [SerializeField] private bool onlyLogTopInputPanelChanged = false;
 
         [SerializeField] private bool logSnapshotAfterPanelEvent = false;
 
@@ -60,7 +60,7 @@ namespace RPG2D
 
         private void OnDestroy()
         {
-            if(instance == this)
+            if (instance == this)
             {
                 instance = null;
             }
@@ -89,15 +89,15 @@ namespace RPG2D
                 return;
             }
 
-            if (onlyLogTopPanelChanged && !e.IsTopPanelChanged)
+            if (onlyLogTopInputPanelChanged && !e.IsTopInputPanelChanged)
             {
                 return;
             }
 
             Debug.Log(
                 $"[UI] Open Panel={e.PanelId}, Group={e.PanelGroup}, Layer={e.Layer}, " +
-                $"Top={e.PreviousTopPanelId}->{e.CurrentTopPanelId}, " +
-                $"TopChanged={e.IsTopPanelChanged}, InputBlocked={uiModel.InputBlocked.Value}");
+                $"TopInput={e.PreviousTopInputPanelId}->{e.CurrentTopInputPanelId}, " +
+                $"TopInputChanged={e.IsTopInputPanelChanged}, InputBlocked={uiModel.InputBlocked.Value}");
 
             LogSnapshot();
         }
@@ -109,15 +109,15 @@ namespace RPG2D
                 return;
             }
 
-            if (onlyLogTopPanelChanged && !e.IsTopPanelChanged)
+            if (onlyLogTopInputPanelChanged && !e.IsTopInputPanelChanged)
             {
                 return;
             }
 
             Debug.Log(
                 $"[UI] Close Panel={e.PanelId}, Group={e.PanelGroup}, Layer={e.Layer}, " +
-                $"Top={e.PreviousTopPanelId}->{e.CurrentTopPanelId}, " +
-                $"TopChanged={e.IsTopPanelChanged}, InputBlocked={uiModel.InputBlocked.Value}");
+                $"TopInput={e.PreviousTopInputPanelId}->{e.CurrentTopInputPanelId}, " +
+                $"TopInputChanged={e.IsTopInputPanelChanged}, InputBlocked={uiModel.InputBlocked.Value}");
 
             LogSnapshot();
         }
@@ -129,7 +129,7 @@ namespace RPG2D
                 return;
             }
 
-            Debug.Log($"[UI] InputBlocked={blocked}, TopPanel={uiModel.TopPanelId.Value}");
+            Debug.Log($"[UI] InputBlocked={blocked}, TopInputPanel={uiModel.TopInputPanelId.Value}");
         }
 
         private void LogSnapshot()
@@ -150,7 +150,7 @@ namespace RPG2D
                 $"[UI Snapshot] Roots={snapshot.RootCount}, " +
                 $"Registered={snapshot.RegisteredPanelCount}, " +
                 $"Opened={snapshot.OpenedPanelCount}, " +
-                $"Top={snapshot.TopPanelId}, " +
+                $"TopInput={snapshot.TopInputPanelId}, " +
                 $"InputBlocked={snapshot.InputBlocked}, " +
                 $"RegisteredPanels={string.Join(", ", snapshot.RegisteredPanelIds)}, " +
                 $"OpenedPanels={string.Join(", ", snapshot.OpenedPanelIds)}");
@@ -178,7 +178,7 @@ namespace RPG2D
 
         private void LogPanelInfos(string title, List<UIPanelStatusInfo> panelInfos)
         {
-            if(panelInfos == null || panelInfos.Count <= 0)
+            if (panelInfos == null || panelInfos.Count <= 0)
             {
                 Debug.Log($"[UI Snapshot Detail] {title}: Empty");
                 return;
@@ -195,7 +195,7 @@ namespace RPG2D
                     $"Cache={info.CacheMode}, " +
                     $"SystemOpen={info.IsOpen}, " +
                     $"GameObjectActive={info.IsGameObjectActive}, " +
-                    $"Top={info.IsTopPanel}, " +
+                    $"TopInput={info.IsTopInputPanel}, " +
                     $"CloseOnBack={info.CloseOnBack}, " +
                     $"BlockInput={info.BlockInput}, " +
                     $"SortOrder={info.SortOrder}, " +

@@ -14,5 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelId: 200
   panelGroup: 3
+  layer: 7
   closeOnBack: 0
   blockInput: 1
+  sortOrder: 0
+  prefabAssetKey:
+  cacheMode: 1

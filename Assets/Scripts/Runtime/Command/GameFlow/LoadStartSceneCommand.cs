@@ -6,7 +6,7 @@ namespace RPG2D
     {
         protected override void OnExecute()
         {
-            this.GetSystem<ISceneSystem>().LoadStartScene();
+            this.GetSystem<IGameFlowSystem>().ReturnToStartScene();
         }
     }
 }

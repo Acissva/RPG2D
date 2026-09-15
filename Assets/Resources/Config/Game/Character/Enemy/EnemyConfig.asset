@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   identity:
     enemyId: enemy_001
-    displayName: Enemy
-    enemyType: 0
   stats:
     maxHP: 3
     attackPower: 1
@@ -30,7 +28,6 @@ MonoBehaviour:
     leashRadius: 8
     patrolRadius: 5
   combat:
-    attackSkillIds: []
     hitStunDuration: 0.5
     attackCooldown: 1
     attackWindupDuration: 0.3
@@ -38,4 +35,3 @@ MonoBehaviour:
     attackRecoveryDuration: 0.4
   reward:
     dropTableId: drop_enemy_001
-    experienceReward: 1

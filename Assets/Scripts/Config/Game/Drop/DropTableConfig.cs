@@ -37,12 +37,10 @@ namespace RPG2D
         [SerializeField] private string itemId = "item_gt_slime_jelly_001";
         [SerializeField, Min(1)] private int minCount = 1;
         [SerializeField, Min(1)] private int maxCount = 1;
-        [SerializeField, Min(1)] private int weight = 1;
 
         public string ItemId => itemId;
         public int MinCount => minCount;
         public int MaxCount => maxCount;
-        public int Weight => weight;
 
         public void Validate()
         {
@@ -59,11 +57,6 @@ namespace RPG2D
             if (maxCount < minCount)
             {
                 maxCount = minCount;
-            }
-
-            if (weight < 1)
-            {
-                weight = 1;
             }
         }
     }

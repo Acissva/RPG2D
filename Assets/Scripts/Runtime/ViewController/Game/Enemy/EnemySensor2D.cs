@@ -7,10 +7,8 @@ namespace RPG2D
     public class EnemySensor2D : MonoBehaviour
     {
         [Header("Scan")]
-        [SerializeField, Min(0.02f)] private float scanInterval = 0.1f;    //扫描间隔
         [SerializeField, Min(1)] private int maxOverlapResults = 16;    //单次扫描最大碰撞体数量
         [SerializeField] private LayerMask targetLayers;    //目标所在层级
-        [SerializeField] private bool scanAutomatically = true;     //是否自动扫描
         [SerializeField] private bool includeTriggerColliders = true;       //是否包含触发器碰撞体
 
         [Header("Faction")]
@@ -33,7 +31,6 @@ namespace RPG2D
         private EnemyController enemyController;
         private Collider2D[] overlapResults;    //碰撞结果预分配数组，避免每次扫描都 new 数组产生 GC
         private Vector2 spawnPosition;      //出生点
-        private float scanTimer;    //扫描倒计时计时器
 
         public FactionType SelfFaction => selfFaction;
         public CombatTarget2D CurrentTarget { get; private set; }       //当前锁定的最优目标
@@ -53,32 +50,9 @@ namespace RPG2D
             ConfigureDefaultTargetLayers();     //自动配置默认目标层级
         }
 
-        private void Start()
-        {
-            spawnPosition = transform.position;
-            scanTimer = 0f;
-        }
-
         private void Reset()
         {
             ConfigureDefaultTargetLayers();
-        }
-
-        private void Update()
-        {
-            if (!scanAutomatically)
-            {
-                return;
-            }
-
-            scanTimer -= Time.deltaTime;
-            if (scanTimer > 0f)
-            {
-                return;
-            }
-
-            scanTimer = scanInterval;
-            Scan();
         }
 
         public void SetSpawnPosition(Vector2 position)
@@ -433,11 +407,6 @@ namespace RPG2D
 
         private void OnValidate()
         {
-            if (scanInterval < 0.02f)
-            {
-                scanInterval = 0.02f;
-            }
-
             if (maxOverlapResults < 1)
             {
                 maxOverlapResults = 1;
@@ -478,7 +447,7 @@ namespace RPG2D
 
             //  蓝色：巡逻范围
             Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(Application.isPlaying ? spawnPosition : (Vector2)transform.position, 
+            Gizmos.DrawWireSphere(Application.isPlaying ? spawnPosition : (Vector2)transform.position,
                 Application.isPlaying ? GetPatrolRadius() : fallbackPatrolRadius);
 
             if (CurrentTarget != null)
