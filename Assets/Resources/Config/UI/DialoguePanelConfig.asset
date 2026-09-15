@@ -18,5 +18,5 @@ MonoBehaviour:
   closeOnBack: 1
   blockInput: 1
   sortOrder: 0
-  prefabPath: Prefab/UI/DialoguePanel
+  prefabAssetKey: Prefab/UI/DialoguePanel
   cacheMode: 2

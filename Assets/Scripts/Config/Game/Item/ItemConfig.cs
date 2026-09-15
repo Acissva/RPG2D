@@ -18,14 +18,12 @@ namespace RPG2D
         [SerializeField] private string displayName = "草药";
         [SerializeField, TextArea] private string description = "草地小镇附近常见的草药。";
         [SerializeField] private ItemType itemType = ItemType.Material;
-        [SerializeField, Min(1)] private int maxStack = 99;
         [SerializeField] private string iconAssetKey;
 
         public string ItemId => itemId;
         public string DisplayName => displayName;
         public string Description => description;
         public ItemType Type => itemType;
-        public int MaxStack => maxStack;
         public string IconAssetKey => iconAssetKey;
 
         private void OnValidate()
@@ -38,11 +36,6 @@ namespace RPG2D
             if (string.IsNullOrWhiteSpace(displayName))
             {
                 displayName = itemId;
-            }
-
-            if (maxStack < 1)
-            {
-                maxStack = 1;
             }
         }
     }

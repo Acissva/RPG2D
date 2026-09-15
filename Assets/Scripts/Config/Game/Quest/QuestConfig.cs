@@ -38,14 +38,52 @@ namespace RPG2D
             objectives ??= new List<QuestObjectiveConfig>();
             rewards ??= new List<RewardItemConfig>();
 
+            HashSet<string> objectiveIds = new();
+
             for (int i = 0; i < objectives.Count; i++)
             {
-                objectives[i]?.Validate();
+                QuestObjectiveConfig objective = objectives[i];
+
+                if (objective == null)
+                {
+                    Debug.LogError($"{nameof(QuestConfig)} {questId} 的 Objectives[{i}] 为空。", this);
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(objective.ObjectiveId))
+                {
+                    Debug.LogError($"{nameof(QuestConfig)} {questId} 中存在 ObjectiveId 为空的目标，索引={i}。", this);
+                }
+
+                objective.Validate();
+
+                if (!objectiveIds.Add(objective.ObjectiveId))
+                {
+                    Debug.LogError($"{nameof(QuestConfig)} {questId} 中存在重复 ObjectiveId：{objective.ObjectiveId}。", this);
+                }
+
+                if (objective.ObjectiveType == QuestObjectiveType.InteractWithObject && string.IsNullOrWhiteSpace(objective.TargetInteractionId))
+                {
+                    Debug.LogError($"{nameof(QuestConfig)} {questId} 的交互目标缺少 TargetInteractionId，ObjectiveId={objective.ObjectiveId}。", this);
+                }
+
+                if (objective.ObjectiveType == QuestObjectiveType.CompleteDungeon && string.IsNullOrWhiteSpace(objective.TargetDungeonId))
+                {
+                    Debug.LogError($"{nameof(QuestConfig)} {questId} 的副本目标缺少 TargetDungeonId，ObjectiveId={objective.ObjectiveId}。", this);
+                }
             }
 
             for (int i = 0; i < rewards.Count; i++)
             {
-                rewards[i]?.Validate();
+                RewardItemConfig reward = rewards[i];
+
+                if (reward == null)
+                {
+                    Debug.LogError($"{nameof(QuestConfig)} {questId} 的 Rewards[{i}] 为空。", this);
+                    continue;
+                }
+
+                reward.Validate();
             }
         }
     }

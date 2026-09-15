@@ -276,7 +276,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -48
+  m_SortingOrder: -30
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -479,12 +479,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f74b775b30208d3448e1f57911de3dc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scanInterval: 0.1
   maxOverlapResults: 16
   targetLayers:
     serializedVersion: 2
     m_Bits: 64
-  scanAutomatically: 1
   includeTriggerColliders: 1
   selfFaction: 2
   targetFactions: 2
@@ -591,7 +589,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1357689331
   m_SortingLayer: 1
-  m_SortingOrder: -48
+  m_SortingOrder: -30
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 0}
   m_FlipX: 0

@@ -30,9 +30,9 @@ namespace RPG2D
         private SortingGroup sortingGroup;
         private Renderer[] renderers = EmptyRenderers;
         private int[] relativeRendererOrders = EmptyOrders;
-        private int lastApplieOrder = int.MinValue;
+        private int lastAppliedOrder = int.MinValue;
 
-        public int CurrentSortOrder => lastApplieOrder;
+        public int CurrentSortOrder => lastAppliedOrder;
 
         private Transform EffectiveSortingPoint => sortingPoint != null ? sortingPoint : transform;
 
@@ -45,7 +45,7 @@ namespace RPG2D
 
         private void Awake()
         {
-            if(sortingPoint == null)
+            if (sortingPoint == null)
             {
                 sortingPoint = transform;
             }
@@ -56,7 +56,7 @@ namespace RPG2D
 
         private void OnEnable()
         {
-            if(sortingPoint == null)
+            if (sortingPoint == null)
             {
                 sortingPoint = transform;
             }
@@ -69,7 +69,7 @@ namespace RPG2D
         {
             orderPerUnit = Mathf.Max(1, orderPerUnit);
 
-            if(sortingPoint == null)
+            if (sortingPoint == null)
             {
                 sortingPoint = transform;
             }
@@ -106,7 +106,7 @@ namespace RPG2D
         public void ForceRefresh()
         {
             RefreshCache();
-            lastApplieOrder = int.MinValue;
+            lastAppliedOrder = int.MinValue;
             ApplySorting(true);
         }
 
@@ -114,7 +114,7 @@ namespace RPG2D
         {
             sortingGroup = preferSortingGroup ? GetComponent<SortingGroup>() : null;
 
-            if(sortingGroup != null)
+            if (sortingGroup != null)
             {
                 renderers = EmptyRenderers;
                 relativeRendererOrders = EmptyOrders;
@@ -146,18 +146,18 @@ namespace RPG2D
         {
             int order = CalculateSortingOrder();
 
-            if(!force && order == lastApplieOrder)
+            if (!force && order == lastAppliedOrder)
             {
                 return;
             }
 
-            if(sortingGroup != null)
+            if (sortingGroup != null)
             {
                 sortingGroup.sortingOrder = order;
             }
             else
             {
-                for (int i = 0;i < renderers.Length; i++)
+                for (int i = 0; i < renderers.Length; i++)
                 {
                     if (renderers[i] == null)
                     {
@@ -167,6 +167,8 @@ namespace RPG2D
                     renderers[i].sortingOrder = ClampSortingOrder(order + relativeRendererOrders[i]);
                 }
             }
+
+            lastAppliedOrder = order;
         }
 
         private int CalculateSortingOrder()

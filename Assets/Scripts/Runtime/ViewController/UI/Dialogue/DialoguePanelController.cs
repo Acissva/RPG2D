@@ -15,19 +15,12 @@ namespace RPG2D
 
         private IDialogueModel dialogueModel;
         private IDialogueSystem dialogueSystem;
-        private IUISystem uiSystem;
         private IInputReader inputReader;
-
-        //UISystem 动态实例化面板后会先调用一次 panel.Close()，用于初始化为关闭状态。
-        //DialoguePanelController.OnClose() 会把这次“初始化关闭”误认为玩家关闭对话，从而提前 EndDialogue()。
-        //该字段用于解决这个问题
-        private bool hasOpened;
 
         private void Awake()
         {
             dialogueModel = this.GetModel<IDialogueModel>();
             dialogueSystem = this.GetSystem<IDialogueSystem>();
-            uiSystem = this.GetSystem<IUISystem>();
             inputReader = this.GetSystem<IRPG2DInputSystem>().InputReader;
 
             dialogueModel.CurrentSpeakerName.RegisterWithInitValue(v => RefreshContent())
@@ -37,8 +30,6 @@ namespace RPG2D
             dialogueModel.CurrentLineIndex.RegisterWithInitValue(v => RefreshHint())
                 .UnRegisterWhenGameObjectDestroyed(gameObject);
             dialogueModel.TotalLineCount.RegisterWithInitValue(v => RefreshHint())
-                .UnRegisterWhenGameObjectDestroyed(gameObject);
-            dialogueModel.IsPlaying.RegisterWithInitValue(OnPlayingChanged)
                 .UnRegisterWhenGameObjectDestroyed(gameObject);
         }
 
@@ -57,31 +48,8 @@ namespace RPG2D
 
         protected override void OnOpen()
         {
-            hasOpened = true;
-
             RefreshContent();
             RefreshHint();
-        }
-
-        protected override void OnClose()
-        {
-            if (!hasOpened)
-            {
-                return;
-            }
-
-            if (dialogueSystem != null && dialogueSystem.IsPlaying)
-            {
-                dialogueSystem.EndDialogue();
-            }
-        }
-
-        private void OnPlayingChanged(bool isPlaying)
-        {
-            if (!isPlaying && IsOpen && uiSystem != null)
-            {
-                uiSystem.ClosePanel(PanelId);
-            }
         }
 
         private void RefreshContent()

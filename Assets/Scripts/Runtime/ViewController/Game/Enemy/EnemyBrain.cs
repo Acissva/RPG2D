@@ -383,7 +383,6 @@ namespace RPG2D
 
                 case EnemyBrainState.Alert:
                     motor.Stop();
-                    sensor.Scan();
                     ReportCombatEngagedIfPlayerTarget();
                     break;
 
@@ -499,11 +498,6 @@ namespace RPG2D
                 });
 
                 return;
-            }
-
-            if (target.Faction == FactionType.Player)
-            {
-                this.SendCommand(new HurtPlayerCommand(damage));
             }
         }
 

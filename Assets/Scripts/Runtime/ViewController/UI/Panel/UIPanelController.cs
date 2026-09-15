@@ -16,7 +16,7 @@ namespace RPG2D
         public bool CloseOnBack => config != null && config.CloseOnBack;
         public bool BlockInput => config != null && config.BlockInput;
         public int SortOrder => config != null ? config.SortOrder : 0;
-        public string PrefabPath => config != null ? config.PrefabPath : string.Empty;
+        public string PrefabAssetKey => config != null ? config.PrefabAssetKey : string.Empty;
         public UIPanelCacheMode CacheMode => config != null ? config.CacheMode : UIPanelCacheMode.None;
 
         public bool IsOpen => gameObject.activeSelf;

@@ -9,34 +9,26 @@ namespace RPG2D
         private readonly int enemyInstanceId;
         private readonly Vector3 position;
         private readonly string dropTableId;
-        private readonly int experienceReward;
 
-        public EnemyDeathCommand(string enemyId, int enemyInstanceId, Vector3 position, string dropTableId, int experienceReward)
+        public EnemyDeathCommand(string enemyId, int enemyInstanceId, Vector3 position, string dropTableId)
         {
             this.enemyId = enemyId;
             this.enemyInstanceId = enemyInstanceId;
             this.position = position;
             this.dropTableId = dropTableId;
-            this.experienceReward = experienceReward;
-        }
-
-        public EnemyDeathCommand(string enemyId, Vector3 position, string dropTableId, int experienceReward)
-            : this(enemyId, 0, position, dropTableId, experienceReward)
-        {
         }
 
         protected override void OnExecute()
         {
-            this.SendEvent(new EnemyDeadEvent
+            this.SendEvent(new EnemyDiedEvent
             {
                 EnemyId = enemyId,
                 EnemyInstanceId = enemyInstanceId,
                 Position = position,
                 DropTableId = dropTableId,
-                ExperienceReward = experienceReward
             });
 
-            this.SendCommand(new DropLootCommand(dropTableId, position, enemyId, experienceReward));
+            this.SendCommand(new DropLootCommand(dropTableId, position, enemyId));
 
             Debug.Log($"敌人【{enemyId}】死亡");
         }

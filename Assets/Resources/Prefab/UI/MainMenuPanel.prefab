@@ -404,7 +404,7 @@ GameObject:
   - component: {fileID: 6233580976312684741}
   - component: {fileID: 5916217999842851400}
   - component: {fileID: 2388300380600109139}
-  - component: {fileID: 6738315418478123566}
+  - component: {fileID: 7321898068710002516}
   m_Layer: 5
   m_HasEditorInfo: 1
   m_Name: ReturnToStartScene
@@ -515,7 +515,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &6738315418478123566
+--- !u!114 &7321898068710002516
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -524,11 +524,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7689102646074094990}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c21a728858fa0204d8d27a42f7ad30da, type: 3}
+  m_Script: {fileID: 11500000, guid: eff9356508c136d4097561080cfbc300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  action: 1
-  message: "\u786E\u5B9A\u6267\u884C\u8BE5\u64CD\u4F5C\u5417\uFF1F"
+  buttonType: 2
+  requireConfirm: 1
+  confirmMessage: "\u786E\u5B9A\u6267\u884C\u8BE5\u64CD\u4F5C\u5417\uFF1F"
 --- !u!1 &7954359706197597668
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,7 +678,7 @@ GameObject:
   - component: {fileID: 4467808583722555706}
   - component: {fileID: 6334153342925405457}
   - component: {fileID: 7895406807444449961}
-  - component: {fileID: 1049814000769484787}
+  - component: {fileID: 4173372253451719115}
   m_Layer: 5
   m_HasEditorInfo: 1
   m_Name: QuitGame
@@ -788,7 +789,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1049814000769484787
+--- !u!114 &4173372253451719115
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -797,11 +798,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8681361611529045138}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c21a728858fa0204d8d27a42f7ad30da, type: 3}
+  m_Script: {fileID: 11500000, guid: eff9356508c136d4097561080cfbc300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  action: 0
-  message: "\u786E\u5B9A\u6267\u884C\u8BE5\u64CD\u4F5C\u5417\uFF1F"
+  buttonType: 1
+  requireConfirm: 1
+  confirmMessage: "\u786E\u5B9A\u6267\u884C\u8BE5\u64CD\u4F5C\u5417\uFF1F"
 --- !u!1 &8755822888892988221
 GameObject:
   m_ObjectHideFlags: 0

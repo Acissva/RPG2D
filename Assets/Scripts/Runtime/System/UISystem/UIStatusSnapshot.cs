@@ -4,7 +4,7 @@ namespace RPG2D
 {
     public class UIStatusSnapshot
     {
-        public UIPanelId TopPanelId;
+        public UIPanelId TopInputPanelId;
         public bool InputBlocked;
 
         public int RootCount;
@@ -29,7 +29,7 @@ namespace RPG2D
 
         public bool IsOpen;
         public bool IsGameObjectActive;
-        public bool IsTopPanel;
+        public bool IsTopInputPanel;
         public bool CloseOnBack;
         public bool BlockInput;
 

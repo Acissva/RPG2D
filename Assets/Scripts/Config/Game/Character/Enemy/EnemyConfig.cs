@@ -1,17 +1,8 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace RPG2D
 {
-    public enum EnemyType
-    {
-        Melee,
-        Ranged,
-        Elite,
-        Boss
-    }
-
     [CreateAssetMenu(
         fileName = "EnemyConfig",
         menuName = "RPG2D/Config/Game/Character/Enemy/Enemy Config")]
@@ -53,25 +44,14 @@ namespace RPG2D
     public class EnemyIdentityConfig
     {
         [SerializeField] private string enemyId = "enemy_001";
-        [SerializeField] private string displayName = "enemy_001";
-        [SerializeField] private string enemyPrefabKey;
-        [SerializeField] private EnemyType enemyType = EnemyType.Melee;
 
         public string EnemyId => enemyId;
-        public string DisplayNameKey => displayName;
-        public string EnemyPrefabKey => enemyPrefabKey;
-        public EnemyType EnemyType => enemyType;
 
         public void Validate()
         {
             if (string.IsNullOrWhiteSpace(enemyId))
             {
                 enemyId = "enemy_001";
-            }
-
-            if (string.IsNullOrWhiteSpace(displayName))
-            {
-                displayName = $"enemy_001";
             }
         }
     }
@@ -160,9 +140,6 @@ namespace RPG2D
     [Serializable]
     public class EnemyCombatConfig
     {
-        [Tooltip("可使用技能ID列表")]
-        [SerializeField] private List<string> attackSkillIds = new List<string>();
-
         [Tooltip("受击硬直时间")]
         [SerializeField, Min(0f)] private float hitStunDuration = 0.5f;
 
@@ -178,7 +155,6 @@ namespace RPG2D
         [Tooltip("攻击后摇时间")]
         [SerializeField, Min(0f)] private float attackRecoveryDuration = 0.4f;
 
-        public IReadOnlyList<string> AttackSkillIds => attackSkillIds;
         public float HitStunDuration => hitStunDuration;
         public float AttackCooldown => attackCooldown;
         public float AttackWindupDuration => attackWindupDuration;
@@ -187,8 +163,6 @@ namespace RPG2D
 
         public void Validate()
         {
-            attackSkillIds ??= new List<string>();
-
             if (hitStunDuration < 0f) hitStunDuration = 0f;
             if (attackCooldown < 0f) attackCooldown = 0f;
             if (attackWindupDuration < 0f) attackWindupDuration = 0f;
@@ -203,22 +177,13 @@ namespace RPG2D
         [Tooltip("掉落表 ID")]
         [SerializeField] private string dropTableId = "drop_enemy_001";
 
-        [Tooltip("击杀经验奖励")]
-        [SerializeField, Min(0)] private int experienceReward = 1;
-
         public string DropTableId => dropTableId;
-        public int ExperienceReward => experienceReward;
 
         public void Validate()
         {
             if (string.IsNullOrWhiteSpace(dropTableId))
             {
                 dropTableId = "drop_enemy_001";
-            }
-
-            if (experienceReward < 0)
-            {
-                experienceReward = 0;
             }
         }
     }

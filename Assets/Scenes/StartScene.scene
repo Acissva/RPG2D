@@ -986,7 +986,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   logPanelEvents: 0
   logInputBlocked: 0
-  onlyLogTopPanelChanged: 0
+  onlyLogTopInputPanelChanged: 0
   logSnapshotAfterPanelEvent: 0
   logSnapshotOnHotkey: 1
   logDetailedSnapshot: 0
