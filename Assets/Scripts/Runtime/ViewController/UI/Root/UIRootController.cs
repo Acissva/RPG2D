@@ -188,10 +188,13 @@ namespace RPG2D
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.overrideSorting = true;
             canvas.sortingOrder = sortingOrder;
+            canvas.vertexColorAlwaysGammaSpace = true;
 
             var canvasScaler = canvasObj.AddComponent<CanvasScaler>();
-            canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
-            canvasScaler.scaleFactor = 1f;
+            canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            canvasScaler.referenceResolution = new Vector2(960f, 540f);
+            canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            canvasScaler.matchWidthOrHeight = 0.5f;
             canvasScaler.referencePixelsPerUnit = 100f;
 
             canvasObj.AddComponent<GraphicRaycaster>();

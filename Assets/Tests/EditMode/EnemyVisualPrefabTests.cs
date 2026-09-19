@@ -9,7 +9,7 @@ namespace RPG2D.Tests.EditMode
     public class EnemyVisualPrefabTests
     {
         private const string EnemyPrefabPath = "Assets/Resources/Prefab/Character/Enemy.prefab";
-        private const string SlimeControllerPath = "Assets/Art/Animations/Characters/Enemy/Slime/Slime.controller";
+        private const string SlimeControllerPath = "Assets/Art/Animations/Character/Enemy/Slime/Slime.controller";
 
         [Test]
         public void EnemyPrefab_WhenLoaded_UsesSlimeAnimationContract()
