@@ -21,12 +21,12 @@ namespace RPG2D
         menuName = "RPG2D/Config/Game/Dungeon/Dungeons/Dungeon Config")]
     public class DungeonConfig : ScriptableObject
     {
-        [SerializeField] private string dungeonId = "dungeon_gt_test_001";
-        [SerializeField] private string displayName = "草地小镇测试副本";
-        [SerializeField] private string sceneName = "Dungeon_GT_Test_001";
+        [SerializeField] private string dungeonId = "dungeon_001";
+        [SerializeField] private string displayName = "小镇地牢";
+        [SerializeField] private string sceneName = "Dungeon_001";
         [SerializeField] private string entranceSpawnPointId = "spawn_dungeon_start";
         [SerializeField] private string returnSceneName = "MainGameScene";
-        [SerializeField] private string returnSpawnPointId = "spawn_main_dungeon_gate";
+        [SerializeField] private string returnSpawnPointId = "spawn_main_dungeon_entrance";
         [SerializeField] private List<DungeonRoomConfig> rooms = new();
         [SerializeField] private List<RewardItemConfig> completionRewards = new();
 
@@ -43,7 +43,7 @@ namespace RPG2D
         {
             if (string.IsNullOrWhiteSpace(dungeonId))
             {
-                dungeonId = "dungeon_gt_test_001";
+                dungeonId = "dungeon_001";
             }
 
             if (string.IsNullOrWhiteSpace(displayName))
@@ -54,7 +54,7 @@ namespace RPG2D
             if (string.IsNullOrWhiteSpace(sceneName))
             {
                 Debug.LogError($"{nameof(DungeonConfig)} {dungeonId} 的 SceneName 为空，已恢复默认值。", this);
-                sceneName = "Dungeon_GT_Test_001";
+                sceneName = "Dungeon_001";
             }
 
             if (string.IsNullOrWhiteSpace(entranceSpawnPointId))
@@ -133,7 +133,7 @@ namespace RPG2D
     [Serializable]
     public class DungeonRoomConfig
     {
-        [SerializeField] private string roomId = "room_gt_test_combat_001";
+        [SerializeField] private string roomId = "room_dungeon_001_combat_001";
         [SerializeField] private DungeonRoomType roomType = DungeonRoomType.Combat;
         [SerializeField] private bool requiredForDungeonCompletion = true;
         [SerializeField, Min(0)] private int expectedEnemyCount = 1;
@@ -149,7 +149,7 @@ namespace RPG2D
         {
             if (string.IsNullOrWhiteSpace(roomId))
             {
-                roomId = "room_gt_test_combat_001";
+                roomId = "room_dungeon_001_combat_001";
             }
 
             if (expectedEnemyCount < 0)

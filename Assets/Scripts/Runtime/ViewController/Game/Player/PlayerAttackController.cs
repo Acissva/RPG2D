@@ -14,7 +14,7 @@ namespace RPG2D
         private IPlayerModel playerModel;
 
         public Vector2 AimDir { get; private set; } = Vector2.right;
-        public bool IsAttacking => currentWeapon != null && currentWeapon.IsAttacking;
+        public bool IsAttacking => IsWeaponAvailable(currentWeapon) && currentWeapon.IsAttacking;
 
         private void Awake()
         {
@@ -24,11 +24,6 @@ namespace RPG2D
             }
 
             currentWeapon = GetComponentInChildren<IWeapon>();
-
-            if (currentWeapon == null)
-            {
-                Debug.LogError("currentWeaponBehaviour must implement IWeapon.");
-            }
 
             inputReader = this.GetSystem<IRPG2DInputSystem>().InputReader;
             uiModel = this.GetModel<IUIModel>();
@@ -46,13 +41,34 @@ namespace RPG2D
 
             if (inputReader.HasAction(InputActionType.Attack))
             {
-                if (currentWeapon == null) return;
+                if (!TryGetCurrentWeapon(out IWeapon weapon))
+                {
+                    return;
+                }
 
-                if (currentWeapon.TryAttack(AimDir))
+                if (weapon.TryAttack(AimDir))
                 {
                     inputReader.ConsumeAction(InputActionType.Attack);
                 }
             }
+        }
+
+        private bool TryGetCurrentWeapon(out IWeapon weapon)
+        {
+            if (!IsWeaponAvailable(currentWeapon))
+            {
+                currentWeapon = GetComponentInChildren<IWeapon>();
+            }
+
+            weapon = currentWeapon;
+            return IsWeaponAvailable(weapon);
+        }
+
+        private static bool IsWeaponAvailable(IWeapon weapon)
+        {
+            return weapon is Behaviour behaviour &&
+                   behaviour != null &&
+                   behaviour.isActiveAndEnabled;
         }
 
         private void UpdateAimDir()

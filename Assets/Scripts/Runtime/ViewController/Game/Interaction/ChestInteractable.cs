@@ -6,7 +6,7 @@ namespace RPG2D
 {
     public class ChestInteractable : RPG2DController, IInteractable
     {
-        [SerializeField] private string interactionId = "chest_gt_001";
+        [SerializeField] private string interactionId = "chest_001";
 
         [SerializeField] private string closedPromptText = "打开宝箱";
         [SerializeField] private string openedPromptText = "查看宝箱";

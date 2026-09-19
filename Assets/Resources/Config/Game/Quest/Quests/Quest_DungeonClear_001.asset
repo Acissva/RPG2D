@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:yousandi.cn,2023:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a2843f188ff642409ccd08b9c5b81bd, type: 3}
+  m_Name: Quest_DungeonClear_001
+  m_EditorClassIdentifier: 
+  questId: quest_dungeon_clear_001
+  displayName: "\u6E05\u7406\u5C0F\u9547\u5730\u7262"
+  description: "\u9547\u6C11\u5E0C\u671B\u4F60\u6E05\u7406\u5C0F\u9547\u9644\u8FD1\u7684\u5730\u7262\u3002"
+  objectives:
+  - objectiveId: objective_complete_dungeon_001
+    objectiveType: 1
+    description: "\u9547\u6C11\u5E0C\u671B\u4F60\u6E05\u7406\u5C0F\u9547\u9644\u8FD1\u7684\u5730\u7262\u3002"
+    targetInteractionId: 
+    targetDungeonId: dungeon_001
+    requiredCount: 1
+  rewards:
+  - itemId: item_herb_001
+    count: 2

@@ -6,7 +6,7 @@ namespace RPG2D
 {
     public class DungeonExitInteractable : RPG2DController, IInteractable
     {
-        [SerializeField] private string interactionId = "dungeon_exit_gt_001";
+        [SerializeField] private string interactionId = "dungeon_exit_001";
         [SerializeField] private string readyPromptText = "返回主世界";
         [SerializeField] private string blockedPromptText = "出口被封锁";
         [SerializeField] private string speakerName = "旁白";

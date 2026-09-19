@@ -132,11 +132,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7f5fd0f25411824c8045a7c34c6c6d2, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  itemId: item_gt_slime_jelly_001
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemId: item_slime_jelly_001
   count: 1
-  sourceId:
+  sourceId: 
 --- !u!1 &5768619095911254375
 GameObject:
   m_ObjectHideFlags: 0

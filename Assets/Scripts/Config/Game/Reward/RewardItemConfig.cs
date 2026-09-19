@@ -6,7 +6,7 @@ namespace RPG2D
     [Serializable]
     public class RewardItemConfig
     {
-        [SerializeField] private string itemId = "item_gt_herb_001";
+        [SerializeField] private string itemId = "item_herb_001";
         [SerializeField, Min(1)] private int count = 1;
 
         public string ItemId => itemId;
@@ -16,7 +16,7 @@ namespace RPG2D
         {
             if (string.IsNullOrWhiteSpace(itemId))
             {
-                itemId = "item_gt_herb_001";
+                itemId = "item_herb_001";
             }
 
             if (count < 1)

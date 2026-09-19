@@ -6,9 +6,9 @@ namespace RPG2D
 {
     public class DungeonEntranceInteractable : RPG2DController, IInteractable
     {
-        [SerializeField] private string interactionId = "dungeon_entrance_gt_001";
+        [SerializeField] private string interactionId = "dungeon_entrance_001";
         [SerializeField] private string promptText = "进入副本";
-        [SerializeField] private string dungeonId = "dungeon_gt_test_001";
+        [SerializeField] private string dungeonId = "dungeon_001";
         [SerializeField] private string speakerName = "旁白";
         [SerializeField, TextArea] private string blockedMessage = "现在还不能进入这里。";
 

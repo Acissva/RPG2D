@@ -1,0 +1,22 @@
+Free Pixel Art Asset Pack - Source and License Record
+
+Recorded: 2026-09-15
+Publisher: xiaosuzaoshui / Xiao Su Zao Shui
+Asset name: Free Pixel Art Asset Pack
+Source page: https://xiaosuzaoshui.itch.io/pixel-art
+Downloaded archive: Free Pixel Art Asset Pack.zip
+
+License summary from the source page:
+- Royalty-free use is permitted in personal and commercial projects.
+- Modification and adaptation are permitted.
+- Attribution is optional but appreciated as: Assets by Xiao Su Zao Shui.
+- Reselling the original or modified assets is prohibited.
+- Including the assets in competing asset products is prohibited.
+- Claiming authorship of the assets is prohibited.
+
+The downloaded ZIP did not include a standalone license file. This record preserves the source URL, access date, and license summary for project traceability.
+
+RPG2D v0.0.13 scope:
+- Use the Slime with shadows Idle, Walk, and Death animation images for the current enemy presentation.
+- Keep Mushroom, Skeleton, Wizard, and Boss as future enemy candidates outside the Unity project until required.
+- Do not use Knight as an enemy. The square player remains the current player presentation.

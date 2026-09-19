@@ -5,7 +5,7 @@ namespace RPG2D
 {
     public class LootPickup : RPG2DController
     {
-        [SerializeField] private string itemId = "item_gt_slime_jelly_001";
+        [SerializeField] private string itemId = "item_slime_jelly_001";
         [SerializeField, Min(1)] private int count = 1;
         [SerializeField] private string sourceId;
 
@@ -26,7 +26,7 @@ namespace RPG2D
         {
             if (string.IsNullOrWhiteSpace(itemId))
             {
-                itemId = "item_gt_slime_jelly_001";
+                itemId = "item_slime_jelly_001";
             }
 
             if (count < 1)

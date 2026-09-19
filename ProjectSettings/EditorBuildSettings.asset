@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainGameScene.scene
     guid: a4f3384647ce67b4cba7f819504990cf
   - enabled: 1
-    path: Assets/Scenes/Dungeon/Dungeon_GT_Test_001.scene
+    path: Assets/Scenes/Dungeon/Dungeon_001.scene
     guid: 894dbd0e192cfb24daebec8a1f91e7a1
   m_BuildProfiles: []
   m_configObjects: {}
