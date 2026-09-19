@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a2843f188ff642409ccd08b9c5b81bd, type: 3}
   m_Name: Quest_GT_NoticeReport_001
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   questId: quest_gt_notice_report_001
   displayName: "\u5C0F\u9547\u516C\u544A\u786E\u8BA4"
   description: "\u9547\u6C11\u5E0C\u671B\u4F60\u53BB\u67E5\u770B\u516C\u544A\u724C\uFF0C\u7136\u540E\u56DE\u6765\u544A\u8BC9\u4ED6\u3002"
@@ -19,7 +19,8 @@ MonoBehaviour:
   - objectiveId: objective_read_notice_board
     objectiveType: 0
     description: "\u67E5\u770B\u8349\u5730\u5C0F\u9547\u516C\u544A\u724C"
-    targetInteractionId: notice_board_gt_001
+    targetInteractionId: notice_board_001
+    targetDungeonId: dungeon_gt_test_001
     requiredCount: 1
   rewards:
   - itemId: item_gt_notice_token_001
