@@ -6,8 +6,8 @@ namespace RPG2D
 {
     public class QuestGiverInteractable : RPG2DController, IInteractable
     {
-        [SerializeField] private string interactionId = "npc_gt_guide_001";
-        [SerializeField] private string questId = "quest_gt_notice_report_001";
+        [SerializeField] private string interactionId = "npc_guide_001";
+        [SerializeField] private string questId = "quest_notice_report_001";
 
         [SerializeField] private string notStartedPromptText = "接取任务";
         [SerializeField] private string inProgressPromptText = "交谈";

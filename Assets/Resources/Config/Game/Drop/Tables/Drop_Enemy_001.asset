@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dropTableId: drop_enemy_001
   entries:
-  - itemId: item_gt_slime_jelly_001
+  - itemId: item_slime_jelly_001
     minCount: 1
     maxCount: 1

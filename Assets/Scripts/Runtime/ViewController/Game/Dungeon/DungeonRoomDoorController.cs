@@ -6,7 +6,7 @@ namespace RPG2D
     public class DungeonRoomDoorController : RPG2DController
     {
         [SerializeField]
-        private string lockRoomId = "room_gt_test_combat_001";
+        private string lockRoomId = "room_dungeon_001_combat_001";
 
         [SerializeField]
         private Collider2D blockingCollider;
