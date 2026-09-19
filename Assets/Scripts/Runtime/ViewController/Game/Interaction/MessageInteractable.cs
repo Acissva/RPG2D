@@ -6,7 +6,7 @@ namespace RPG2D
 {
     public class MessageInteractable : RPG2DController, IInteractable
     {
-        [SerializeField] private string interactionId = "message_gt_001";
+        [SerializeField] private string interactionId = "message_001";
         [SerializeField] private string promptText = "查看";
         [SerializeField] private string speakerName = "旁白";
         [SerializeField, TextArea] private string message = "这里还没有配置内容";

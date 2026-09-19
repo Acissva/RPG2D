@@ -6,7 +6,7 @@ namespace RPG2D
 {
     public class SimpleDialogueInteractable : RPG2DController, IInteractable
     {
-        [SerializeField] private string interactionId = "npc_gt_guide_001";
+        [SerializeField] private string interactionId = "npc_guide_001";
         [SerializeField] private string promptText = "交谈";
         [SerializeField] private List<DialogueLine> dialogueLines = new();
 

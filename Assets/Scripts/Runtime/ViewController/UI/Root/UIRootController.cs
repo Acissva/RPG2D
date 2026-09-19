@@ -192,7 +192,7 @@ namespace RPG2D
 
             var canvasScaler = canvasObj.AddComponent<CanvasScaler>();
             canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            canvasScaler.referenceResolution = new Vector2(960f, 540f);
+            canvasScaler.referenceResolution = new Vector2(1280f, 720f);
             canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
             canvasScaler.matchWidthOrHeight = 0.5f;
             canvasScaler.referencePixelsPerUnit = 100f;

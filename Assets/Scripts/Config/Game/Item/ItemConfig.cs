@@ -14,9 +14,9 @@ namespace RPG2D
        menuName = "RPG2D/Config/Game/Item/Items/Item Config")]
     public class ItemConfig : ScriptableObject
     {
-        [SerializeField] private string itemId = "item_gt_herb_001";
+        [SerializeField] private string itemId = "item_herb_001";
         [SerializeField] private string displayName = "草药";
-        [SerializeField, TextArea] private string description = "草地小镇附近常见的草药。";
+        [SerializeField, TextArea] private string description = "小镇附近常见的草药。";
         [SerializeField] private ItemType itemType = ItemType.Material;
         [SerializeField] private string iconAssetKey;
 
@@ -30,7 +30,7 @@ namespace RPG2D
         {
             if (string.IsNullOrWhiteSpace(itemId))
             {
-                itemId = "item_gt_herb_001";
+                itemId = "item_herb_001";
             }
 
             if (string.IsNullOrWhiteSpace(displayName))

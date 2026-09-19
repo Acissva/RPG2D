@@ -315,7 +315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9977e0ebeef67be45b7591759d4700a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionId: sign_gt_001
+  interactionId: sign_001
   promptText: "\u9605\u8BFB\u8DEF\u724C"
   speakerName: "\u65C1\u767D"
-  message: "\u5317\u65B9\u662F\u8349\u5730\u5C0F\u9547\uFF0C\u5357\u65B9\u8FD8\u6CA1\u6709\u5F00\u653E"
+  message: "\u5317\u65B9\u662F\u5C0F\u9547\uFF0C\u5357\u65B9\u8FD8\u6CA1\u6709\u5F00\u653E"

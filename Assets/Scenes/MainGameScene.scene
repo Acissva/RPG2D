@@ -196,7 +196,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 960, y: 540}
+  m_ReferenceResolution: {x: 1280, y: 720}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
@@ -109255,7 +109255,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 960, y: 540}
+  m_ReferenceResolution: {x: 1280, y: 720}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
@@ -109443,23 +109443,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df4cffdeba69ac4c8cc7ba7348378e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionId: npc_gt_dungeon_quest_giver_001
-  questId: quest_gt_dungeon_clear_001
+  interactionId: npc_dungeon_quest_giver_001
+  questId: quest_dungeon_clear_001
   notStartedPromptText: "\u63A5\u53D6\u4EFB\u52A1"
   inProgressPromptText: "\u8BE2\u95EE\u4EFB\u52A1"
   readyToTurnInPromptText: "\u4EA4\u4ED8\u4EFB\u52A1"
   completedPromptText: "\u4EA4\u8C08"
   notStartedDialogueLines:
   - speakerName: "\u526F\u672C\u5B88\u536B"
-    text: "\u524D\u9762\u7684\u6D4B\u8BD5\u526F\u672C\u91CC\u51FA\u73B0\u4E86\u53F2\u83B1\u59C6\uFF0C\u80FD\u8BF7\u4F60\u8FDB\u53BB\u6E05\u7406\u4E00\u4E0B\u5417\uFF1F"
+    text: "\u524D\u9762\u7684\u5730\u7262\u91CC\u51FA\u73B0\u4E86\u602A\u7269\uFF0C\u80FD\u8BF7\u4F60\u8FDB\u53BB\u6E05\u7406\u4E00\u4E0B\u5417\uFF1F"
   - speakerName: "\u526F\u672C\u5B88\u536B"
     text: "\u6E05\u7406\u5B8C\u6210\u540E\u56DE\u6765\u5411\u6211\u62A5\u544A\uFF0C\u6211\u4F1A\u51C6\u5907\u597D\u62A5\u916C\u3002"
   inProgressDialogueLines:
   - speakerName: "\u526F\u672C\u5B88\u536B"
-    text: "\u6D4B\u8BD5\u526F\u672C\u5C31\u5728\u65C1\u8FB9\uFF0C\u6E05\u7406\u5B8C\u6210\u540E\u518D\u56DE\u6765\u627E\u6211\u3002"
+    text: "\u5730\u7262\u5C31\u5728\u65C1\u8FB9\uFF0C\u6E05\u7406\u5B8C\u6210\u540E\u518D\u56DE\u6765\u627E\u6211\u3002"
   readyToTurnInDialogueLines:
   - speakerName: "\u526F\u672C\u5B88\u536B"
-    text: "\u4F60\u5DF2\u7ECF\u6E05\u7406\u4E86\u6D4B\u8BD5\u526F\u672C\uFF1F\u5E72\u5F97\u6F02\u4EAE\uFF0C\u8FD9\u662F\u7ED9\u4F60\u7684\u62A5\u916C\u3002"
+    text: "\u4F60\u5DF2\u7ECF\u6E05\u7406\u4E86\u5730\u7262\uFF1F\u5E72\u5F97\u6F02\u4EAE\uFF0C\u8FD9\u662F\u7ED9\u4F60\u7684\u62A5\u916C\u3002"
   completedDialogueLines:
   - speakerName: "\u526F\u672C\u5B88\u536B"
     text: "\u8C22\u8C22\u4F60\u7684\u5E2E\u52A9\uFF0C\u9644\u8FD1\u6682\u65F6\u5B89\u5168\u4E86\u3002"
@@ -109586,8 +109586,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df4cffdeba69ac4c8cc7ba7348378e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionId: npc_gt_guide_001
-  questId: quest_gt_notice_report_001
+  interactionId: npc_guide_001
+  questId: quest_notice_report_001
   notStartedPromptText: "\u63A5\u53D6\u4EFB\u52A1"
   inProgressPromptText: "\u4EA4\u8C08"
   readyToTurnInPromptText: "\u4EA4\u4ED8\u4EFB\u52A1"
@@ -114492,6 +114492,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5606610640965263935, guid: f7f546defcbafe043bd1ed89fea5c1fc, type: 3}
+      propertyPath: message
+      value: "\u5317\u65B9\u662F\u5C0F\u9547\uFF0C\u5357\u65B9\u8FD8\u6CA1\u6709\u5F00\u653E"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5606610640965263935, guid: f7f546defcbafe043bd1ed89fea5c1fc, type: 3}
       propertyPath: speakerName
       value: "\u8DEF\u724C"
       objectReference: {fileID: 0}
@@ -117365,7 +117369,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 960, y: 540}
+  m_ReferenceResolution: {x: 1280, y: 720}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
@@ -182492,7 +182496,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 960, y: 540}
+  m_ReferenceResolution: {x: 1280, y: 720}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
@@ -183572,7 +183576,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 960, y: 540}
+  m_ReferenceResolution: {x: 1280, y: 720}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
@@ -188933,29 +188937,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1461918047}
     m_Modifications:
-    - target: {fileID: 1405313472999984716, guid: 12e786af46f60db42b0c49850e556080, type: 3}
-      propertyPath: m_SortingOrder
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2005993342735223406, guid: 12e786af46f60db42b0c49850e556080, type: 3}
       propertyPath: m_Name
-      value: interactable_gt_dungeon_gate_placeholder_01
-      objectReference: {fileID: 0}
-    - target: {fileID: 3394043145848684434, guid: 12e786af46f60db42b0c49850e556080, type: 3}
-      propertyPath: m_Size.x
-      value: 2.612989
-      objectReference: {fileID: 0}
-    - target: {fileID: 3394043145848684434, guid: 12e786af46f60db42b0c49850e556080, type: 3}
-      propertyPath: m_Size.y
-      value: 3.3351684
-      objectReference: {fileID: 0}
-    - target: {fileID: 3394043145848684434, guid: 12e786af46f60db42b0c49850e556080, type: 3}
-      propertyPath: m_Offset.x
-      value: -0.0072155
-      objectReference: {fileID: 0}
-    - target: {fileID: 3394043145848684434, guid: 12e786af46f60db42b0c49850e556080, type: 3}
-      propertyPath: m_Offset.y
-      value: 1.2335112
+      value: interactable_dungeon_entrance_01
       objectReference: {fileID: 0}
     - target: {fileID: 6720988537777983230, guid: 12e786af46f60db42b0c49850e556080, type: 3}
       propertyPath: m_LocalPosition.x
@@ -188997,9 +188981,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1405313472999984716, guid: 12e786af46f60db42b0c49850e556080, type: 3}
-    - {fileID: 320522738141108917, guid: 12e786af46f60db42b0c49850e556080, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -196802,7 +196784,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12d049187b47d81478a4bc745917d769, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPointId: spawn_main_dungeon_gate
+  spawnPointId: spawn_main_dungeon_entrance
 --- !u!1 &2110606992
 GameObject:
   m_ObjectHideFlags: 0
@@ -196840,7 +196822,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 180, y: -40}
+  m_AnchoredPosition: {x: 180, y: -55}
   m_SizeDelta: {x: 300, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2110606996
