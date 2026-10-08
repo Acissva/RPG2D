@@ -79,6 +79,7 @@ namespace RPG2D
                 Debug.Log("玩家死亡");
             }
 
+            this.SendEvent(new PlayerHurtEvent());
             return true;
         }
 
