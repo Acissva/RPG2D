@@ -351,7 +351,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 94c1bd497f6ec944189343db28c55fbe, type: 2}
+  - {fileID: 2100000, guid: b91a754d9a959084fbffe4a741c8e0fc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -402,6 +402,7 @@ GameObject:
   - component: {fileID: 2527890249994756216}
   - component: {fileID: 4525683057565049826}
   - component: {fileID: 4322964388828633046}
+  - component: {fileID: 6723597401575948788}
   m_Layer: 7
   m_HasEditorInfo: 1
   m_Name: Player
@@ -610,6 +611,20 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortAtRoot: 0
+--- !u!114 &6723597401575948788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7859840664435002712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2db498aa03be4b44aafc9ba9d58ba9a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bodyRenderer: {fileID: 5759562966117762398}
+  flashDuration: 0.15
 --- !u!1001 &3391810710195491348
 PrefabInstance:
   m_ObjectHideFlags: 0
