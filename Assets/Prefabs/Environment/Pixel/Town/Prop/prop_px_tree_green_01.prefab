@@ -187,6 +187,7 @@ GameObject:
   - component: {fileID: 8287268323351243143}
   - component: {fileID: 1330818844192898348}
   - component: {fileID: 8481802430466821119}
+  - component: {fileID: 850367417988683534}
   m_Layer: 0
   m_HasEditorInfo: 1
   m_Name: prop_px_tree_green_01
@@ -277,6 +278,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 0.3}
   m_EdgeRadius: 0
+--- !u!114 &850367417988683534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3002799191405571669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: f2652fae
 --- !u!1 &7605125855059099563
 GameObject:
   m_ObjectHideFlags: 0

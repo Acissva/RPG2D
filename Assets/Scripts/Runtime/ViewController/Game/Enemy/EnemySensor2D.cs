@@ -29,6 +29,7 @@ namespace RPG2D
         private readonly List<CombatTarget2D> detectedTargets = new List<CombatTarget2D>();     //本次扫描到的有效目标列表
 
         private EnemyController enemyController;
+        private readonly RaycastHit2D[] attackHits = new RaycastHit2D[1];
         private Collider2D[] overlapResults;    //碰撞结果预分配数组，避免每次扫描都 new 数组产生 GC
         private Vector2 spawnPosition;      //出生点
 
@@ -199,6 +200,19 @@ namespace RPG2D
             RaycastHit2D hit = Physics2D.Linecast(origin, targetPosition, obstacleLayers);
 
             return hit.collider == null;
+        }
+
+        public bool HasClearAttackPath(CombatTarget2D target, Vector2 origin)
+        {
+            if (target == null || !target.IsTargetable || obstacleLayers.value == 0)
+            {
+                return false;
+            }
+
+            Collider2D targetCollider = target.GetComponent<Collider2D>();
+            Vector2 targetPoint = target.AimPoint != null ? target.TargetPosition : targetCollider != null ? (Vector2)targetCollider.bounds.center : target.TargetPosition;
+            ContactFilter2D filter = new ContactFilter2D { useLayerMask = true, layerMask = obstacleLayers, useTriggers = false };
+            return Physics2D.Linecast(origin, targetPoint, filter, attackHits) == 0;
         }
 
         private void UpdateCurrentTarget()

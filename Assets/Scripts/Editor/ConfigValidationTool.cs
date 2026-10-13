@@ -40,6 +40,11 @@ namespace RPG2D.Editor
                 ValidateDungeonRewardItemReferences(dungeonDatabase, itemDatabase, ref errorCount);
             }
 
+            if (enemyConfig != null)
+            {
+                ValidateEnemyNavigationSettings(enemyConfig, ref errorCount);
+            }
+
             if (enemyConfig != null && dropTableDatabase != null)
             {
                 ValidateEnemyDropTableReference(enemyConfig, dropTableDatabase, ref errorCount);
@@ -238,6 +243,21 @@ namespace RPG2D.Editor
             }
 
             Debug.LogError($"配置校验：{ownerDescription} 引用了不存在的 ItemId：{reward.ItemId}。", context);
+            errorCount++;
+        }
+
+        private static void ValidateEnemyNavigationSettings(EnemyConfig enemyConfig, ref int errorCount)
+        {
+            if (enemyConfig.Movement != null)
+            {
+                float interval = enemyConfig.Movement.NavigationReplanInterval;
+                if (!float.IsNaN(interval) && !float.IsInfinity(interval) && interval >= 0.05f)
+                {
+                    return;
+                }
+            }
+
+            Debug.LogError("配置校验：EnemyConfig.Movement.NavigationReplanInterval 必须是大于等于 0.05 的有限数值。", enemyConfig);
             errorCount++;
         }
 
