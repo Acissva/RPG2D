@@ -80,18 +80,22 @@ namespace RPG2D
     {
         [SerializeField, Min(0f)] private float moveSpeed = 2f;
         [SerializeField, Min(0f)] private float chaseSpeed = 3f;
+        [SerializeField, Min(0.05f)] private float navigationReplanInterval = 0.3f;
 
         [Tooltip("击退抗性")]
         [SerializeField, Min(0f)] private float knockbackResistance = 0f;
 
         public float MoveSpeed => moveSpeed;
         public float ChaseSpeed => chaseSpeed;
+        public float NavigationReplanInterval => navigationReplanInterval;
         public float KnockbackResistance => knockbackResistance;
 
         public void Validate()
         {
             if (moveSpeed < 0f) moveSpeed = 0f;
             if (chaseSpeed < 0f) chaseSpeed = 0f;
+            if (float.IsNaN(navigationReplanInterval) || float.IsInfinity(navigationReplanInterval)) navigationReplanInterval = 0.3f;
+            if (navigationReplanInterval < 0.05f) navigationReplanInterval = 0.05f;
             if (knockbackResistance < 0f) knockbackResistance = 0f;
         }
     }
