@@ -22,6 +22,12 @@
       },
       "url": "https://packages.tuanjie.cn"
     },
+    "com.h8man.2d.navmeshplus": {
+      "version": "file:com.h8man.2d.navmeshplus",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.2d.animation": {
       "version": "9.2.0",
       "depth": 1,
@@ -258,13 +264,12 @@
       "url": "https://packages.tuanjie.cn"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.9",
+      "version": "file:com.unity.textmeshpro",
       "depth": 0,
-      "source": "registry",
+      "source": "embedded",
       "dependencies": {
         "com.unity.ugui": "1.0.0"
-      },
-      "url": "https://packages.tuanjie.cn"
+      }
     },
     "com.unity.timeline": {
       "version": "1.7.7",

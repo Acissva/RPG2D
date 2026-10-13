@@ -38,6 +38,10 @@ namespace RPG2D
         private EnemyController enemyController;
         private EnemySensor2D sensor;
         private EnemyMotor2D motor;
+        private EnemyNavigationAgent navigation;
+
+        private bool UsesNavigation => navigation != null && navigation.UseNavigation;
+        private bool CanAttackCurrentTarget => sensor.HasTargetInAttackRange && (!UsesNavigation || sensor.HasClearAttackPath(sensor.CurrentTarget, navigation.BodyCenter));
 
         private float decisionTimer;
         private float stateEnterTime;
@@ -75,6 +79,7 @@ namespace RPG2D
             enemyController = GetComponent<EnemyController>();
             sensor = GetComponent<EnemySensor2D>();
             motor = GetComponent<EnemyMotor2D>();
+            navigation = GetComponent<EnemyNavigationAgent>();
         }
 
         private void Start()
@@ -86,12 +91,47 @@ namespace RPG2D
                 return;
             }
 
+            if (UsesNavigation && defaultState != DefaultState.Idle)
+            {
+                Debug.LogError("启用导航的敌人实例请设置 Default State = Idle；本版未接入导航巡逻。", this);
+                enabled = false;
+                return;
+            }
+
             Vector2 spawnPosition = transform.position;
             sensor.SetSpawnPosition(spawnPosition);
             motor.SetSpawnPosition(spawnPosition);
 
             lastObservedHP = Stats.CurrentHP.Value;
             ChangeState(EnemyBrainState.Spawn);
+        }
+
+        private void StopMovement()
+        {
+            if (UsesNavigation)
+            {
+                navigation.Stop();
+            }
+            motor.Stop();
+        }
+
+        private void MoveToSpawn()
+        {
+            if (UsesNavigation)
+            {
+                navigation.MoveToPoint(motor.SpawnPosition, Stats.MoveSpeed);
+            }
+            else
+            {
+                motor.ReturnToSpawn();
+            }
+        }
+
+        private void OnDisable()
+        {
+            navigation?.Stop();
+            motor?.Stop();
+            ReportCombatDisengaged();
         }
 
         private void OnDestroy()
@@ -170,7 +210,7 @@ namespace RPG2D
 
         private void TickSpawn()
         {
-            motor.Stop();
+            StopMovement();
 
             if (StateElapsed >= spawnDuration)
             {
@@ -180,7 +220,7 @@ namespace RPG2D
 
         private void TickIdle(bool shouldThink)
         {
-            motor.Stop();
+            StopMovement();
 
             if (!shouldThink)
             {
@@ -220,7 +260,7 @@ namespace RPG2D
 
         private void TickAlert()
         {
-            motor.Stop();
+            StopMovement();
 
             if (!sensor.HasCurrentTarget)
             {
@@ -256,9 +296,9 @@ namespace RPG2D
                 return;
             }
 
-            if (sensor.HasTargetInAttackRange)
+            if (CanAttackCurrentTarget)
             {
-                motor.Stop();
+                StopMovement();
                 motor.FaceTo(sensor.CurrentTargetPosition);
 
                 if (Time.time >= nextAttackTime)
@@ -269,12 +309,19 @@ namespace RPG2D
                 return;
             }
 
-            motor.ChaseCurrentTarget(sensor);
+            if (UsesNavigation)
+            {
+                navigation.ChaseTarget(sensor.CurrentTarget, Stats.ChaseSpeed);
+            }
+            else
+            {
+                motor.ChaseCurrentTarget(sensor);
+            }
         }
 
         private void TickAttack(float deltaTime)
         {
-            motor.Stop();
+            StopMovement();
 
             if (sensor.HasCurrentTarget)
             {
@@ -306,7 +353,7 @@ namespace RPG2D
 
         private void TickHurt()
         {
-            motor.Stop();
+            StopMovement();
 
             float stunDuration = Stats != null ? Stats.HitStunDuration : 0f;
             if (StateElapsed < stunDuration || motor.IsKnockbackActive)
@@ -320,7 +367,7 @@ namespace RPG2D
                 return;
             }
 
-            if (sensor.IsSelfOutsideLeash)
+            if (UsesNavigation || sensor.IsSelfOutsideLeash)
             {
                 ChangeState(EnemyBrainState.Return);
                 return;
@@ -332,9 +379,9 @@ namespace RPG2D
         private void TickReturn()
         {
             sensor.ClearCurrentTarget();
-            motor.ReturnToSpawn();
+            MoveToSpawn();
 
-            if (motor.HasArrived)
+            if (UsesNavigation ? navigation.HasArrived : motor.HasArrived)
             {
                 ChangeState(GetDefaultState());
             }
@@ -355,6 +402,10 @@ namespace RPG2D
 
             hasStateInitialized = true;
 
+            if (UsesNavigation)
+            {
+                navigation.Stop();
+            }
             ExitState(CurrentState);
 
             CurrentState = nextState;
@@ -374,7 +425,7 @@ namespace RPG2D
             {
                 case EnemyBrainState.Idle:
                     ReportCombatDisengaged();
-                    motor.Stop();
+                    StopMovement();
                     break;
 
                 case EnemyBrainState.Patrol:
@@ -382,7 +433,7 @@ namespace RPG2D
                     break;
 
                 case EnemyBrainState.Alert:
-                    motor.Stop();
+                    StopMovement();
                     ReportCombatEngagedIfPlayerTarget();
                     break;
 
@@ -398,13 +449,13 @@ namespace RPG2D
                 case EnemyBrainState.Hurt:
                     ReportCombatEngagedIfPlayerTarget();
                     attackPhase = AttackPhase.None;
-                    motor.Stop();
+                    StopMovement();
                     break;
 
                 case EnemyBrainState.Return:
                     ReportCombatDisengaged();
                     sensor.ClearCurrentTarget();
-                    motor.ReturnToSpawn();
+                    MoveToSpawn();
                     break;
 
                 case EnemyBrainState.Dead:
@@ -474,7 +525,12 @@ namespace RPG2D
                 return;
             }
 
-            if (requireTargetInRangeWhenHit && !sensor.HasTargetInAttackRange)
+            if ((requireTargetInRangeWhenHit || UsesNavigation) && !sensor.HasTargetInAttackRange)
+            {
+                return;
+            }
+
+            if (UsesNavigation && !sensor.HasClearAttackPath(sensor.CurrentTarget, navigation.BodyCenter))
             {
                 return;
             }
