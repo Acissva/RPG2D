@@ -17,6 +17,7 @@ namespace RPG2D.Editor
             QuestConfigDatabase questDatabase = LoadSingleAsset<QuestConfigDatabase>(ref errorCount);
             DungeonConfigDatabase dungeonDatabase = LoadSingleAsset<DungeonConfigDatabase>(ref errorCount);
             EnemyConfig enemyConfig = LoadSingleAsset<EnemyConfig>(ref errorCount);
+            GameServerSettings gameServerSettings = LoadSingleAsset<GameServerSettings>(ref errorCount);
             _ = LoadSingleAsset<UIPanelConfigDatabase>(ref errorCount);
             UIPanelConfig[] panelConfigs = LoadAllAssets<UIPanelConfig>(ref errorCount);
 
@@ -50,6 +51,7 @@ namespace RPG2D.Editor
                 ValidateEnemyDropTableReference(enemyConfig, dropTableDatabase, ref errorCount);
             }
 
+            ValidateGameServerSettings(gameServerSettings, ref errorCount);
             ValidateUIPanelPrefabReferences(panelConfigs, ref errorCount);
 
             if (dungeonDatabase != null)
@@ -64,6 +66,26 @@ namespace RPG2D.Editor
             }
 
             Debug.Log("配置校验通过：数据库资产与已接入的跨配置引用均有效。");
+        }
+
+        private static void ValidateGameServerSettings(GameServerSettings settings, ref int errorCount)
+        {
+            if (settings == null)
+            {
+                return;
+            }
+
+            if (!settings.TryGetNoticeUrl(out string noticeUrl, out string error))
+            {
+                Debug.LogError("配置校验：" + error, settings);
+                errorCount++;
+            }
+
+            if (AssetDatabase.GetAssetPath(settings) != "Assets/Resources/Config/Network/GameServerSettings.asset")
+            {
+                Debug.LogError("配置校验：GameServerSettings 必须位于 Assets/Resources/Config/Network/GameServerSettings.asset。", settings);
+                errorCount++;
+            }
         }
 
         private static T LoadSingleAsset<T>(ref int errorCount) where T : ScriptableObject
