@@ -9,6 +9,8 @@ namespace RPG2D
 
         public EnemyConfig EnemyConfig { get; private set; }
 
+        public GameServerSettings GameServerSettings { get; private set; }
+
         public QuestConfigDatabase QuestConfigDatabase { get; private set; }
 
         public UIPanelConfigDatabase UIPanelConfigDatabase { get; private set; }
@@ -23,6 +25,7 @@ namespace RPG2D
 
         private const string PlayerConfigPath = "Config/Game/Character/Player/PlayerConfig";
         private const string EnemyConfigPath = "Config/Game/Character/Enemy/EnemyConfig";
+        private const string GameServerSettingsPath = "Config/Network/GameServerSettings";
         private const string QuestConfigDatabasePath = "Config/Game/Quest/QuestConfigDatabase";
         private const string UIPanelConfigDatabasePath = "Config/UI/UIPanelConfigDatabase";
         private const string ItemConfigDatabasePath = "Config/Game/Item/ItemConfigDatabase";
@@ -35,11 +38,17 @@ namespace RPG2D
 
             PlayerConfig = assetSystem.Load<PlayerConfig>(PlayerConfigPath);
             EnemyConfig = assetSystem.Load<EnemyConfig>(EnemyConfigPath);
+            GameServerSettings = assetSystem.Load<GameServerSettings>(GameServerSettingsPath);
             QuestConfigDatabase = assetSystem.Load<QuestConfigDatabase>(QuestConfigDatabasePath);
             UIPanelConfigDatabase = assetSystem.Load<UIPanelConfigDatabase>(UIPanelConfigDatabasePath);
             ItemConfigDatabase = assetSystem.Load<ItemConfigDatabase>(ItemConfigDatabasePath);
             DropTableConfigDatabase = assetSystem.Load<DropTableConfigDatabase>(DropTableConfigDatabasePath);
             DungeonConfigDatabase = assetSystem.Load<DungeonConfigDatabase>(DungeonConfigDatabasePath);
+
+            if (GameServerSettings == null)
+            {
+                Debug.LogError("Can not load GameServerSettings from " + GameServerSettingsPath);
+            }
 
             if (PlayerConfig == null)
             {

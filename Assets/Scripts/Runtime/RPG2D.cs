@@ -15,12 +15,14 @@ namespace RPG2D
             this.RegisterModel<IInventoryModel>(new InventoryModel());
             this.RegisterModel<ICombatStateModel>(new CombatStateModel());
             this.RegisterModel<IDungeonModel>(new DungeonModel());
+            this.RegisterModel<IGameServerModel>(new GameServerModel());
 
             //注册System
             this.RegisterSystem<IRuntimeUpdateSystem>(new RuntimeUpdateSystem());   //特殊：由于后面有几个系统会使用Update，所以放最前面
             this.RegisterSystem<IRPG2DInputSystem>(new RPG2DInputSystem());
             this.RegisterSystem<IAssetSystem>(new AssetSystem());
             this.RegisterSystem<IConfigSystem>(new ConfigSystem());
+            this.RegisterSystem<IGameServerSystem>(new GameServerSystem());
             this.RegisterSystem<IPlayerSystem>(new PlayerSystem());
             this.RegisterSystem<IInventorySystem>(new InventorySystem());
             this.RegisterSystem<IRewardSystem>(new RewardSystem());

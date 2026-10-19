@@ -8,6 +8,8 @@ namespace RPG2D
 
         EnemyConfig EnemyConfig { get; }
 
+        GameServerSettings GameServerSettings { get; }
+
         QuestConfigDatabase QuestConfigDatabase { get; }
 
         UIPanelConfigDatabase UIPanelConfigDatabase { get; }
