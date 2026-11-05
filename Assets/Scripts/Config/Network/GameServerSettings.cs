@@ -12,14 +12,12 @@ namespace RPG2D
         public string BaseUrl => baseUrl;
         public int TimeoutSeconds => timeoutSeconds;
 
-        public bool TryGetNoticeUrl(out string noticeUrl, out string error)
+        public bool TryValidate(out Uri baseUri, out string error)
         {
-            noticeUrl = string.Empty;
+            baseUri = null;
             error = string.Empty;
 
-            if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out Uri uri)
-                || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
-                || string.IsNullOrWhiteSpace(uri.Host))
+            if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out Uri uri) || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps) || string.IsNullOrWhiteSpace(uri.Host))
             {
                 error = "服务器地址必须是有效的 HTTP 或 HTTPS 绝对地址";
                 return false;
@@ -37,7 +35,7 @@ namespace RPG2D
                 return false;
             }
 
-            noticeUrl = new Uri(uri, "api/notice").AbsoluteUri;
+            baseUri = uri;
             return true;
         }
     }

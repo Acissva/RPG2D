@@ -5,13 +5,13 @@ namespace RPG2D
 {
     public class ServerNoticeLearningProbe : RPG2DController
     {
-        private IGameServerSystem gameServerSystem;
+        private INoticeSystem noticeSystem;
         private IUnRegister snapshotRegistration;
 
         private void OnEnable()
         {
-            gameServerSystem = this.GetSystem<IGameServerSystem>();
-            snapshotRegistration = this.GetModel<IGameServerModel>().Snapshot.RegisterWithInitValue(OnSnapshotChanged);
+            noticeSystem = this.GetSystem<INoticeSystem>();
+            snapshotRegistration = this.GetModel<INoticeModel>().Snapshot.RegisterWithInitValue(OnSnapshotChanged);
         }
 
         private void Start()
@@ -23,7 +23,7 @@ namespace RPG2D
         {
             snapshotRegistration?.UnRegister();
             snapshotRegistration = null;
-            gameServerSystem?.CancelRequest();
+            noticeSystem?.CancelRequest();
         }
 
         [ContextMenu("Refresh Notice")]
@@ -35,14 +35,14 @@ namespace RPG2D
                 return;
             }
 
-            this.SendCommand<RefreshServerNoticeCommand>();
+            this.SendCommand<RefreshNoticeCommand>();
         }
 
-        private void OnSnapshotChanged(GameServerSnapshot snapshot)
+        private void OnSnapshotChanged(NoticeSnapshot snapshot)
         {
             Debug.Log($"公告状态：{snapshot.State}，提示：{snapshot.Error}，保留有效公告：{snapshot.HasNotice}");
 
-            if (snapshot.State == GameServerRequestState.Ready)
+            if (snapshot.State == NoticeRequestState.Ready)
             {
                 Debug.Log(snapshot.Title + "\n" + snapshot.Content);
             }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace RPG2D
 {
     [DisallowMultipleComponent]
-    public sealed class ServerInfoView : RPG2DController
+    public sealed class ServerNoticeView : RPG2DController
     {
         [SerializeField] private TextMeshProUGUI statusText = null;
         [SerializeField] private TextMeshProUGUI noticeTitleText = null;
@@ -14,8 +14,8 @@ namespace RPG2D
         [SerializeField] private Button refreshButton = null;
         [SerializeField] private ScrollRect noticeScroll = null;
 
-        private IGameServerModel model;
-        private IGameServerSystem gameServerSystem;
+        private INoticeModel model;
+        private INoticeSystem noticeSystem;
         private IUnRegister snapshotRegistration;
         private bool started;
 
@@ -25,7 +25,7 @@ namespace RPG2D
 
             if (panel == null || panel.PanelId != UIPanelId.StartSceneMenu || statusText == null || noticeTitleText == null || noticeContentText == null || refreshButton == null || noticeScroll == null || noticeScroll.content == null)
             {
-                Debug.LogError("ServerInfoView 必须位于 StartSceneMenu 内，并配置三项文本、刷新按钮和有效的 ScrollRect。", this);
+                Debug.LogError($"{nameof(ServerNoticeView)} 必须位于 StartSceneMenu 内，并配置三项文本、刷新按钮和有效的 ScrollRect。", this);
 
                 if (refreshButton != null)
                 {
@@ -42,13 +42,13 @@ namespace RPG2D
             statusText.raycastTarget = false;
             noticeTitleText.raycastTarget = false;
             noticeContentText.raycastTarget = false;
-            model = this.GetModel<IGameServerModel>();
-            gameServerSystem = this.GetSystem<IGameServerSystem>();
+            model = this.GetModel<INoticeModel>();
+            noticeSystem = this.GetSystem<INoticeSystem>();
         }
 
         private void OnEnable()
         {
-            if (gameServerSystem == null)
+            if (noticeSystem == null)
             {
                 return;
             }
@@ -78,23 +78,23 @@ namespace RPG2D
                 refreshButton.onClick.RemoveListener(OnRefreshClicked);
             }
 
-            gameServerSystem?.CancelRequest();
+            noticeSystem?.CancelRequest();
         }
 
         private void OnRefreshClicked()
         {
-            if (!isActiveAndEnabled || gameServerSystem == null)
+            if (!isActiveAndEnabled || noticeSystem == null)
             {
                 return;
             }
 
-            this.SendCommand<RefreshServerNoticeCommand>();
+            this.SendCommand<RefreshNoticeCommand>();
         }
 
-        private void Render(GameServerSnapshot snapshot)
+        private void Render(NoticeSnapshot snapshot)
         {
             statusText.text = GetStatusText(snapshot);
-            refreshButton.interactable = snapshot.State != GameServerRequestState.Loading;
+            refreshButton.interactable = snapshot.State != NoticeRequestState.Loading;
             string title = snapshot.HasNotice ? snapshot.Title : "服务器公告";
             string content = snapshot.HasNotice ? snapshot.Content : "暂无可用公告。";
             bool changed = noticeTitleText.text != title || noticeContentText.text != content;
@@ -110,15 +110,15 @@ namespace RPG2D
             }
         }
 
-        private static string GetStatusText(GameServerSnapshot snapshot)
+        private static string GetStatusText(NoticeSnapshot snapshot)
         {
             switch (snapshot.State)
             {
-                case GameServerRequestState.Loading:
+                case NoticeRequestState.Loading:
                     return snapshot.HasNotice ? "获取中（显示上次内容）" : "获取中…";
-                case GameServerRequestState.Ready:
+                case NoticeRequestState.Ready:
                     return "服务可用";
-                case GameServerRequestState.Failed:
+                case NoticeRequestState.Failed:
                     return "暂不可用：" + snapshot.Error + (snapshot.HasNotice ? "（显示上次内容）" : string.Empty);
                 default:
                     return snapshot.HasNotice ? "尚未刷新（显示上次内容）" : "尚未连接";
