@@ -75,7 +75,7 @@ namespace RPG2D.Editor
                 return;
             }
 
-            if (!settings.TryGetNoticeUrl(out string noticeUrl, out string error))
+            if (!settings.TryValidate(out _, out string error))
             {
                 Debug.LogError("配置校验：" + error, settings);
                 errorCount++;

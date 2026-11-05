@@ -2,7 +2,7 @@ using QFramework;
 
 namespace RPG2D
 {
-    public interface IGameServerSystem : ISystem
+    public interface INoticeSystem : ISystem
     {
         bool RefreshNotice();
         void CancelRequest();
