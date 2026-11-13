@@ -34,7 +34,7 @@ namespace RPG2D
         {
             if (isPlaying)
             {
-                uiSystem.OpenPanel(UIPanelId.Dialogue, false);
+                uiSystem.OpenPanel(UIPanelId.Dialogue);
                 return;
             }
 

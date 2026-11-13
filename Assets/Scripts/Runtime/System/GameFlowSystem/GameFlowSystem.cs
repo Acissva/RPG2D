@@ -62,6 +62,7 @@ namespace RPG2D
 
         private void ResetSession()
         {
+            this.GetSystem<INpcChatSystem>().EndChat();
             timerSystem.CancelScope(TimerScope.Session);
             respawnTimer = default;
         }

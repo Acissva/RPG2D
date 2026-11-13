@@ -13,5 +13,6 @@ namespace RPG2D
         Loading = 200,
         StartSceneMenu = 300,
         Dialogue = 400,
+        NpcChat = 401,
     }
 }
