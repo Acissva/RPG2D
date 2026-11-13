@@ -342,14 +342,15 @@ namespace RPG2D
             UIPanelId topInputPanelId = FindTopInputPanelId();
             bool inputBlocked = HasInputBlockingPanel();
 
-            bool stateChanged = topInputPanelId != uiModel.TopInputPanelId.Value
-                || inputBlocked != uiModel.InputBlocked.Value
-                || HasOpenedPanelStackChanged();
+            bool inputContextChanged = topInputPanelId != uiModel.TopInputPanelId.Value || inputBlocked != uiModel.InputBlocked.Value;
+            bool stateChanged = inputContextChanged || HasOpenedPanelStackChanged();
 
             if (!stateChanged)
             {
                 return;
             }
+
+            if (inputContextChanged) inputReader.DiscardActionsForCurrentFrame();
 
             lastPublishedOpenedPanelStack.Clear();
             lastPublishedOpenedPanelStack.AddRange(openedPanelStack);

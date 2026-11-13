@@ -10,6 +10,10 @@ namespace RPG2D
 
         GameServerSettings GameServerSettings { get; }
 
+        NpcChatConfig NpcChatConfig { get; }
+
+        NpcChatSettings NpcChatSettings { get; }
+
         QuestConfigDatabase QuestConfigDatabase { get; }
 
         UIPanelConfigDatabase UIPanelConfigDatabase { get; }

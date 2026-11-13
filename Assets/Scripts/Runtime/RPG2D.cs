@@ -16,6 +16,7 @@ namespace RPG2D
             this.RegisterModel<ICombatStateModel>(new CombatStateModel());
             this.RegisterModel<IDungeonModel>(new DungeonModel());
             this.RegisterModel<INoticeModel>(new NoticeModel());
+            this.RegisterModel<INpcChatModel>(new NpcChatModel());
 
             //注册System
             this.RegisterSystem<IRuntimeUpdateSystem>(new RuntimeUpdateSystem());   //特殊：由于后面有几个系统会使用Update，所以放最前面
@@ -24,6 +25,7 @@ namespace RPG2D
             this.RegisterSystem<IAssetSystem>(new AssetSystem());
             this.RegisterSystem<IConfigSystem>(new ConfigSystem());
             this.RegisterSystem<INoticeSystem>(new NoticeSystem());
+            this.RegisterSystem<INpcChatSystem>(new NpcChatSystem());
             this.RegisterSystem<IPlayerSystem>(new PlayerSystem());
             this.RegisterSystem<IInventorySystem>(new InventorySystem());
             this.RegisterSystem<IRewardSystem>(new RewardSystem());

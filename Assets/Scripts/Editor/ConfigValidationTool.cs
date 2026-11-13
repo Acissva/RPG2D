@@ -18,6 +18,8 @@ namespace RPG2D.Editor
             DungeonConfigDatabase dungeonDatabase = LoadSingleAsset<DungeonConfigDatabase>(ref errorCount);
             EnemyConfig enemyConfig = LoadSingleAsset<EnemyConfig>(ref errorCount);
             GameServerSettings gameServerSettings = LoadSingleAsset<GameServerSettings>(ref errorCount);
+            NpcChatConfig npcChatConfig = LoadSingleAsset<NpcChatConfig>(ref errorCount);
+            NpcChatSettings npcChatSettings = LoadSingleAsset<NpcChatSettings>(ref errorCount);
             _ = LoadSingleAsset<UIPanelConfigDatabase>(ref errorCount);
             UIPanelConfig[] panelConfigs = LoadAllAssets<UIPanelConfig>(ref errorCount);
 
@@ -52,6 +54,8 @@ namespace RPG2D.Editor
             }
 
             ValidateGameServerSettings(gameServerSettings, ref errorCount);
+            ValidateNpcChatConfig(npcChatConfig, ref errorCount);
+            ValidateNpcChatSettings(npcChatSettings, ref errorCount);
             ValidateUIPanelPrefabReferences(panelConfigs, ref errorCount);
 
             if (dungeonDatabase != null)
@@ -88,6 +92,37 @@ namespace RPG2D.Editor
             }
         }
 
+        private static void ValidateNpcChatConfig(NpcChatConfig config, ref int errorCount)
+        {
+            if (config == null) return;
+            if (!config.TryValidate(out string error))
+            {
+                Debug.LogError("配置校验：" + error, config);
+                errorCount++;
+            }
+
+            if (AssetDatabase.GetAssetPath(config) != "Assets/Resources/Config/Game/Npc/NpcChatConfig.asset")
+            {
+                Debug.LogError("配置校验：NpcChatConfig 必须位于 Assets/Resources/Config/Game/Npc/NpcChatConfig.asset。", config);
+                errorCount++;
+            }
+        }
+
+        private static void ValidateNpcChatSettings(NpcChatSettings settings, ref int errorCount)
+        {
+            if (settings == null) return;
+            if (!settings.TryValidate(out string error))
+            {
+                Debug.LogError("配置校验：" + error, settings);
+                errorCount++;
+            }
+
+            if (AssetDatabase.GetAssetPath(settings) != "Assets/Resources/Config/Network/NpcChatSettings.asset")
+            {
+                Debug.LogError("配置校验：NpcChatSettings 必须位于 Assets/Resources/Config/Network/NpcChatSettings.asset。", settings);
+                errorCount++;
+            }
+        }
         private static T LoadSingleAsset<T>(ref int errorCount) where T : ScriptableObject
         {
             string[] assetGuids = AssetDatabase.FindAssets($"t:{typeof(T).Name}", SearchFolders);

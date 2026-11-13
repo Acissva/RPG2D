@@ -24,6 +24,7 @@ namespace RPG2D.Tests.EditMode
         private ITimerSystem timerSystem;
         private IGameFlowSystem gameFlowSystem;
         private RecordingSceneSystem sceneSystem;
+        private RecordingNpcChatSystem npcChatSystem;
 
         private string selectedItemId;
         private string selectedQuestId;
@@ -48,6 +49,7 @@ namespace RPG2D.Tests.EditMode
             timerSystem = architecture.GetSystem<ITimerSystem>();
             gameFlowSystem = architecture.GetSystem<IGameFlowSystem>();
             sceneSystem = (RecordingSceneSystem)architecture.GetSystem<ISceneSystem>();
+            npcChatSystem = (RecordingNpcChatSystem)architecture.GetSystem<INpcChatSystem>();
         }
 
         [TearDown]
@@ -69,6 +71,7 @@ namespace RPG2D.Tests.EditMode
             timerSystem = null;
             gameFlowSystem = null;
             sceneSystem = null;
+            npcChatSystem = null;
             selectedItemId = null;
             selectedQuestId = null;
         }
@@ -111,6 +114,7 @@ namespace RPG2D.Tests.EditMode
 
             gameFlowSystem.StartNewGame();
 
+            Assert.That(npcChatSystem.EndChatCallCount, Is.EqualTo(1));
             Assert.That(sceneSystem.MainGameSceneLoadCount, Is.EqualTo(1));
             Assert.That(sceneSystem.SessionWasCleanWhenMainSceneRequested, Is.True);
             Assert.That(IsSessionClean(), Is.True);
@@ -122,6 +126,7 @@ namespace RPG2D.Tests.EditMode
 
         private bool IsSessionClean()
         {
+            if (npcChatSystem.EndChatCallCount != 1) return false;
             if (playerModel.MaxHP.Value != expectedMaxHP) return false;
             if (playerModel.HP.Value != expectedInitialHP) return false;
             if (!Mathf.Approximately(playerModel.MoveSpeed.Value, expectedMoveSpeed)) return false;
@@ -195,7 +200,29 @@ namespace RPG2D.Tests.EditMode
                 this.RegisterSystem<ITravelSystem>(new RecordingTravelSystem());
                 this.RegisterSystem<IDungeonSystem>(new DungeonSystem());
                 this.RegisterSystem<IDialogueSystem>(new DialogueSystem());
+                this.RegisterSystem<INpcChatSystem>(new RecordingNpcChatSystem());
                 this.RegisterSystem<IGameFlowSystem>(new GameFlowSystem());
+            }
+        }
+
+        private sealed class RecordingNpcChatSystem : AbstractSystem, INpcChatSystem
+        {
+            public int EndChatCallCount { get; private set; }
+
+            protected override void OnInit()
+            {
+            }
+
+            public bool BeginChat(string npcId) => false;
+            public bool SendMessage(string message) => false;
+
+            public void ClearChat()
+            {
+            }
+
+            public void EndChat()
+            {
+                EndChatCallCount++;
             }
         }
 

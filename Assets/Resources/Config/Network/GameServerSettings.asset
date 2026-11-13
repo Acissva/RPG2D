@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e039aa6f7fbb349962e7a7a5297b47, type: 3}
   m_Name: GameServerSettings
   m_EditorClassIdentifier: 
-  baseUrl: http://127.0.0.1:5080
+  baseUrl: http://localhost:5080
   timeoutSeconds: 5

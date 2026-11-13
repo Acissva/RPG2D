@@ -2,6 +2,10 @@
 
 RPG2D is a 2D adventure role-playing game project built with Unity / Tuanjie Engine.
 
+v0.0.19 adds an AI guide NPC with free text input, whole replies and the latest four successful question / answer pairs. The request path is Unity → C# business API → Python AI service → DeepSeek. Gameplay / failure-recovery regression and Windows candidate observations passed. The C# candidate uses net9.0 / Release / win-x64, framework-dependent Production; health / notice returned 200 while OpenAPI / admin GET remained 404.
+
+NpcChatConfig and NpcChatSettings use ConfigSystem; AI uses 70 seconds separately from notices. GameServerSettings defaults and the existing asset use http://localhost:5080. On this machine that root avoids the proxy path observed with 127.0.0.1. The rebuilt candidate completed a local reply and propagated cancellation when quitting during its next request; its process exited with code 0 and the fixture drained all requests. The earlier real conversation remains the paid sample (453 tokens, 72 UTF-16 reply units). UI / input observations follow user feedback. Formal builds use main and the v0.0.19 directory; release commit / tag and artifact identities are maintained in the design version records.
+
 ## Current Source Structure
 
 The v0.0.19-pre structure separates common HTTP transport from notice business logic. NoticeSystem calls the common HTTP scheduler and holds its own notice request handle. It retains notice response validation, snapshots and previous-content policy; native request cleanup belongs to HttpRequestSystem. The Notice type and directory migration has been checked against the actual source, build and editor log. Private probe variables and diagnostic strings use Notice names.

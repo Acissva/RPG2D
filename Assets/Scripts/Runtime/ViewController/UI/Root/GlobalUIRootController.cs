@@ -20,6 +20,7 @@ namespace RPG2D
 
             EnsureSceneTransitionPresenter();
             EnsureDialoguePresenter();
+            EnsureNpcChatPresenter();
         }
 
         protected override void OnDestroy()
@@ -53,6 +54,13 @@ namespace RPG2D
                 presenter = gameObject.AddComponent<DialoguePresenter>();
             }
 
+            presenter.Initialize();
+        }
+
+        private void EnsureNpcChatPresenter()
+        {
+            NpcChatPresenter presenter = GetComponent<NpcChatPresenter>();
+            if (presenter == null) presenter = gameObject.AddComponent<NpcChatPresenter>();
             presenter.Initialize();
         }
     }
