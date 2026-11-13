@@ -11,6 +11,10 @@ namespace RPG2D
 
         public GameServerSettings GameServerSettings { get; private set; }
 
+        public NpcChatConfig NpcChatConfig { get; private set; }
+
+        public NpcChatSettings NpcChatSettings { get; private set; }
+
         public QuestConfigDatabase QuestConfigDatabase { get; private set; }
 
         public UIPanelConfigDatabase UIPanelConfigDatabase { get; private set; }
@@ -26,6 +30,8 @@ namespace RPG2D
         private const string PlayerConfigPath = "Config/Game/Character/Player/PlayerConfig";
         private const string EnemyConfigPath = "Config/Game/Character/Enemy/EnemyConfig";
         private const string GameServerSettingsPath = "Config/Network/GameServerSettings";
+        private const string NpcChatConfigPath = "Config/Game/Npc/NpcChatConfig";
+        private const string NpcChatSettingsPath = "Config/Network/NpcChatSettings";
         private const string QuestConfigDatabasePath = "Config/Game/Quest/QuestConfigDatabase";
         private const string UIPanelConfigDatabasePath = "Config/UI/UIPanelConfigDatabase";
         private const string ItemConfigDatabasePath = "Config/Game/Item/ItemConfigDatabase";
@@ -39,6 +45,8 @@ namespace RPG2D
             PlayerConfig = assetSystem.Load<PlayerConfig>(PlayerConfigPath);
             EnemyConfig = assetSystem.Load<EnemyConfig>(EnemyConfigPath);
             GameServerSettings = assetSystem.Load<GameServerSettings>(GameServerSettingsPath);
+            NpcChatConfig = assetSystem.Load<NpcChatConfig>(NpcChatConfigPath);
+            NpcChatSettings = assetSystem.Load<NpcChatSettings>(NpcChatSettingsPath);
             QuestConfigDatabase = assetSystem.Load<QuestConfigDatabase>(QuestConfigDatabasePath);
             UIPanelConfigDatabase = assetSystem.Load<UIPanelConfigDatabase>(UIPanelConfigDatabasePath);
             ItemConfigDatabase = assetSystem.Load<ItemConfigDatabase>(ItemConfigDatabasePath);
@@ -48,6 +56,16 @@ namespace RPG2D
             if (GameServerSettings == null)
             {
                 Debug.LogError("Can not load GameServerSettings from " + GameServerSettingsPath);
+            }
+
+            if (NpcChatConfig == null)
+            {
+                Debug.LogError("Can not load NpcChatConfig from " + NpcChatConfigPath);
+            }
+
+            if (NpcChatSettings == null)
+            {
+                Debug.LogError("Can not load NpcChatSettings from " + NpcChatSettingsPath);
             }
 
             if (PlayerConfig == null)

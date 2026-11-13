@@ -10,6 +10,8 @@ namespace RPG2D
 
         bool ConsumeAction(InputActionType action);
 
+        void DiscardActionsForCurrentFrame();
+
         Vector2 MoveDir { get; }
 
         Vector2 PointerScreenPosition { get; }

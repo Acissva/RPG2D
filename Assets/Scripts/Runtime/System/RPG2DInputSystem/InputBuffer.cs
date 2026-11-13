@@ -21,6 +21,7 @@ namespace RPG2D
         /// 缓存多少帧
         /// </summary>
         private readonly int bufferFrames;
+        private int discardedFrame = -1;
 
         public InputBuffer(int bufferFrames = 1)
         {
@@ -33,6 +34,7 @@ namespace RPG2D
         /// </summary>
         public void Press(InputActionType action)
         {
+            if (Time.frameCount == discardedFrame) return;
             pressedFrames[action] = Time.frameCount;
             consumedActions.Remove(action);
         }
@@ -69,6 +71,13 @@ namespace RPG2D
             return true;
         }
 
+        public void DiscardForCurrentFrame()
+        {
+            discardedFrame = Time.frameCount;
+            pressedFrames.Clear();
+            consumedActions.Clear();
+        }
+
         public void ClearExpired()
         {
             //因为不能在 foreach 遍历 Dictionary 时直接删除其中元素
@@ -77,9 +86,9 @@ namespace RPG2D
 
             foreach (var pair in pressedFrames)
             {
-                if(Time.frameCount - pair.Value > bufferFrames)
+                if (Time.frameCount - pair.Value > bufferFrames)
                 {
-                    if(expired == null)
+                    if (expired == null)
                     {
                         expired = new List<InputActionType>();
                     }
@@ -87,7 +96,7 @@ namespace RPG2D
                 }
             }
 
-            if(expired == null) return;
+            if (expired == null) return;
 
             foreach (var action in expired)
             {
@@ -95,6 +104,6 @@ namespace RPG2D
                 consumedActions.Remove(action);
             }
         }
-        
+
     }
 }

@@ -6,7 +6,7 @@ namespace RPG2D
     [CreateAssetMenu(fileName = "GameServerSettings", menuName = "RPG2D/Config/Network/Game Server Settings")]
     public class GameServerSettings : ScriptableObject
     {
-        [SerializeField] private string baseUrl = "http://127.0.0.1:5080";
+        [SerializeField] private string baseUrl = "http://localhost:5080";
         [SerializeField, Range(1, 30)] private int timeoutSeconds = 5;
 
         public string BaseUrl => baseUrl;

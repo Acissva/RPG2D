@@ -5,6 +5,8 @@ namespace RPG2D
     public class OldInputReader : IInputReader
     {
         private readonly InputBuffer inputBuffer = new InputBuffer(3);
+        private bool wasComposing;
+        private int discardedFrame = -1;
 
         public Vector2 MoveDir { get; private set; }
         public Vector2 PointerScreenPosition { get; private set; }
@@ -18,6 +20,11 @@ namespace RPG2D
 
         private void GetMoveDir()
         {
+            if (Time.frameCount == discardedFrame)
+            {
+                MoveDir = Vector2.zero;
+                return;
+            }
             //GetAxis自带缓冲，想立即停下用GetAxisRaw
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
@@ -34,9 +41,26 @@ namespace RPG2D
             return inputBuffer.Consume(action);
         }
 
+        public void DiscardActionsForCurrentFrame()
+        {
+            discardedFrame = Time.frameCount;
+            MoveDir = Vector2.zero;
+            inputBuffer.DiscardForCurrentFrame();
+        }
+
+        private bool CanQueueUiBack(string composition)
+        {
+            bool composing = !string.IsNullOrEmpty(composition);
+            bool canQueue = !composing && !wasComposing;
+            wasComposing = composing;
+            if (!canQueue) inputBuffer.Consume(InputActionType.UIBack);
+            return canQueue;
+        }
+
         private void GetAction()
         {
             GetMoveDir();
+            bool canQueueUiBack = CanQueueUiBack(Input.compositionString);
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -48,7 +72,7 @@ namespace RPG2D
                 inputBuffer.Press(InputActionType.Interact);
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) && canQueueUiBack)
             {
                 inputBuffer.Press(InputActionType.UIBack);
             }
